@@ -28,8 +28,11 @@ export class Match {
   @NotEquals('homeTeam')
   awayTeam: Team;
 
-  @Column({ type: 'datetime' })
-  dateAndTime: Date;
+  @Column({ type: 'date' })
+  date: string;
+
+  @Column({ type: 'time' })
+  time: string;
 
   @ManyToOne(() => Stadium, { cascade: true })
   matchVenue: Stadium;
@@ -43,7 +46,7 @@ export class Match {
   @Column()
   secondLinesman: string;
 
-  @Column({})
+  @Column({ default: '' })
   reservedSeats: string;
 
   reservedSeatsArray: boolean[][];
