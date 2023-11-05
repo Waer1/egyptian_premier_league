@@ -87,4 +87,11 @@ export class UsersController {
   async remove(@Param('id') id: string) {
     return await this.usersService.remove(+id);
   }
+
+  @Get('username/:username')
+  @ApiOperation({ summary: 'Get a user by username' })
+  @ApiResponse({ status: 200, description: 'Return the user.' })
+  async findByUsername(@Param('username') username: string) {
+    return await this.usersService.findByUsername(username);
+  }
 }

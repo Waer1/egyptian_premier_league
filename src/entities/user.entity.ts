@@ -58,7 +58,8 @@ export class User {
   @Column({ nullable: true })
   address: string;
 
-  @Column()
+  @Column({})
+  // @Column({ unique: true })
   @IsEmail()
   email: string;
 

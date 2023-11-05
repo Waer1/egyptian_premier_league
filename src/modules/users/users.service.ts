@@ -23,8 +23,9 @@ export class UsersService {
 
     const newUser = this.userRepositry.create(createUserDto);
     await this.userRepositry.save(newUser);
-    const { password, ...userWithoutPassword } = newUser;
-    return userWithoutPassword;
+
+    delete newUser.password;
+    return newUser;
   }
 
   findAll() {
@@ -56,5 +57,17 @@ export class UsersService {
     }
     await this.userRepositry.delete(user.id);
     return user;
+  }
+
+  async findByUsername(username: string, includePassword = false) {
+    let query = this.userRepositry
+      .createQueryBuilder('user')
+      .where('user.username = :username', { username });
+
+    if (includePassword) {
+      query = query.addSelect('user.password');
+    }
+
+    return query.getOne();
   }
 }

@@ -16,6 +16,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
 
   const swaggerConfig = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('EPL API')
     .setVersion('1.0')
     .build();

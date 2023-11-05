@@ -1,5 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { User } from './user.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  BeforeInsert,
+  BeforeUpdate,
+} from 'typeorm';
 import { Team } from 'src/shared/teams';
 import { NotEquals } from 'class-validator';
 import { Stadium } from './stadum.entity';
@@ -28,12 +34,38 @@ export class Match {
   @ManyToOne(() => Stadium, { cascade: true })
   matchVenue: Stadium;
 
-  @ManyToOne(() => User, { cascade: true })
-  mainReferee: User;
+  @Column()
+  mainReferee: string;
 
-  @ManyToOne(() => User, { cascade: true })
-  firstLinesman: User;
+  @Column()
+  firstLinesman: string;
 
-  @ManyToOne(() => User, { cascade: true })
-  secondLinesman: User;
+  @Column()
+  secondLinesman: string;
+
+  @Column({})
+  reservedSeats: string;
+
+  reservedSeatsArray: boolean[][];
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  convertSeatsArrayToString() {
+    this.reservedSeats = JSON.stringify(this.reservedSeatsArray);
+  }
+
+  getSeatsArray(): boolean[][] {
+    const seatsArray: boolean[][] = Array(this.matchVenue.rows)
+      .fill(null)
+      .map(() => Array(this.matchVenue.seatsPerRow).fill(false));
+
+    if (this.reservedSeats) {
+      const reservedSeatsArray = JSON.parse(this.reservedSeats);
+      for (const [rowIndex, columnIndex] of reservedSeatsArray) {
+        seatsArray[rowIndex][columnIndex] = true;
+      }
+    }
+
+    return seatsArray;
+  }
 }
