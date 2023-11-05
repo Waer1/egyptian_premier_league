@@ -8,5 +8,6 @@ import { Stadium } from 'src/entities/stadum.entity';
   imports: [TypeOrmModule.forFeature([Stadium])],
   controllers: [StadiumsController],
   providers: [StadiumsService],
+  exports: [StadiumsService],
 })
 export class StadiumsModule {}

@@ -1,14 +1,8 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsString,
-  IsDate,
-  ValidateNested,
-} from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsEnum, IsNotEmpty, IsString, IsDateString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Team } from 'src/shared/teams';
-import { Stadium } from 'src/entities/stadum.entity';
+import { IsNotEqualTo } from 'src/shared/IsNotEqual';
+import { IsTimeString } from 'src/shared/IsTimeString';
 
 export class CreateMatchDto {
   @ApiProperty({ description: 'The home team' })
@@ -19,18 +13,24 @@ export class CreateMatchDto {
   @ApiProperty({ description: 'The away team' })
   @IsEnum(Team)
   @IsNotEmpty()
+  @IsNotEqualTo('homeTeam', {
+    message: 'Away team must not be the same as the home team',
+  })
   awayTeam: Team;
 
-  @ApiProperty({ description: 'The date and time of the match' })
-  @IsDate()
+  @ApiProperty({ description: 'The date of the match' })
+  @IsDateString()
   @IsNotEmpty()
-  dateAndTime: Date;
+  date: string;
 
-  @ApiProperty({ description: 'The venue of the match', type: Stadium })
-  @ValidateNested()
-  @Type(() => Stadium)
+  @ApiProperty({ description: 'The time of the match' })
   @IsNotEmpty()
-  matchVenue: Stadium;
+  @IsTimeString({ message: 'Time must be a string in the format "HH:mm"' })
+  time: string;
+
+  @ApiProperty({ description: 'The venue of the match', type: String })
+  @IsNotEmpty()
+  stauimName: string;
 
   @ApiProperty({ description: 'The main referee' })
   @IsString()
