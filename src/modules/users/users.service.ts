@@ -1,26 +1,59 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(User) private userRepositry: Repository<User>,
+  ) {}
+
+  async create(createUserDto: CreateUserDto) {
+    const { username } = createUserDto;
+    const existingUser = await this.userRepositry.findOne({
+      where: { username },
+    });
+
+    if (existingUser) {
+      throw new BadRequestException('Username already exists');
+    }
+
+    const newUser = this.userRepositry.create(createUserDto);
+    await this.userRepositry.save(newUser);
+    return newUser;
   }
 
   findAll() {
-    return `This action returns all users`;
+    return this.userRepositry.find({});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    const user = await this.userRepositry.findOne({ where: { id } });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepositry.findOne({ where: { id } });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    Object.assign(user, updateUserDto);
+    await this.userRepositry.save(user);
+    return user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    const user = await this.userRepositry.findOne({ where: { id } });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    await this.userRepositry.delete(user.id);
+    return user;
   }
 }
