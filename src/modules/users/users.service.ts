@@ -23,7 +23,8 @@ export class UsersService {
 
     const newUser = this.userRepositry.create(createUserDto);
     await this.userRepositry.save(newUser);
-    return newUser;
+    const { password, ...userWithoutPassword } = newUser;
+    return userWithoutPassword;
   }
 
   findAll() {

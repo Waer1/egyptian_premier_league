@@ -1,26 +1,56 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateStadiumDto } from './dto/create-stadium.dto';
 import { UpdateStadiumDto } from './dto/update-stadium.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Stadium } from 'src/entities/stadum.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class StadiumsService {
-  create(createStadiumDto: CreateStadiumDto) {
-    return 'This action adds a new stadium';
+  constructor(
+    @InjectRepository(Stadium) private stadiumRepository: Repository<Stadium>,
+  ) {}
+
+  async create(createStadiumDto: CreateStadiumDto) {
+    const { name } = createStadiumDto;
+    const existingStadium = this.stadiumRepository.findOne({ where: { name } });
+
+    if (existingStadium) {
+      throw new BadRequestException('Stadium already exists');
+    }
+    const newStadium = this.stadiumRepository.create(createStadiumDto);
+    await this.stadiumRepository.save(newStadium);
+    return newStadium;
   }
 
   findAll() {
-    return `This action returns all stadiums`;
+    return this.stadiumRepository.find({});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} stadium`;
+  async findOne(id: number) {
+    const stadium = await this.stadiumRepository.findOne({ where: { id } });
+    if (!stadium) {
+      throw new BadRequestException('Stadium not found');
+    }
+    return stadium;
   }
 
-  update(id: number, updateStadiumDto: UpdateStadiumDto) {
-    return `This action updates a #${id} stadium`;
+  async update(id: number, updateStadiumDto: UpdateStadiumDto) {
+    const stadium = await this.stadiumRepository.findOne({ where: { id } });
+    if (!stadium) {
+      throw new BadRequestException('Stadium not found');
+    }
+    Object.assign(stadium, updateStadiumDto);
+    this.stadiumRepository.save(stadium);
+    return stadium;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} stadium`;
+  async remove(id: number) {
+    const stadium = await this.stadiumRepository.findOne({ where: { id } });
+    if (!stadium) {
+      throw new BadRequestException('Stadium not found');
+    }
+    this.stadiumRepository.delete(stadium);
+    return stadium;
   }
 }
