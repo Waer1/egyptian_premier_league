@@ -9,9 +9,6 @@ export class Stadium {
   name: string;
 
   @Column()
-  shape: string;
-
-  @Column()
   rows: number;
 
   @Column()

@@ -9,11 +9,6 @@ export class CreateStadiumDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsString()
-  shape: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
   @IsInt()
   @Min(1)
   rows: number;
