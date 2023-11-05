@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from 'src/entities/user.entity';
+import { User, UserStatus } from 'src/entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -69,5 +69,15 @@ export class UsersService {
     }
 
     return query.getOne();
+  }
+
+  async approve(id: number) {
+    const user = await this.userRepositry.findOne({ where: { id } });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    user.status = UserStatus.APPROVED;
+    await this.userRepositry.save(user);
+    return user;
   }
 }

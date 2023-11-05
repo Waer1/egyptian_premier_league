@@ -6,11 +6,19 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { SITE_ADMINGuard } from 'src/guards/siteAdmin.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -42,6 +50,8 @@ export class UsersController {
     return await this.usersService.create(createUserDto);
   }
 
+  @UseGuards(SITE_ADMINGuard)
+  @ApiBearerAuth('SITE_ADMINGuard')
   @Get()
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Return all users.' })
@@ -49,6 +59,8 @@ export class UsersController {
     return await this.usersService.findAll();
   }
 
+  @UseGuards(SITE_ADMINGuard)
+  @ApiBearerAuth('SITE_ADMINGuard')
   @Get(':id')
   @ApiOperation({ summary: 'Get a user by id' })
   @ApiResponse({ status: 200, description: 'Return the user.' })
@@ -56,6 +68,8 @@ export class UsersController {
     return await this.usersService.findOne(+id);
   }
 
+  @UseGuards(SITE_ADMINGuard)
+  @ApiBearerAuth('SITE_ADMINGuard')
   @Patch(':id')
   @ApiOperation({ summary: 'Update a user' })
   @ApiResponse({ status: 200, description: 'User successfully updated.' })
@@ -81,6 +95,8 @@ export class UsersController {
     return await this.usersService.update(+id, updateUserDto);
   }
 
+  @UseGuards(SITE_ADMINGuard)
+  @ApiBearerAuth('SITE_ADMINGuard')
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a user' })
   @ApiResponse({ status: 200, description: 'User successfully deleted.' })
@@ -88,10 +104,21 @@ export class UsersController {
     return await this.usersService.remove(+id);
   }
 
+  @UseGuards(SITE_ADMINGuard)
+  @ApiBearerAuth('SITE_ADMINGuard')
   @Get('username/:username')
   @ApiOperation({ summary: 'Get a user by username' })
   @ApiResponse({ status: 200, description: 'Return the user.' })
   async findByUsername(@Param('username') username: string) {
     return await this.usersService.findByUsername(username);
+  }
+
+  @UseGuards(SITE_ADMINGuard)
+  @ApiBearerAuth('SITE_ADMINGuard')
+  @Patch(':id/approve')
+  @ApiOperation({ summary: 'Approve a user' })
+  @ApiResponse({ status: 200, description: 'User successfully approved.' })
+  async approve(@Param('id') id: string) {
+    return await this.usersService.approve(+id);
   }
 }

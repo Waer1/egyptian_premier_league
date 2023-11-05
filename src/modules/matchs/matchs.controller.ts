@@ -6,17 +6,27 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { MatchsService } from './matchs.service';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { EFA_MANAGERGuard } from 'src/guards/EFA_MANAGER.guard';
 
 @ApiTags('matchs')
 @Controller('matchs')
 export class MatchsController {
   constructor(private readonly matchsService: MatchsService) {}
 
+  @UseGuards(EFA_MANAGERGuard)
+  @ApiBearerAuth('EFA_MANAGERGuard')
   @Post()
   @ApiOperation({ summary: 'Create match' })
   @ApiResponse({
@@ -42,6 +52,8 @@ export class MatchsController {
     return this.matchsService.findOne(+id);
   }
 
+  @UseGuards(EFA_MANAGERGuard)
+  @ApiBearerAuth('EFA_MANAGERGuard')
   @Patch(':id')
   @ApiOperation({ summary: 'Update match' })
   @ApiResponse({
@@ -53,6 +65,8 @@ export class MatchsController {
     return this.matchsService.update(+id, updateMatchDto);
   }
 
+  @UseGuards(EFA_MANAGERGuard)
+  @ApiBearerAuth('EFA_MANAGERGuard')
   @Delete(':id')
   @ApiOperation({ summary: 'Delete match' })
   @ApiResponse({

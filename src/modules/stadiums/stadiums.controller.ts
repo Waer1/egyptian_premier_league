@@ -6,17 +6,27 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { StadiumsService } from './stadiums.service';
 import { CreateStadiumDto } from './dto/create-stadium.dto';
 import { UpdateStadiumDto } from './dto/update-stadium.dto';
+import { EFA_MANAGERGuard } from 'src/guards/EFA_MANAGER.guard';
 
 @ApiTags('stadiums')
 @Controller('stadiums')
 export class StadiumsController {
   constructor(private readonly stadiumsService: StadiumsService) {}
 
+  @UseGuards(EFA_MANAGERGuard)
+  @ApiBearerAuth('EFA_MANAGERGuard')
   @Post()
   @ApiOperation({ summary: 'Create a new stadium' })
   @ApiResponse({ status: 201, description: 'Stadium successfully created.' })
@@ -46,12 +56,16 @@ export class StadiumsController {
   }
 
   @Get(':id')
+  @UseGuards(EFA_MANAGERGuard)
+  @ApiBearerAuth('EFA_MANAGERGuard')
   @ApiOperation({ summary: 'Get a stadium by id' })
   @ApiResponse({ status: 200, description: 'Return the stadium.' })
   async findOne(@Param('id') id: string) {
     return await this.stadiumsService.findOne(+id);
   }
 
+  @UseGuards(EFA_MANAGERGuard)
+  @ApiBearerAuth('EFA_MANAGERGuard')
   @Patch(':id')
   @ApiOperation({ summary: 'Update a stadium' })
   @ApiResponse({ status: 200, description: 'Stadium successfully updated.' })
@@ -76,6 +90,8 @@ export class StadiumsController {
     return await this.stadiumsService.update(+id, updateStadiumDto);
   }
 
+  @UseGuards(EFA_MANAGERGuard)
+  @ApiBearerAuth('EFA_MANAGERGuard')
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a stadium' })
   @ApiResponse({ status: 200, description: 'Stadium successfully deleted.' })
