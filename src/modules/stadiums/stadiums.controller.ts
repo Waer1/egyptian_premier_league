@@ -19,13 +19,14 @@ import { StadiumsService } from './stadiums.service';
 import { CreateStadiumDto } from './dto/create-stadium.dto';
 import { UpdateStadiumDto } from './dto/update-stadium.dto';
 import { EFA_MANAGERGuard } from 'src/guards/EFA_MANAGER.guard';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @ApiTags('stadiums')
 @Controller('stadiums')
 export class StadiumsController {
   constructor(private readonly stadiumsService: StadiumsService) {}
 
-  @UseGuards(EFA_MANAGERGuard)
+  @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
   @ApiBearerAuth('EFA_MANAGERGuard')
   @Post()
   @ApiOperation({ summary: 'Create a new stadium' })
@@ -56,7 +57,6 @@ export class StadiumsController {
   }
 
   @Get(':id')
-  @UseGuards(EFA_MANAGERGuard)
   @ApiBearerAuth('EFA_MANAGERGuard')
   @ApiOperation({ summary: 'Get a stadium by id' })
   @ApiResponse({ status: 200, description: 'Return the stadium.' })
@@ -64,7 +64,7 @@ export class StadiumsController {
     return await this.stadiumsService.findOne(+id);
   }
 
-  @UseGuards(EFA_MANAGERGuard)
+  @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
   @ApiBearerAuth('EFA_MANAGERGuard')
   @Patch(':id')
   @ApiOperation({ summary: 'Update a stadium' })
@@ -90,7 +90,7 @@ export class StadiumsController {
     return await this.stadiumsService.update(+id, updateStadiumDto);
   }
 
-  @UseGuards(EFA_MANAGERGuard)
+  @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
   @ApiBearerAuth('EFA_MANAGERGuard')
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a stadium' })

@@ -9,6 +9,7 @@ import {
 import { Team } from 'src/shared/teams';
 import { NotEquals } from 'class-validator';
 import { Stadium } from './stadum.entity';
+import { BadRequestException } from '@nestjs/common';
 
 @Entity()
 export class Match {
@@ -70,5 +71,48 @@ export class Match {
     }
 
     return seatsArray;
+  }
+
+  isValidAndAvailableSeat(row: number, column: number): boolean {
+    const seatsArray = this.getSeatsArray();
+
+    // Check if the row and column are within the valid range
+    if (
+      row < 0 ||
+      row >= seatsArray.length ||
+      column < 0 ||
+      column >= seatsArray[0].length
+    ) {
+      throw new BadRequestException('Invalid seat');
+    }
+
+    // Check if the seat is available
+    if (seatsArray[row][column]) {
+      return false;
+    }
+
+    return true;
+  }
+
+  reserveSeat(row: number, column: number) {
+    const seatsArray = this.getSeatsArray();
+
+    if (!this.isValidAndAvailableSeat(row, column)) {
+      throw new BadRequestException('Seat is already reserved');
+    }
+
+    seatsArray[row][column] = true;
+    this.reservedSeatsArray = seatsArray;
+  }
+
+  unresereveSeat(row: number, column: number) {
+    const seatsArray = this.getSeatsArray();
+
+    if (!this.isValidAndAvailableSeat(row, column)) {
+      throw new BadRequestException('Seat is not reserved');
+    }
+
+    seatsArray[row][column] = false;
+    this.reservedSeatsArray = seatsArray;
   }
 }

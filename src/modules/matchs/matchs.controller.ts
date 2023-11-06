@@ -19,13 +19,14 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { EFA_MANAGERGuard } from 'src/guards/EFA_MANAGER.guard';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @ApiTags('matchs')
 @Controller('matchs')
 export class MatchsController {
   constructor(private readonly matchsService: MatchsService) {}
 
-  @UseGuards(EFA_MANAGERGuard)
+  @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
   @ApiBearerAuth('EFA_MANAGERGuard')
   @Post()
   @ApiOperation({ summary: 'Create match' })
@@ -52,7 +53,7 @@ export class MatchsController {
     return this.matchsService.findOne(+id);
   }
 
-  @UseGuards(EFA_MANAGERGuard)
+  @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
   @ApiBearerAuth('EFA_MANAGERGuard')
   @Patch(':id')
   @ApiOperation({ summary: 'Update match' })
@@ -65,7 +66,7 @@ export class MatchsController {
     return this.matchsService.update(+id, updateMatchDto);
   }
 
-  @UseGuards(EFA_MANAGERGuard)
+  @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
   @ApiBearerAuth('EFA_MANAGERGuard')
   @Delete(':id')
   @ApiOperation({ summary: 'Delete match' })

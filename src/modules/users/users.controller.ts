@@ -19,12 +19,14 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { SITE_ADMINGuard } from 'src/guards/siteAdmin.guard';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({ status: 201, description: 'User successfully created.' })
@@ -50,7 +52,7 @@ export class UsersController {
     return await this.usersService.create(createUserDto);
   }
 
-  @UseGuards(SITE_ADMINGuard)
+  @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
   @ApiBearerAuth('SITE_ADMINGuard')
   @Get()
   @ApiOperation({ summary: 'Get all users' })
@@ -59,7 +61,7 @@ export class UsersController {
     return await this.usersService.findAll();
   }
 
-  @UseGuards(SITE_ADMINGuard)
+  @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
   @ApiBearerAuth('SITE_ADMINGuard')
   @Get(':id')
   @ApiOperation({ summary: 'Get a user by id' })
@@ -68,7 +70,7 @@ export class UsersController {
     return await this.usersService.findOne(+id);
   }
 
-  @UseGuards(SITE_ADMINGuard)
+  @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
   @ApiBearerAuth('SITE_ADMINGuard')
   @Patch(':id')
   @ApiOperation({ summary: 'Update a user' })
@@ -95,7 +97,7 @@ export class UsersController {
     return await this.usersService.update(+id, updateUserDto);
   }
 
-  @UseGuards(SITE_ADMINGuard)
+  @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
   @ApiBearerAuth('SITE_ADMINGuard')
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a user' })
@@ -104,7 +106,7 @@ export class UsersController {
     return await this.usersService.remove(+id);
   }
 
-  @UseGuards(SITE_ADMINGuard)
+  @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
   @ApiBearerAuth('SITE_ADMINGuard')
   @Get('username/:username')
   @ApiOperation({ summary: 'Get a user by username' })
@@ -113,7 +115,7 @@ export class UsersController {
     return await this.usersService.findByUsername(username);
   }
 
-  @UseGuards(SITE_ADMINGuard)
+  @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
   @ApiBearerAuth('SITE_ADMINGuard')
   @Patch(':id/approve')
   @ApiOperation({ summary: 'Approve a user' })

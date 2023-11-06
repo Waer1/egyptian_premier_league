@@ -14,7 +14,10 @@ export class Reservation {
   match: Match;
 
   @Column()
-  seatNumber: number;
+  seatRaw: number;
+
+  @Column()
+  seatColum: number;
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   reservationTime: Date;

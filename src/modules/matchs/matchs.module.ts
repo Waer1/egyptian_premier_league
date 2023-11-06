@@ -9,5 +9,6 @@ import { StadiumsModule } from '../stadiums/stadiums.module';
   imports: [TypeOrmModule.forFeature([Match]), StadiumsModule],
   controllers: [MatchsController],
   providers: [MatchsService],
+  exports: [MatchsService],
 })
 export class MatchsModule {}
