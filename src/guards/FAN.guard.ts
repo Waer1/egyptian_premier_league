@@ -20,6 +20,7 @@ export class FANGuard implements CanActivate {
     if (user.role !== UserRole.FAN) {
       return false;
     }
+
     return true;
   }
 }

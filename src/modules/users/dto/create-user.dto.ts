@@ -8,7 +8,6 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender, UserRole } from 'src/entities/user.entity';
-import { Transform } from 'class-transformer';
 import { CreateDateColumn } from 'typeorm';
 
 export class CreateUserDto {
@@ -49,4 +48,9 @@ export class CreateUserDto {
   @ApiProperty()
   @IsEmail()
   email: string;
+
+  @ApiProperty({ enum: UserRole })
+  @IsEnum(UserRole)
+  @IsNotEmpty()
+  role: UserRole;
 }

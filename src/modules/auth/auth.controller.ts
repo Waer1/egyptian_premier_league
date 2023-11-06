@@ -44,6 +44,12 @@ export class AuthController {
           password: '12345678Ww+',
         },
       },
+      'Site Admin': {
+        value: {
+          username: 'admin',
+          password: 'Admin1234+',
+        },
+      },
     },
   })
   async login(@Request() req) {

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -20,6 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { SITE_ADMINGuard } from 'src/guards/siteAdmin.guard';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { UserRole } from 'src/entities/user.entity';
 
 @ApiTags('users')
 @Controller('users')
@@ -44,6 +46,7 @@ export class UsersController {
           gender: 'male',
           city: 'shoubra',
           email: 'elwaeryousef@gmail.com',
+          role: UserRole.FAN,
         },
       },
     },
@@ -53,16 +56,16 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
-  @ApiBearerAuth('SITE_ADMINGuard')
-  @Get()
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Return all users.' })
+  @Get()
   async findAll() {
     return await this.usersService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
-  @ApiBearerAuth('SITE_ADMINGuard')
+  @ApiBearerAuth()
   @Get(':id')
   @ApiOperation({ summary: 'Get a user by id' })
   @ApiResponse({ status: 200, description: 'Return the user.' })
@@ -71,7 +74,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
-  @ApiBearerAuth('SITE_ADMINGuard')
+  @ApiBearerAuth()
   @Patch(':id')
   @ApiOperation({ summary: 'Update a user' })
   @ApiResponse({ status: 200, description: 'User successfully updated.' })
@@ -89,6 +92,7 @@ export class UsersController {
           gender: 'female',
           city: 'newCity',
           email: 'newEmail@example.com',
+          role: UserRole.FAN,
         },
       },
     },
@@ -98,7 +102,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
-  @ApiBearerAuth('SITE_ADMINGuard')
+  @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a user' })
   @ApiResponse({ status: 200, description: 'User successfully deleted.' })
@@ -107,7 +111,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
-  @ApiBearerAuth('SITE_ADMINGuard')
+  @ApiBearerAuth()
   @Get('username/:username')
   @ApiOperation({ summary: 'Get a user by username' })
   @ApiResponse({ status: 200, description: 'Return the user.' })
@@ -116,7 +120,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
-  @ApiBearerAuth('SITE_ADMINGuard')
+  @ApiBearerAuth()
   @Patch(':id/approve')
   @ApiOperation({ summary: 'Approve a user' })
   @ApiResponse({ status: 200, description: 'User successfully approved.' })

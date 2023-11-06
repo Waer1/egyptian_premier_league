@@ -9,6 +9,7 @@ export class SITE_ADMINGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
+    console.log(user);
 
     if (user.role !== UserRole.SITE_ADMIN) {
       return false;

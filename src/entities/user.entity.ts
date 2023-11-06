@@ -36,7 +36,7 @@ export class User {
   @Column({ select: false })
   password: string;
 
-  @Column()
+  @Column({})
   firstName: string;
 
   @Column()

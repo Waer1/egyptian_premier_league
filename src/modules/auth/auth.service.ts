@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { comparePasswords } from 'src/shared/encryption.util';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/entities/user.entity';
+import { User, UserStatus } from 'src/entities/user.entity';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Injectable()
@@ -27,11 +27,22 @@ export class AuthService {
       throw new UnauthorizedException('Invalid username or password');
     }
 
+    if (logininUser.status === UserStatus.PENDING) {
+      throw new UnauthorizedException(
+        'Your account is Created but not approved yet',
+      );
+    }
+
     return logininUser;
   }
 
   async login(user: User) {
-    const payload = { id: user.id, username: user.username, role: user.role };
+    const payload = {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      isApproved: user.status,
+    };
     return {
       access_token: this.jwtService.sign(payload),
     };
@@ -39,6 +50,9 @@ export class AuthService {
 
   async signup(user: CreateUserDto) {
     const newUser = await this.usersService.create(user);
-    return this.login(newUser);
-  }
+    return {
+      message: 'User has been created successfully but waiting for approval from site admin',
+      user: newUser,
+    };
+    }
 }
