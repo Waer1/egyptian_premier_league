@@ -155,7 +155,10 @@ function ResponsiveAppBar(props:UserState) {
                 </Box>:
                 <IconButton 
                 // onClick={()=>window.location.pathname="profile"} 
-                sx={{ p: 0 }}>
+                sx={{ p: 0,borderRadius:1 }}>
+                    <Box sx={{color:"white" ,pr:1}}>
+                    Ahmed Hosny
+                    </Box>
                     <Avatar alt="" src="/broken-image.jpg" />
                 </IconButton>}
             </Box>
