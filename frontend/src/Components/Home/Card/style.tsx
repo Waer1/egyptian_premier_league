@@ -18,7 +18,7 @@ export const Team1 = styled(Box)(() => ({
 export const Team2 = styled(Box)(() => ({
     display:"flex",
     alignItems:"center",
-    justifyContent:"right",
+    justifyContent:"right   ",
     width:"50%",
     }));
 export const TeamName = styled(Box)(() => ({
