@@ -51,8 +51,18 @@ export class AuthService {
   async signup(user: CreateUserDto) {
     const newUser = await this.usersService.create(user);
     return {
-      message: 'User has been created successfully but waiting for approval from site admin',
+      message:
+        'User has been created successfully but waiting for approval from site admin',
       user: newUser,
     };
+  }
+
+  validateToken(token: string) {
+    try {
+      const payload = this.jwtService.verify(token);
+      return payload;
+    } catch (err) {
+      throw new UnauthorizedException('Invalid token');
     }
+  }
 }

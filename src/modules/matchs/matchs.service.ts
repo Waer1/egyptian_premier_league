@@ -1,11 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Search } from '@nestjs/common';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Match } from 'src/entities/match.entity';
-import { Between, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { StadiumsService } from '../stadiums/stadiums.service';
-import { endOfDay, parseISO, startOfDay } from 'date-fns';
+import { Console } from 'console';
 
 @Injectable()
 export class MatchsService {
@@ -49,7 +49,12 @@ export class MatchsService {
   }
 
   async findOne(id: number) {
-    const match = this.matchRepositry.findOne({ where: { id } });
+    const match = await this.matchRepositry.findOne({
+      where: { id: id },
+      relations: {
+        matchVenue: true,
+      },
+    });
     if (!match) {
       throw new BadRequestException('Match not found');
     }
@@ -75,5 +80,42 @@ export class MatchsService {
 
     await this.matchRepositry.remove(match);
     return match;
+  }
+
+  async doesMatchExist(id: number) {
+    const matchExist = await this.matchRepositry.exist({ where: { id } });
+    return matchExist;
+  }
+
+  async reserveSeat(matchId: number, row: number, column: number) {
+    const match = await this.findOne(matchId);
+
+    const seatsArray = match.getSeatsArray();
+
+    if (!match.isValidAndAvailableSeat(row, column)) {
+      throw new BadRequestException('Seat is already reserved');
+    }
+
+    seatsArray[row][column] = true;
+
+    match.reservedSeats = match.minimizeSeatsArray(seatsArray);
+
+    // Save the updated Match entity to the database
+    await this.matchRepositry.save(match);
+  }
+
+  async unresereveSeat(matchId: number, row: number, column: number) {
+    const match = await this.findOne(matchId);
+
+    const seatsArray = match.getSeatsArray();
+
+    if (match.isValidAndAvailableSeat(row, column)) {
+      throw new BadRequestException('Seat is not reserved');
+    }
+
+    seatsArray[row][column] = false;
+
+    match.reservedSeats = match.minimizeSeatsArray(seatsArray);
+    await this.matchRepositry.save(match);
   }
 }

@@ -3,8 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  BeforeInsert,
-  BeforeUpdate,
+  BaseEntity,
 } from 'typeorm';
 import { Team } from 'src/shared/teams';
 import { NotEquals } from 'class-validator';
@@ -12,7 +11,7 @@ import { Stadium } from './stadum.entity';
 import { BadRequestException } from '@nestjs/common';
 
 @Entity()
-export class Match {
+export class Match extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -47,15 +46,13 @@ export class Match {
   @Column()
   secondLinesman: string;
 
-  @Column({ default: '' })
+  @Column({ type: 'mediumtext' })
   reservedSeats: string;
 
-  reservedSeatsArray: boolean[][];
-
-  @BeforeInsert()
-  @BeforeUpdate()
-  convertSeatsArrayToString() {
-    this.reservedSeats = JSON.stringify(this.reservedSeatsArray);
+  minimizeSeatsArray(seatsArray: boolean[][]): string {
+    return seatsArray
+      .map((row) => row.map((value) => (value ? '1' : '0')).join(''))
+      .join(',');
   }
 
   getSeatsArray(): boolean[][] {
@@ -64,15 +61,15 @@ export class Match {
       .map(() => Array(this.matchVenue.seatsPerRow).fill(false));
 
     if (this.reservedSeats) {
-      const reservedSeatsArray = JSON.parse(this.reservedSeats);
-      for (const [rowIndex, columnIndex] of reservedSeatsArray) {
-        seatsArray[rowIndex][columnIndex] = true;
-      }
+      const reservedSeatsArray = this.reservedSeats
+        .split(',')
+        .map((row) => row.split('').map((value) => value === '1'));
+
+      return reservedSeatsArray;
     }
 
     return seatsArray;
   }
-
   isValidAndAvailableSeat(row: number, column: number): boolean {
     const seatsArray = this.getSeatsArray();
 
@@ -92,27 +89,5 @@ export class Match {
     }
 
     return true;
-  }
-
-  reserveSeat(row: number, column: number) {
-    const seatsArray = this.getSeatsArray();
-
-    if (!this.isValidAndAvailableSeat(row, column)) {
-      throw new BadRequestException('Seat is already reserved');
-    }
-
-    seatsArray[row][column] = true;
-    this.reservedSeatsArray = seatsArray;
-  }
-
-  unresereveSeat(row: number, column: number) {
-    const seatsArray = this.getSeatsArray();
-
-    if (!this.isValidAndAvailableSeat(row, column)) {
-      throw new BadRequestException('Seat is not reserved');
-    }
-
-    seatsArray[row][column] = false;
-    this.reservedSeatsArray = seatsArray;
   }
 }

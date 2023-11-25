@@ -27,7 +27,7 @@ export class ReservationService {
     const user = await this.userService.findOne(userId);
     const match = await this.matchService.findOne(createReservationDto.matchId);
 
-    // check if the user is already reserved a seat in this match
+    // check if the seat is valid and available
     if (
       !match.isValidAndAvailableSeat(
         createReservationDto.seatRaw,
@@ -36,19 +36,20 @@ export class ReservationService {
     ) {
       throw new BadRequestException('Seat is already reserved');
     }
-
+    let reservation: Reservation;
     // start the transaction
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
       // reserve the seat
-      const reservation = this.reservationRepository.create({
+      reservation = this.reservationRepository.create({
         user: user,
         match: match,
         ...createReservationDto,
       });
-      match.reserveSeat(
+      this.matchService.reserveSeat(
+        createReservationDto.matchId,
         createReservationDto.seatRaw,
         createReservationDto.seatColum,
       );
@@ -64,6 +65,7 @@ export class ReservationService {
     } finally {
       await queryRunner.release();
     }
+    return reservation;
   }
 
   findAll() {
@@ -73,6 +75,10 @@ export class ReservationService {
   async findOne(id: number) {
     const reservation = await this.reservationRepository.findOne({
       where: { id },
+      relations: {
+        match: true,
+        user: true,
+      },
     });
     if (!reservation) {
       throw new BadRequestException('Reservation not found');
@@ -115,7 +121,11 @@ export class ReservationService {
     await queryRunner.startTransaction();
     try {
       // reserve the seat
-      match.unresereveSeat(reservation.seatRaw, reservation.seatColum);
+      this.matchService.unresereveSeat(
+        updateReservationDto.matchId,
+        reservation.seatRaw,
+        reservation.seatColum,
+      );
       Object.assign(reservation, updateReservationDto);
 
       await queryRunner.manager.save(reservation);
@@ -141,6 +151,12 @@ export class ReservationService {
         'You are not the owner of this reservation',
       );
     }
+
+    await this.matchService.unresereveSeat(
+      reservation.match.id,
+      reservation.seatRaw,
+      reservation.seatColum,
+    );
 
     return await this.reservationRepository.remove(reservation);
   }
