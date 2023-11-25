@@ -8,7 +8,7 @@ import Home from './Components/Home/Home';
 function App() {
   return (
     <div className="App">
-      <ResponsiveAppBar state={3}/>
+      <ResponsiveAppBar state={0}/>
       <Container>
         <Order/>
         <Home/>

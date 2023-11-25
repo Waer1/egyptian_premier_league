@@ -11,6 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
+import Login from './Login/Login';
 
 type UserState={
     state:number
@@ -143,7 +144,7 @@ function ResponsiveAppBar(props:UserState) {
             <Box sx={{ flexGrow: 0, display:"flex" }}>
             {!pages ?
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                    {guest?.map((page) => (
+                    {/* {guest?.map((page) => (
                     <Button
                         key={page}
                         onClick={handleCloseNavMenu}
@@ -151,7 +152,8 @@ function ResponsiveAppBar(props:UserState) {
                     >
                         {page}
                     </Button>
-                    ))}
+                    ))} */}
+                    <Login/>
                 </Box>:
                 <IconButton 
                 // onClick={()=>window.location.pathname="profile"} 
