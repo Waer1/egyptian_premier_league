@@ -13,12 +13,15 @@ import MenuItem from '@mui/material/MenuItem';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import Login from './Login/Login';
 import SignUp from './SignUp/SignUp';
+import AddStadium from './Staduim/AddStadium';
+import AddMatch from './AddMatch/AddMatch';
 
 type UserState={
     state:number
 }
 function ResponsiveAppBar(props:UserState) {
 
+    const state=props.state;
     const fan :string[] = ["Home",'profile', 'Reservation'];
     const manger :string[] = ["Home",'profile', 'Add match', 'Add stadium'];
     const admin :string[] = ["Home",'Profile', 'pending', 'users'];
@@ -131,19 +134,38 @@ function ResponsiveAppBar(props:UserState) {
                 Egyption Premuim League
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                {pages?.map((page) => (
-                <Button
+            
+            {
+            // Fan
+            state===1?
+            <>
+                {/* <Button
                     key={page}
                     onClick={handleCloseNavMenu}
                     sx={{ my: 2, color: 'white', display: 'block' }}
                 >
                     {page}
-                </Button>
-                ))}
+                </Button> */}
+                
+            </>
+            :
+            // Manager
+            state===2?
+            <>
+                
+                <AddMatch/>
+                <AddStadium/>
+            </>
+            :
+            // Admin
+            <>
+                
+            </>
+                }
             </Box>
 
             <Box sx={{ flexGrow: 0, display:"flex" }}>
-            {!pages ?
+            {(state===0) ?
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                     <Login/>
                     <SignUp/>

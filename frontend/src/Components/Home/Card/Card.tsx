@@ -1,6 +1,7 @@
 import { Avatar } from "@mui/material";
 import { Container, Team1, Team2, TeamName } from "./style";
 import Time from "./Time/Time";
+import PopUpMatch from "../../PopUpMatch/PopUpMatch";
 
 type Team = {
     team1: string;
@@ -12,13 +13,17 @@ type Team = {
 }
 type CardProps = {
     team: Team;
-    key: number;
+    index: number;
 }
+
 export default function Card(props:CardProps) {
     const team = props.team;
-    const key=props.key;
+    const index=props.index;
+    const displayCard=()=>{
+        document.getElementById("match"+index)?.click();
+    }
     return (
-        <Container key={key}>
+        <Container key={index} onClick={displayCard}>
             <Team1>
                 <Avatar sx={{ width: 85, height: 85 ,mx:4}} alt={team.team1} src={team.logo1} />
                 <TeamName>
