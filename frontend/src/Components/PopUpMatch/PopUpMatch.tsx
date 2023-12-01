@@ -5,17 +5,13 @@ import Button from '@mui/material/Button';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import { Avatar, FormControl,Input,InputLabel,Typography } from '@mui/material';
 import {Style, Team1, Team2, TeamName} from './style';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Time from '../Home/Card/Time/Time';
 
 type Match = {
     team1: string;
     team2: string;
-    time: string;
-    date: string;
+    date: Date;
+    time: Date;
     logo1: string;
     logo2: string;
     ref:string;
@@ -76,7 +72,7 @@ export default function PopUpMatch(props:CardProps) {
                         {match.team1}
                     </TeamName>
                 </Team1>
-                <Time time={match.time} data={match.date}/>
+                <Time data={match.date} time={match.time}/>
                 <Team2>
                     <TeamName>
                         {match.team2}

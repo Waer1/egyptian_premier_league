@@ -73,7 +73,9 @@ function ResponsiveAppBar(props:UserState) {
                 letterSpacing: '.3rem',
                 color: 'inherit',
                 textDecoration: 'none',
+                cursor: 'pointer',
                 }}
+                onClick={()=>window.location.pathname='/'}
             >
                 EPL
             </Typography>
@@ -134,44 +136,62 @@ function ResponsiveAppBar(props:UserState) {
                 Egyption Premuim League
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            
-            {
-            // Fan
-            state===1?
-            <>
-                {/* <Button
-                    key={page}
-                    onClick={handleCloseNavMenu}
+            <Button
+                    onClick={()=>{
+                        handleCloseNavMenu();
+                        window.location.pathname='/';}}
                     sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                    {page}
-                </Button> */}
+                    Home
+            </Button> 
+            {
+            // Fan
+             
+            state===1?
+            <>
+                <Button
+                    onClick={()=>window.location.pathname='profile'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Profile
+                </Button> 
                 
             </>
             :
             // Manager
             state===2?
             <>
-                
+                <Button
+                    onClick={()=>window.location.pathname='profile'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Profile
+                </Button> 
                 <AddMatch/>
                 <AddStadium/>
             </>
             :
             // Admin
             <>
-                
+                <Button
+                    onClick={()=>window.location.pathname='profile'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Profile
+                </Button> 
             </>
                 }
             </Box>
 
             <Box sx={{ flexGrow: 0, display:"flex" }}>
+                
             {(state===0) ?
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                     <Login/>
                     <SignUp/>
                 </Box>:
                 <IconButton 
-                // onClick={()=>window.location.pathname="profile"} 
+                onClick={()=>window.location.pathname="profile"} 
                 sx={{ p: 0,borderRadius:1 }}>
                     <Box sx={{color:"white" ,pr:1}}>
                     Ahmed Hosny

@@ -4,7 +4,7 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import { FormControl,Input,InputLabel,Typography } from '@mui/material';
-import {Style} from './style';
+import {Btn, Style} from './style';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -13,17 +13,35 @@ import dayjs from 'dayjs';
 import moment from 'moment';
 import { DesktopTimePicker } from '@mui/x-date-pickers';
 
+type Match = {
+    team1: string;
+    team2: string;
+    date: Date;
+    time: Date;
+    logo1: string;
+    logo2: string;
+    ref:string;
+    first:string;
+    second:string;
+    stadium:string;
+}
+type CardProps = {
+    match: Match;
+    index: number;
+}
 
-export default function AddMatch() {
+export default function EditMatch(props:CardProps) {
+    const match = props.match;
+    const index=props.index
   const [open, setOpen] = React.useState(false);
-  const [home, setHom] = React.useState("");
-  const [away, setAway] = React.useState("");
-  const [ref, setRef] = React.useState("");
-  const [fisrt, setFirst] = React.useState("");
-  const [second, setSecond] = React.useState("");
-  const [stadium, setStadium] = React.useState("");
-  const [time, setTime] = React.useState(new Date());
-  const [time2, setTime2] = React.useState(new Date());
+  const [home, setHom] = React.useState(match.team1);
+  const [away, setAway] = React.useState(match.team2);
+  const [ref, setRef] = React.useState(match.ref);
+  const [fisrt, setFirst] = React.useState(match.first);
+  const [second, setSecond] = React.useState(match.second);
+  const [stadium, setStadium] = React.useState(match.stadium);
+  const [time, setTime] = React.useState(match.date);
+  const [time2, setTime2] = React.useState(match.time);
 
   const handleOpen = () => {
     setOpen(true);
@@ -35,10 +53,13 @@ export default function AddMatch() {
   const Submit=()=>{  
     console.log("Submit");
   }
+  const Cancel=()=>{  
+    console.log("Cancel");
+  }
 
   return (
     <div>
-      <Button onClick={handleOpen} sx={{ my: 2, color: 'white', display: 'block' }} id='Signup'>Add Match</Button>
+      <Btn onClick={handleOpen} id={`Edit+${index}`}>Edit Match</Btn>
       <Modal
         open={open}
         onClose={handleClose}
@@ -159,49 +180,48 @@ export default function AddMatch() {
 
             <Box sx={{display:"flex" , alignItems:"end",justifyContent:'space-evenly',width: 500,my:1}}>
             
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-    <Box sx={{boxSizing:"border-box",width:"40%",display:'flex',justifyContent:'center',alignItems:'center'}}>
-                <DemoContainer components={['DatePicker']}>
-                <DatePicker
-                    label="Date of match"
-                    defaultValue={dayjs(moment(new Date()).format('YYYY-MM-DD'))}
-                    onChange={(newValue) => 
-                    {
-                        if(newValue!==null) setTime(newValue.toDate());
-                    }    
-                }
-            />
-                </DemoContainer>
-            </Box>
-    <Box sx={{boxSizing:"border-box",width:"40%",display:'flex',justifyContent:'center',alignItems:'center'}}>
-
-                <DemoContainer
-                    components={[
-                        'TimePicker',
-                        'MobileTimePicker',
-                        'DesktopTimePicker',
-                        'StaticTimePicker',
-                    ]}
-                    >
-                    <DemoItem >
-                        <DesktopTimePicker defaultValue={dayjs(time2.toISOString().slice(0, 16))} label="Time for match"
-                        onChange={
-                            (newValue) => 
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Box sx={{boxSizing:"border-box",width:"40%",display:'flex',justifyContent:'center',alignItems:'center'}}>
+                        <DemoContainer components={['DatePicker']}>
+                        <DatePicker
+                            label="Date of Birth"
+                            value={dayjs(moment(time).format('YYYY-MM-DD'))}
+                            onChange={(newValue) => 
                             {
-                                if(newValue!==null) setTime2(newValue.toDate());
-                            }
+                                if(newValue!==null) setTime(newValue.toDate());
+                            }         
                         }
-                        />
-                    </DemoItem>
-                </DemoContainer>
-                         </Box>       
-            </LocalizationProvider>
+                    />
+                        </DemoContainer>
+                    </Box>
+            <Box sx={{boxSizing:"border-box",width:"40%",display:'flex',justifyContent:'center',alignItems:'center'}}>
 
-    </Box>
-            <Box sx={{display:"flex" , alignItems:"end",justifyContent:'space-evenly',width: 500,my:2}}>
-                <Box sx={{width:"40%",display:'flex',alignItems:'baseline',justifyContent:"center",my:1 }}>
+                        <DemoContainer
+                            components={[
+                                'TimePicker',
+                                'MobileTimePicker',
+                                'DesktopTimePicker',
+                                'StaticTimePicker',
+                            ]}
+                            >
+                            <DemoItem >
+                                <DesktopTimePicker defaultValue={dayjs(time2.toISOString().slice(0, 16))} label="Time for match"
+                                onChange={
+                                    (newValue) => 
+                                    {
+                                        if(newValue!==null) setTime2(newValue.toDate());
+                                    }
+                                }
+                                />
+                            </DemoItem>
+                        </DemoContainer>
+                                 </Box>       
+                    </LocalizationProvider>
+
+            </Box>
+            <Box sx={{width:"80%",display:'flex',alignItems:'baseline',justifyContent:"space-evenly",my:1}}>
                     <Button variant="contained"  onClick={Submit}>Submit</Button>
-                </Box>
+                    <Button variant="contained"  onClick={Cancel}>Cancel</Button>
             </Box>
         </Box>
       </Modal>
