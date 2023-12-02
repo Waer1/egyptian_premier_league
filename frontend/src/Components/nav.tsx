@@ -155,6 +155,12 @@ function ResponsiveAppBar(props:UserState) {
                 >
                     Profile
                 </Button> 
+                <Button
+                    onClick={()=>window.location.pathname='reservation'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Reservation
+                </Button> 
                 
             </>
             :

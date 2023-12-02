@@ -4,7 +4,7 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import { Avatar, FormControl,Input,InputLabel,Typography } from '@mui/material';
-import {Style, Team1, Team2, TeamName} from './style';
+import {Delete, Style, Team1, Team2, TeamName} from './style';
 import Time from '../Home/Card/Time/Time';
 
 type Match = {
@@ -22,11 +22,18 @@ type Match = {
 type CardProps = {
     match: Match;
     index: number;
+    state:number;
+    row?:number;
+    column?:number;
 }
 
 export default function PopUpMatch(props:CardProps) {
     const match = props.match;
     const index=props.index
+    const state=props.state
+    const row=props.row;
+    const column=props.column;
+
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -80,7 +87,7 @@ export default function PopUpMatch(props:CardProps) {
                     <Avatar sx={{ width: 85, height: 85 ,mx:4}} alt={match.team2} src={match.logo2} />
                 </Team2>
             </Box>
-            <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',width: 500,my:1}}>
+            <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',width: 550,my:1}}>
                 <Box sx={{width:"40%"}}>
                 <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
                     <InputLabel htmlFor="Stadium">Stadium</InputLabel>
@@ -104,8 +111,8 @@ export default function PopUpMatch(props:CardProps) {
                     </FormControl>
                 </Box>    
             </Box>   
-            <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',width: 500,my:1}}>
-                <Box sx={{width:"40%"}}>
+            <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',width: 550,my:1}}>
+            <Box sx={{width:"40%"}}>
                     <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
                         <InputLabel htmlFor="First Name">First Lin mane</InputLabel>
                         <Input
@@ -129,7 +136,18 @@ export default function PopUpMatch(props:CardProps) {
                         />
                     </FormControl>
                 </Box>
+                
             </Box>   
+
+            {(state===4) && 
+                <>
+                    <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',width: 550,my:1}}>
+                        <Box sx={{width:"40%"}}>
+                            <Delete> Cancle Row:{row} column:{column}</Delete>
+                        </Box>
+                    </Box>
+                </>
+            }
         </Box>
       </Modal>
     </div>

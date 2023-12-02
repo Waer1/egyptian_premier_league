@@ -1,5 +1,5 @@
 import { Avatar, Box } from "@mui/material";
-import { BOX, Container, Delete, Team1, Team2, TeamName } from "./style";
+import { BOX, Btn, Container, Delete, Team1, Team2, TeamName } from "./style";
 import Time from "./Time/Time";
 import EditMatch from "../../EditMatch/EditMatch";
 
@@ -27,6 +27,8 @@ type CardProps = {
     index: number;
     match:Match;
     state:number;
+    row?:number;
+    column?:number;
 }
 
 export default function Card(props:CardProps) {
@@ -34,6 +36,8 @@ export default function Card(props:CardProps) {
     const index=props.index;
     const state=props.state;
     const match=props.match;
+    const row=props.row;
+    const column=props.column;
     console.log(state);
     const displayCard=()=>{
         document.getElementById("match"+index)?.click();
@@ -61,6 +65,16 @@ export default function Card(props:CardProps) {
                 <>
                 <EditMatch match={match} index={index}/>
                 <Delete >Delete</Delete>
+                </>
+                }
+                {(state===1) && 
+                <>
+                <Btn> reserve </Btn>
+                </>
+                }
+                {(state===4) && 
+                <>
+                <Delete> Cancle Row:{row} column:{column}</Delete>
                 </>
                 }
             </Box>

@@ -1,4 +1,4 @@
-import { Box, styled } from "@mui/material";
+import { Box, Button, styled } from "@mui/material";
 
 export const Style = {
     position: 'absolute' as 'absolute',
@@ -27,4 +27,15 @@ export const Team2 = styled(Box)(() => ({
     }));
 export const TeamName = styled(Box)(() => ({
     fontSize:20,
+    }));
+export const Delete = styled(Button)(() => ({
+    display: 'block',
+    // margin:0,
+    backgroundColor:"white",
+    color:'red',
+    ':hover':{
+        backgroundColor:"red",
+        color:'white' 
+    },
+    margin:"0px 5px",
     }));

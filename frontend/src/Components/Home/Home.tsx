@@ -71,7 +71,7 @@ const teams:Team[] =matches.map((match,index) => {
             {
                 matches.map((match,index) => {
                     return <>
-                            <PopUpMatch match={match} key={index} index={index}/>
+                            <PopUpMatch match={match} key={index} index={index} state={0}/>
                             <Card key={index} team={teams[index]} index={index} match={match} state={state}/>
                         </>
                 })
