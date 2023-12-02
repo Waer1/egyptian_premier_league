@@ -179,6 +179,18 @@ function ResponsiveAppBar(props:UserState) {
                 >
                     Profile
                 </Button> 
+                <Button
+                    onClick={()=>window.location.pathname='Users'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Users
+                </Button> 
+                <Button
+                    onClick={()=>window.location.pathname='Pending'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Pending
+                </Button> 
             </>
                 }
             </Box>
