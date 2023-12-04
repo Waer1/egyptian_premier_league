@@ -4,6 +4,8 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import {Btn, Delete, Style} from './style';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
+import { FormControl, IconButton, Input, InputAdornment, InputLabel } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 type Coordinates = [number, number]; // [row, column]
 type Props = {
@@ -143,6 +145,15 @@ export default function TakeSeat(props:Props) {
     setOpen(false);
   }
   
+  const [showPassword, setShowPassword] = React.useState(false);
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+    };
+const [cardNumber, setCardNumber] = React.useState('');
+const [password, setPassword] = React.useState('');
 return (
     <div>
       <Btn onClick={handleOpen} id='Reserve'>Reserve</Btn>
@@ -154,6 +165,46 @@ return (
       >
         <Box sx={{ ...Style, width: `${numColumns * 48}px`,mt:2, pt:3}}>
             {renderSeats()}
+            <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',my:1}}>
+            <Box >
+            <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
+                <InputLabel htmlFor="Card Numbe">Card Numbe</InputLabel>
+                <Input
+                    id="Card Number"
+                    type='text' 
+                    defaultValue={cardNumber}
+                    onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
+                        setCardNumber(e.target.value);
+                    }}
+                />
+            </FormControl>
+            </Box>
+
+            <Box >
+            <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
+                <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+                <Input
+                    id="standard-adornment-password"
+                    type={showPassword ? 'text' : 'password'}
+                    defaultValue={password}
+                    onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
+                        setPassword(e.target.value);
+                    }}
+                    endAdornment={
+                    <InputAdornment position="end">
+                        <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                    </InputAdornment>
+                    }
+                />
+            </FormControl>
+        </Box>
+        </Box>
             <Box sx={{display:'flex', justifyContent:'space-evenly',my:1}}>
                 <Btn  sx={{m:1}} onClick={Confirm}>Confirm</Btn>
                 <Delete sx={{m:1}} onClick={Cancel}>Cancel</Delete>
