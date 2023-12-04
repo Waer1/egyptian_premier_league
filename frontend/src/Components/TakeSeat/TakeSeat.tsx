@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
-import {Btn, Style} from './style';
+import {Btn, Delete, Style} from './style';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 
 type Coordinates = [number, number]; // [row, column]
@@ -95,16 +95,26 @@ export default function TakeSeat(props:Props) {
                     seats.push(
                         <EventSeatIcon
                         key={`icon-${i}-${j}`}
+                        id={`icon-${i}-${j}`}
                         sx={{
                             fontSize: '3rem',
-                            color: '#1976d2',
+                            color:  (willReserve.findIndex(item => item[0] === point[0] && item[1] === point[1])) ===-1 ? '#1976d2': '#eadb06' ,
                             position: 'absolute',
                             top: `${i * 48}px`,
                             left: `${j * 48}px`,
                             zIndex: '2',
                             cursor: 'pointer',
                         }}
-                        onClick={() => willReserve.push(point)}
+                        onClick={() => {
+                            setWillReserve(prevWillReserve => {
+                                const index = prevWillReserve.findIndex(item => item[0] === point[0] && item[1] === point[1]);
+                                if (index !== -1) {
+                                    return prevWillReserve.filter(item => item[0] !== point[0] || item[1] !== point[1]);
+                                } else {
+                                    return [...prevWillReserve, point];
+                                }
+                            });
+                        }}
                         /> 
                     );
                 }
@@ -112,15 +122,23 @@ export default function TakeSeat(props:Props) {
             }
         }
         }
-    
         return (
         <div style={{ position: 'relative', width: `${numColumns * 48}px`, height: `${numRows * 48}px` }}>
             {seats}
         </div>
         );
     };
-  
+    React.useEffect(() => {
+        renderSeats()
+    }
+    , [willReserve]);
+    
   const Confirm = () => {
+    console.log(willReserve);
+    setOpen(false);
+  }
+  const Cancel = () => {
+    setWillReserve([]);
     console.log(willReserve);
     setOpen(false);
   }
@@ -137,7 +155,8 @@ return (
         <Box sx={{ ...Style, width: `${numColumns * 48}px`,mt:2, pt:3}}>
             {renderSeats()}
             <Box sx={{display:'flex', justifyContent:'space-evenly',my:1}}>
-                <Button variant="contained" sx={{m:1}} onClick={Confirm}>Confirm</Button>
+                <Btn  sx={{m:1}} onClick={Confirm}>Confirm</Btn>
+                <Delete sx={{m:1}} onClick={Cancel}>Cancel</Delete>
             </Box>
         </Box>
       </Modal>

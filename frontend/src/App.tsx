@@ -162,13 +162,13 @@ function App() {
     <Router>
       <div className="App">
                   
-      <ResponsiveAppBar state={2}/>
+      <ResponsiveAppBar state={1}/>
       
       <Routes>
         <Route path="/" element={<>
           <Container>
             <Order/>
-            <Home state={2}/>
+            <Home state={1}/>
           </Container>
 
           </>

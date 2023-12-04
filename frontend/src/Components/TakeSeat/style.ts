@@ -23,3 +23,15 @@ color:'#1976d2',
 }
 
 }));
+export const Delete = styled(Button)(() => ({
+    display: 'block',
+    // margin:0,
+    textTransform:"none",
+    backgroundColor:"white",
+    color:'red',
+    ':hover':{
+        backgroundColor:"red",
+        color:'white' 
+    },
+    margin:"0px 5px",
+    }));

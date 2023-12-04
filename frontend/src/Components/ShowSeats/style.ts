@@ -21,5 +21,4 @@ color:'#eadb06',
     backgroundColor:"#eadb06",
     color:'white' 
 }
-
 }));
