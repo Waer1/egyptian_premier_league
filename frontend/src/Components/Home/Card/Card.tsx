@@ -1,7 +1,9 @@
 import { Avatar, Box } from "@mui/material";
-import { BOX, Btn, Container, Delete, Team1, Team2, TeamName } from "./style";
+import { BOX, Container, Delete, Team1, Team2, TeamName } from "./style";
 import Time from "./Time/Time";
 import EditMatch from "../../EditMatch/EditMatch";
+import TakeSeat from "../../TakeSeat/TakeSeat";
+import ShowSeats from "../../ShowSeats/ShowSeats";
 
 type Team = {
     team1: string;
@@ -30,7 +32,18 @@ type CardProps = {
     row?:number;
     column?:number;
 }
+type Coordinates = [number, number]; // [row, column]
 
+const reserved: Coordinates[] = [
+    [0, 1],
+    [0, 2],
+    [0, 3],
+    [1, 9],
+    [2, 1],
+    [2, 2],
+    [2, 0],
+    [2, 10],
+];
 export default function Card(props:CardProps) {
     const team = props.team;
     const index=props.index;
@@ -38,7 +51,6 @@ export default function Card(props:CardProps) {
     const match=props.match;
     const row=props.row;
     const column=props.column;
-    console.log(state);
     const displayCard=()=>{
         document.getElementById("match"+index)?.click();
     }
@@ -65,11 +77,12 @@ export default function Card(props:CardProps) {
                 <>
                 <EditMatch match={match} index={index}/>
                 <Delete >Delete</Delete>
+                <ShowSeats Rows={8} Columns={15} reserved={reserved}/>
                 </>
                 }
                 {(state===1) && 
                 <>
-                <Btn> reserve </Btn>
+                <TakeSeat Rows={8} Columns={15} reserved={reserved}/>
                 </>
                 }
                 {(state===4) && 
