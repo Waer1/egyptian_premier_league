@@ -55,7 +55,7 @@ export default function Profile(props:UserProps) {
     }
     return (
     <Container>
-        <Box sx={{display:"flex" , alignItems:"center",my:1 ,width:"100%" }}>
+        <Box sx={{display:"flex" , alignItems:"center",my:1 ,width:"100%",justifyContent:'center' }}>
                 <SportsSoccerIcon sx={{fontSize:'3rem',color:'#1976d2'}}/>
                 <Typography
                 variant="h6"
