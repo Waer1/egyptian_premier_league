@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import Button from '@mui/material/Button';
 import {Btn, Delete, Style} from './style';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 import { FormControl, IconButton, Input, InputAdornment, InputLabel } from '@mui/material';
@@ -137,6 +136,7 @@ export default function TakeSeat(props:Props) {
     
   const Confirm = () => {
     console.log(willReserve);
+    setWillReserve([])
     setOpen(false);
   }
   const Cancel = () => {

@@ -16,7 +16,7 @@ export default function Order() {
   return (
     <Container>
         <Header>
-        <SportsSoccerIcon fontSize='medium' sx={{paddingRight:1}}/> Order
+        <SportsSoccerIcon fontSize='medium' sx={{paddingRight:1}}/> Standing
         </Header>
         <ListContainer dense >
         {teams?.map((value:string,index:number) => {

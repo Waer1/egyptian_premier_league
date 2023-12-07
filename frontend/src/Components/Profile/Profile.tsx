@@ -30,7 +30,7 @@ type UserProps={
 export default function Profile(props:UserProps) {
     const constInfo=props.user;
     // var UserInfo=constInfo;
-    var UserInfo:UserInfo=JSON.parse(JSON.stringify(constInfo));
+    const [UserInfo,setUserInfo]=React.useState<UserInfo>(JSON.parse(JSON.stringify(constInfo)));
     const [showPassword, setShowPassword] = React.useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -39,15 +39,15 @@ export default function Profile(props:UserProps) {
       event.preventDefault();
     };
 
-    const Cancel=()=>{
-        UserInfo=constInfo;
+    const Cancel=async()=>{
+        await setUserInfo(constInfo);
         if(UserInfo!==constInfo)
         {
             window.location.reload();
         }
-
     }
     const Save=()=>{
+
         if(UserInfo!==constInfo)
         {
             window.location.reload();
@@ -55,7 +55,7 @@ export default function Profile(props:UserProps) {
     }
     return (
     <Container>
-        <Box sx={{display:"flex" , alignItems:"center",my:1}}>
+        <Box sx={{display:"flex" , alignItems:"center",my:1 ,width:"100%" }}>
                 <SportsSoccerIcon sx={{fontSize:'3rem',color:'#1976d2'}}/>
                 <Typography
                 variant="h6"
@@ -74,7 +74,7 @@ export default function Profile(props:UserProps) {
                     EPL
                 </Typography>
             </Box>
-        <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',my:1}}>
+        <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',my:1 ,width:"100%"}}>
             <Box sx={{width:"50%"}}>
             <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
                 <InputLabel htmlFor="User Name">User Name</InputLabel>
@@ -114,7 +114,7 @@ export default function Profile(props:UserProps) {
             </FormControl>
         </Box>
         </Box>
-        <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',my:1}}>
+        <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',my:1,width:"100%"}}>
         <Box sx={{width:"50%"}}>
 
             <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
@@ -145,9 +145,9 @@ export default function Profile(props:UserProps) {
         </Box>
         </Box>
 
-        <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',my:1,width:'500px'}}>
+        <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',my:1,width:"100%"}}>
         <Box sx={{width:"40%" }}>
-        <FormControl sx={{display:'flex',justifyContent:'flex-start'}}>
+        <FormControl >
                 <FormLabel id="demo-row-radio-buttons-group-label">Role</FormLabel>
                     <RadioGroup
                         defaultValue={UserInfo.role}
@@ -165,7 +165,7 @@ export default function Profile(props:UserProps) {
             </Box>
         <Box sx={{width:"40%"}}>
             
-            <FormControl>
+            <FormControl >
                 <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
                     <RadioGroup
                         defaultValue={UserInfo.gender}
@@ -183,7 +183,7 @@ export default function Profile(props:UserProps) {
         </Box>
         </Box>
 
-        <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',my:1}}>
+        <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',my:1,width:"100%"}}>
         <Box sx={{width:"50%"}}>
             
             <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
@@ -201,7 +201,7 @@ export default function Profile(props:UserProps) {
             
             <Box sx={{width:"50%"}}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker', 'DatePicker']}>
+                <DemoContainer components={['DatePicker', 'DatePicker']}sx={{marginLeft: '20%'}}>
                     <DatePicker
                     label="Date of Birth"
                     value={dayjs(moment(UserInfo.dateOfBirth).format('YYYY-MM-DD'))}
@@ -215,7 +215,7 @@ export default function Profile(props:UserProps) {
                 </LocalizationProvider>
             </Box>
         </Box>
-        <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',my:1}}>
+        <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',my:1,width:"100%"}}>
         <Box sx={{width:"50%"}}>
             
             <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">

@@ -160,20 +160,16 @@ const user:UserInfo={
 function App() {
   return (
     <Router>
-      <div className="App">
-                  
-      <ResponsiveAppBar state={1}/>
-      
+      <div className="App">         
+      <ResponsiveAppBar state={3}/>
       <Routes>
         <Route path="/" element={<>
           <Container>
             <Order/>
-            <Home state={1}/>
+            <Home state={3}/>
           </Container>
-
           </>
         } />
-
         <Route path="/profile" element={<>
           <Profile user={user}/>
           </>

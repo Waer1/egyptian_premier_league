@@ -82,7 +82,7 @@ export default function Card(props:CardProps) {
                 }
                 {(state===1) && 
                 <>
-                <TakeSeat Rows={8} Columns={15} reserved={reserved}/>
+                <TakeSeat Rows={10} Columns={10} reserved={reserved}/>
                 </>
                 }
                 {(state===4) && 
