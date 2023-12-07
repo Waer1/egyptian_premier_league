@@ -118,4 +118,15 @@ export class MatchsService {
     match.reservedSeats = match.minimizeSeatsArray(seatsArray);
     await this.matchRepositry.save(match);
   }
+
+  async getMatchesBetweenDates(
+    startDate: Date,
+    endDate: Date,
+  ): Promise<Match[]> {
+    return this.matchRepositry
+      .createQueryBuilder('match')
+      .where('match.date >= :startDate', { startDate })
+      .andWhere('match.date <= :endDate', { endDate })
+      .getMany();
+  }
 }

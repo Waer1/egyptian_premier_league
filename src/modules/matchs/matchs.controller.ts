@@ -17,6 +17,7 @@ import {
   ApiResponse,
   ApiParam,
   ApiBearerAuth,
+  ApiBody,
 } from '@nestjs/swagger';
 import { EFA_MANAGERGuard } from 'src/guards/EFA_MANAGER.guard';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
@@ -77,5 +78,40 @@ export class MatchsController {
   @ApiParam({ name: 'id', required: true, description: 'The id of the match' })
   remove(@Param('id') id: string) {
     return this.matchsService.remove(+id);
+  }
+
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        startDate: {
+          type: 'string',
+          format: 'date',
+          description: 'Start date in YYYY-MM-DD format',
+        },
+        endDate: {
+          type: 'string',
+          format: 'date',
+          description: 'End date in YYYY-MM-DD format',
+        },
+      },
+      required: ['startDate', 'endDate'],
+    },
+  })
+  
+  @Post('date-range')
+  @ApiOperation({ summary: 'Get matches between dates' })
+  @ApiResponse({
+    status: 200,
+    description: 'Matches between the provided dates.',
+  })
+  getMatchesBetweenDates(
+    @Body('startDate') startDate: string,
+    @Body('endDate') endDate: string,
+  ) {
+    return this.matchsService.getMatchesBetweenDates(
+      new Date(startDate),
+      new Date(endDate),
+    );
   }
 }
