@@ -11,12 +11,17 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
+import Login from './Login/Login';
+import SignUp from './SignUp/SignUp';
+import AddStadium from './Staduim/AddStadium';
+import AddMatch from './AddMatch/AddMatch';
 
 type UserState={
     state:number
 }
 function ResponsiveAppBar(props:UserState) {
 
+    const state=props.state;
     const fan :string[] = ["Home",'profile', 'Reservation'];
     const manger :string[] = ["Home",'profile', 'Add match', 'Add stadium'];
     const admin :string[] = ["Home",'Profile', 'pending', 'users'];
@@ -68,7 +73,9 @@ function ResponsiveAppBar(props:UserState) {
                 letterSpacing: '.3rem',
                 color: 'inherit',
                 textDecoration: 'none',
+                cursor: 'pointer',
                 }}
+                onClick={()=>window.location.pathname='/'}
             >
                 EPL
             </Typography>
@@ -129,32 +136,80 @@ function ResponsiveAppBar(props:UserState) {
                 Egyption Premuim League
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                {pages?.map((page) => (
-                <Button
-                    key={page}
-                    onClick={handleCloseNavMenu}
+            <Button
+                    onClick={()=>{
+                        handleCloseNavMenu();
+                        window.location.pathname='/';}}
                     sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                    {page}
-                </Button>
-                ))}
+                    Home
+            </Button> 
+            {
+            // Fan
+             
+            state===1?
+            <>
+                <Button
+                    onClick={()=>window.location.pathname='profile'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Profile
+                </Button> 
+                <Button
+                    onClick={()=>window.location.pathname='reservation'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Reservation
+                </Button> 
+                
+            </>
+            :
+            // Manager
+            state===2?
+            <>
+                <Button
+                    onClick={()=>window.location.pathname='profile'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Profile
+                </Button> 
+                <AddMatch/>
+                <AddStadium/>
+            </>
+            :
+            // Admin
+            <>
+                <Button
+                    onClick={()=>window.location.pathname='profile'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Profile
+                </Button> 
+                <Button
+                    onClick={()=>window.location.pathname='Users'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Users
+                </Button> 
+                <Button
+                    onClick={()=>window.location.pathname='Pending'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Pending
+                </Button> 
+            </>
+                }
             </Box>
 
             <Box sx={{ flexGrow: 0, display:"flex" }}>
-            {!pages ?
+                
+            {(state===0) ?
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                    {guest?.map((page) => (
-                    <Button
-                        key={page}
-                        onClick={handleCloseNavMenu}
-                        sx={{ my: 2, color: 'white', display: 'block' }}
-                    >
-                        {page}
-                    </Button>
-                    ))}
+                    <Login/>
+                    <SignUp/>
                 </Box>:
                 <IconButton 
-                // onClick={()=>window.location.pathname="profile"} 
+                onClick={()=>window.location.pathname="profile"} 
                 sx={{ p: 0,borderRadius:1 }}>
                     <Box sx={{color:"white" ,pr:1}}>
                     Ahmed Hosny
