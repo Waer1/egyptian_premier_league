@@ -123,7 +123,7 @@ export class MatchsService {
     startDate: Date,
     endDate: Date,
   ): Promise<Match[]> {
-    return this.matchRepository
+    return this.matchRepositry
       .createQueryBuilder('match')
       .where('match.date >= :startDate', { startDate })
       .andWhere('match.date <= :endDate', { endDate })
