@@ -14,26 +14,30 @@ import AddStadium from './Staduim/AddStadium';
 import AddMatch from './AddMatch/AddMatch';
 import { useSelector } from 'react-redux';
 import { filterState } from '../State';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import { useDispatch } from "react-redux";
 import {bindActionCreators} from 'redux';
 import { actionsCreators } from "../State/index";
+import { Icon } from '@mui/material';
+import { changeFilter } from '../State/ActionCreators';
 
 // type UserState={
 //     state:number
 // }
 function ResponsiveAppBar() {
-    
     const state= useSelector((state:filterState) => state.state);
+    console.log(state);
     const token= useSelector((state:filterState) => state.token);
     const dispatch = useDispatch();
-    const {ChangeState} = bindActionCreators(actionsCreators,dispatch);
+    const {ChangeState,ChangeToken} = bindActionCreators(actionsCreators,dispatch);
 
     const fan :string[] = ["Home",'profile', 'Reservation'];
     const manger :string[] = ["Home",'profile', 'Add match', 'Add stadium'];
     const admin :string[] = ["Home",'Profile', 'pending', 'users'];
     const guest :string[] = ['Log in','Sign up'];
     const [pages, setPages] = React.useState<null | string[]>(null);
+    ChangeState(1);
    
   
     React.useEffect (()=>{
@@ -156,14 +160,20 @@ function ResponsiveAppBar() {
                     <Login/>
                     <SignUp/>
                 </Box>:
-                <IconButton 
-                onClick={()=>window.location.pathname="profile"} 
-                sx={{ p: 0,borderRadius:1 }}>
-                    <Box sx={{color:"white" ,pr:1}}>
-                    Ahmed Hosny
-                    </Box>
-                    <Avatar alt="" src="/broken-image.jpg" />
-                </IconButton>}
+                <>
+                    <IconButton 
+                    onClick={()=>window.location.pathname="profile"} 
+                    sx={{ p: 0,borderRadius:1 }}>
+                        <Box sx={{color:"white" ,pr:1}}>
+                        Ahmed Hosny
+                        </Box>
+                        <Avatar alt="" src="/broken-image.jpg" />
+                    </IconButton>
+                    <IconButton>
+                        <LogoutIcon sx={{color:"white",fontSize:35,mr:-2}}onClick={()=>{ChangeState(0);ChangeToken("");window.location.pathname="/"}}/>
+                    </IconButton>
+                </>
+                }
             </Box>
             </Toolbar>
         </Container>

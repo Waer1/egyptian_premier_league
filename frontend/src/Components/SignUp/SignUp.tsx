@@ -45,7 +45,7 @@ export default function SignUp() {
   };
 
   const dispatch = useDispatch();
-  const {ChangeState,ChangeToken} = bindActionCreators(actionsCreators,dispatch);
+  const {ChangeState} = bindActionCreators(actionsCreators,dispatch);
 
   const LogIN=()=>{
     handleClose();
@@ -55,8 +55,7 @@ export default function SignUp() {
   const SignUP=()=>{  
     // TODO:
     // send request to backend to check if the user is valid and fet the state 
-    ChangeState(1);
-    ChangeToken("sss")
+    ChangeState(0);
     console.log("Sign up");
   }
 
