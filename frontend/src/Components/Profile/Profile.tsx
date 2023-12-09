@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container } from './style';
 import { Box, Button, FormControl, FormControlLabel, FormLabel, IconButton, Input, InputAdornment, InputLabel, Radio, RadioGroup, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -27,8 +27,20 @@ type UserInfo={
 type UserProps={
     user:UserInfo
 }
-export default function Profile(props:UserProps) {
-    const constInfo=props.user;
+const user:UserInfo={
+    userName:"AhmedHosny2024",
+    password:"123456789",
+    firstName:"Ahmed",
+    lastName:"Hosny",
+    email:"eng.ahemdhosny2024@gmail.com",
+    gender:"male",
+    role:"Fan",
+    city:"Cairo",
+    dateOfBirth:dayjs(moment(new Date("2000-01-01")).format('YYYY-MM-DD')).toDate(),
+    address:"Masr el gadeda"
+}
+export default function Profile() {
+    const constInfo : UserInfo =user;
     // var UserInfo=constInfo;
     const [UserInfo,setUserInfo]=React.useState<UserInfo>(JSON.parse(JSON.stringify(constInfo)));
     const [showPassword, setShowPassword] = React.useState(false);
@@ -38,7 +50,9 @@ export default function Profile(props:UserProps) {
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
     };
-
+    useEffect(() => {
+       // TODO: send request to backend to get the user info
+    }, [])
     const Cancel=async()=>{
         await setUserInfo(constInfo);
         if(UserInfo!==constInfo)
@@ -47,9 +61,9 @@ export default function Profile(props:UserProps) {
         }
     }
     const Save=()=>{
-
         if(UserInfo!==constInfo)
         {
+            // TODO: send request to backend to save the user info
             window.location.reload();
         }
     }

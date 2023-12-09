@@ -44,6 +44,7 @@ const reserved: Coordinates[] = [
     [2, 0],
     [2, 10],
 ];
+
 export default function Card(props:CardProps) {
     const team = props.team;
     const index=props.index;
@@ -53,6 +54,13 @@ export default function Card(props:CardProps) {
     const column=props.column;
     const displayCard=()=>{
         document.getElementById("match"+index)?.click();
+    }
+
+    const DeleteMatch=()=>{
+        // TODO: send delete action to backend
+    }
+    const DeleteSeat=()=>{
+        // TODO: send delete action to backend
     }
     return (
         <BOX>
@@ -75,8 +83,8 @@ export default function Card(props:CardProps) {
                 
                 {(state===2) && 
                 <>
-                <EditMatch match={match} index={index}/>
-                <Delete >Delete</Delete>
+                <EditMatch match={match} index={index} />
+                <Delete onClick={DeleteMatch}>Delete</Delete>
                 <ShowSeats Rows={8} Columns={15} reserved={reserved}/>
                 </>
                 }
@@ -87,7 +95,7 @@ export default function Card(props:CardProps) {
                 }
                 {(state===4) && 
                 <>
-                <Delete> Cancle Row:{row} column:{column}</Delete>
+                <Delete onClick={DeleteSeat}> Cancle Row:{row} column:{column}</Delete>
                 </>
                 }
             </Box>

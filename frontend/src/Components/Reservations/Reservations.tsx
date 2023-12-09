@@ -2,6 +2,7 @@ import { Container } from "./style";
 import Card from "../Home/Card/Card";
 import Filter from "../Home/Filter/Filter";
 import PopUpMatch from "../PopUpMatch/PopUpMatch";
+import React, { useEffect } from "react";
 
 type Match = {
     team1: string;
@@ -33,9 +34,47 @@ type Team = {
 type TicketProps={
     tickets:Ticket[];
 }
-
-export default function Reservation( props:TicketProps) {
-    const tickets : Ticket[]=props.tickets;
+const tickets2:Ticket[]=[
+    {
+      seatRaw: 1,
+      seatColum: 1,
+      reservationTime: new Date("2020-8-4"),
+      match: {
+        team1: "Al-Ahly",
+        team2: "El-Zamalek",
+        date: new Date("2020-8-4"),
+        time: new Date("2020-8-4"),
+        logo1: "https://material-ui.com/static/images/avatar/1.jpg",
+        logo2: "https://material-ui.com/static/images/avatar/1.jpg",
+        ref:"ref",
+        first:"first",
+        second:"second",
+        stadium:"stadium"
+        },
+    },
+    {
+      seatRaw: 1,
+      seatColum: 1,
+      reservationTime: new Date("2020-8-4"),
+      match: {
+        team1: "Al-Ahly",
+        team2: "El-Zamalek",
+        date: new Date("2020-8-4"),
+        time: new Date("2020-8-4"),
+        logo1: "https://material-ui.com/static/images/avatar/1.jpg",
+        logo2: "https://material-ui.com/static/images/avatar/1.jpg",
+        ref:"ref",
+        first:"first",
+        second:"second",
+        stadium:"stadium"
+        },
+    },
+  ]
+export default function Reservation() {
+    const [tickets,setTickets] =React.useState<Ticket[]>(tickets2);
+    useEffect(() => {
+        // Todo: fetch tickets from backend
+    },[]);
     const teams:Team[] =tickets.map((ticket,index) => {
         const team :Team = {
             team1: ticket.match.team1,

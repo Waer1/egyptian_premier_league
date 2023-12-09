@@ -1,5 +1,7 @@
 import { Typography } from "@mui/material";
 import { BOX, Container, Delete } from "./style";
+import { useEffect } from "react";
+import React from "react";
 
 
 type User={
@@ -11,11 +13,34 @@ type User={
 type UserProps={
     users:User[];
 }
+const users2:User[]=[
+    {
+      firstName:"Ahmed",
+      lastName:"Hosny",
+      email:"eng.ahmedhosny2024@gmail.com",
+      role:"fan",
+    },
+    {
+      firstName:"Ahmed20",
+      lastName:"Hosny20",
+      email:"eng.ahmedhosny2020@gmail.com",
+      role:"fan",
+    },
+    {
+      firstName:"Ahmed10",
+      lastName:"Hosny10",
+      email:"eng.ahmedhosny1010@gmail.com",
+      role:"fan",
+    },
+  ]
 
-export default function Users( props:UserProps) {
-    const users=props.users;
+export default function Users() {
+    const [users,setUsers]=React.useState<User[]>(users2);
+
+    useEffect(() => {
+        // TODO: fetch teams from backend
+    },[]);
     return (
-        // <Box sx={{display:'flex',justifyContent:'flex-start',flexDirection:'column'}}>
 <>
     {users.map((user:User,index:number)=>(
         <BOX key={index}>

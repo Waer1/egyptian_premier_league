@@ -11,3 +11,19 @@ export const changeFilter = (filter:boolean[]) => {
         });
     }
 };
+export const ChangeState = (state:number) => {
+    return (dispatch : Dispatch<Action>) => {
+        dispatch({
+            type: ActionType.CHANGE_STATE,
+            payload: state,
+        });
+    }
+}
+export const ChangeToken = (state:string) => {
+    return (dispatch : Dispatch<Action>) => {
+        dispatch({
+            type: ActionType.CHANGE_TOKEN,
+            payload: state,
+        });
+    }
+}

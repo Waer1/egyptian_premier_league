@@ -1,6 +1,8 @@
 import { Box, Typography } from "@mui/material";
 import { BOX, Btn, Container, Delete } from "./style";
 import moment from "moment";
+import React, { useEffect } from "react";
+import dayjs from "dayjs";
 
 
 type User={
@@ -17,13 +19,37 @@ type User={
 type UserProps={
     users:User[];
 }
-
-export default function Pending( props:UserProps) {
-    const users=props.users;
+const PendingList:User[]=[{
+    firstName:"Ahmed",
+    lastName:"Hosny",
+    email:"eng.ahmedhosny2024@gmail.com",
+    role:"fan",
+    address:"Masr el gadeda",
+    city:"Cairo",
+    dateOfBirth:dayjs(moment(new Date("2000-01-01")).format('YYYY-MM-DD')).toDate(),
+    gender:'male',
+    userName:"AhmedHosny2024"
+  },
+  {
+    firstName:"Ahmed",
+    lastName:"Hosny",
+    email:"eng.ahmedhosny2024@gmail.com",
+    role:"fan",
+    address:"Masr el gadeda",
+    city:"Cairo",
+    dateOfBirth:dayjs(moment(new Date("2000-01-01")).format('YYYY-MM-DD')).toDate(),
+    gender:'male',
+    userName:"AhmedHosny2024"
+  }
+  ]
+export default function Pending( ) {
+    const [users,setUsers]=React.useState<User[]>(PendingList);
     const formattedDate :string[]= users.map((user:User,index:number)=>(
         moment(new Date(user.dateOfBirth)).format('YYYY-MM-DD')
     ))
-
+    useEffect(() => {
+        // TODO: fetch teams from backend
+    },[]);
     return (
         // <Box sx={{display:'flex',justifyContent:'flex-start',flexDirection:'column'}}>
 <>

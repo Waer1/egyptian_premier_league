@@ -7,6 +7,9 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { FormControl, IconButton, Input, InputAdornment, InputLabel, Typography } from '@mui/material';
 import {Style} from './style';
 
+import { useDispatch } from "react-redux";
+import {bindActionCreators} from 'redux';
+import { actionsCreators } from "../../State/index";
 
 export default function Login() {
   const [open, setOpen] = React.useState(false);
@@ -26,8 +29,14 @@ export default function Login() {
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
+  const dispatch = useDispatch();
+  const {ChangeState, ChangeToken} = bindActionCreators(actionsCreators,dispatch);
 
   const LogIN=()=>{
+    // TODO:
+    // send request to backend to check if the user is valid and fet the state 
+    ChangeState(1);
+    ChangeToken("sss");
     console.log("Log in");
   }
   const SignUP=()=>{

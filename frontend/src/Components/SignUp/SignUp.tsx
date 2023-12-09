@@ -11,6 +11,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import { useDispatch } from "react-redux";
+import {bindActionCreators} from 'redux';
+import { actionsCreators } from "../../State/index";
+
 
 export default function SignUp() {
   const [open, setOpen] = React.useState(false);
@@ -40,6 +44,8 @@ export default function SignUp() {
     event.preventDefault();
   };
 
+  const dispatch = useDispatch();
+  const {ChangeState,ChangeToken} = bindActionCreators(actionsCreators,dispatch);
 
   const LogIN=()=>{
     handleClose();
@@ -47,6 +53,10 @@ export default function SignUp() {
     console.log("Log in");
   }
   const SignUP=()=>{  
+    // TODO:
+    // send request to backend to check if the user is valid and fet the state 
+    ChangeState(1);
+    ChangeToken("sss")
     console.log("Sign up");
   }
 

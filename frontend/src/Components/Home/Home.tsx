@@ -1,7 +1,10 @@
+import { useSelector } from "react-redux";
 import PopUpMatch from "../PopUpMatch/PopUpMatch";
 import Card from "./Card/Card";
 import Filter from "./Filter/Filter";
 import { Container } from "./style";
+import { filterState } from "../../State";
+import { useEffect } from "react";
 type Team = {
     team1: string;
     team2: string;
@@ -21,13 +24,6 @@ type Match = {
     second:string;
     stadium:string;
 }
-
-type UserState={
-    state:number
-}
-export default function Home( props:UserState) {
-  const state=props.state;
-
 const matches :Match[]= [
     {
     team1: "Al-Ahly",
@@ -65,6 +61,16 @@ const teams:Team[] =matches.map((match,index) => {
     return team;
 }
 )
+export default function Home( ) {
+    const state= useSelector((state:filterState) => state.state);
+
+
+useEffect(() => {
+    //TODO: get data from backend depends on the filter 
+    // index = filter.indexof(1)
+    // switch(index)
+    console.log(matches);
+}, [])
     return (
         <Container>
             <Filter/>

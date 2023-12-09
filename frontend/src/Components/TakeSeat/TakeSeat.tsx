@@ -136,8 +136,12 @@ export default function TakeSeat(props:Props) {
     
   const Confirm = () => {
     console.log(willReserve);
-    setWillReserve([])
-    setOpen(false);
+    if(willReserve.length!==0 && cardNumber!=='' && password!==''){
+        console.log("Confirm");
+        // TODO: send willReserve to backend
+        setWillReserve([])
+        setOpen(false);
+    }
   }
   const Cancel = () => {
     setWillReserve([]);
