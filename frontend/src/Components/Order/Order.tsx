@@ -9,6 +9,17 @@ import { Container, Header, ListContainer, ListNumber } from './style';
 
 export default function Order() {
   
+    // React.useEffect(() => {
+    //     // TODO: fetch teams from backend
+    //     // fetch('http://localhost:8000/teams')
+    //     // .then(res => res.json())
+    //     // .then(data => {
+    //     //     console.log(data);
+    //     //     setTeams(data);
+    //     // })
+    //     // .catch(err => console.log(err));
+    // }, []);
+
     const [teams,setTeams]=React.useState<string[]>();
     React.useEffect(() => {
         setTeams(["Al-ahly","Zamalek","itihad el sakandary","pyramids"]);
@@ -16,7 +27,7 @@ export default function Order() {
   return (
     <Container>
         <Header>
-        <SportsSoccerIcon fontSize='medium' sx={{paddingRight:1}}/> Order
+        <SportsSoccerIcon fontSize='medium' sx={{paddingRight:1}}/> Standing
         </Header>
         <ListContainer dense >
         {teams?.map((value:string,index:number) => {

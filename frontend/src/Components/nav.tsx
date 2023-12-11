@@ -4,27 +4,49 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
+import Login from './Login/Login';
+import SignUp from './SignUp/SignUp';
+import AddStadium from './Staduim/AddStadium';
+import AddMatch from './AddMatch/AddMatch';
+import { useSelector } from 'react-redux';
+import { filterState } from '../State';
+import LogoutIcon from '@mui/icons-material/Logout';
 
-type UserState={
-    state:number
-}
-function ResponsiveAppBar(props:UserState) {
+import { useDispatch } from "react-redux";
+import {bindActionCreators} from 'redux';
+import { actionsCreators } from "../State/index";
+import { Icon } from '@mui/material';
+import { changeFilter } from '../State/ActionCreators';
+
+// type UserState={
+//     state:number
+// }
+function ResponsiveAppBar() {
+    const state= useSelector((state:filterState) => state.state);
+    console.log(state);
+    const token= useSelector((state:filterState) => state.token);
+    const dispatch = useDispatch();
+    const {ChangeState,ChangeToken} = bindActionCreators(actionsCreators,dispatch);
 
     const fan :string[] = ["Home",'profile', 'Reservation'];
     const manger :string[] = ["Home",'profile', 'Add match', 'Add stadium'];
     const admin :string[] = ["Home",'Profile', 'pending', 'users'];
     const guest :string[] = ['Log in','Sign up'];
     const [pages, setPages] = React.useState<null | string[]>(null);
-
+    ChangeState(1);
+   
+  
+    React.useEffect (()=>{
+        if(token===""){
+            ChangeState(0)
+        }
+    },[])
     React.useEffect(() => {
-        switch (props.state) {
+        switch (state) {
             case 1:
                 setPages(fan);
                 break;
@@ -39,16 +61,8 @@ function ResponsiveAppBar(props:UserState) {
                 break;
         }
     console.log(pages);
-    }, [props.state]);
-    
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-      setAnchorElNav(event.currentTarget);
-    };
-    const handleCloseNavMenu = () => {
-      setAnchorElNav(null);
-    };
+    }, [state]);
+
   
 
     return (
@@ -68,99 +82,98 @@ function ResponsiveAppBar(props:UserState) {
                 letterSpacing: '.3rem',
                 color: 'inherit',
                 textDecoration: 'none',
+                cursor: 'pointer',
                 }}
+                onClick={()=>window.location.pathname='/'}
             >
                 EPL
             </Typography>
-
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-                >
-                <MenuIcon />
-                </IconButton>
-                <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                keepMounted
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{
-                    display: { xs: 'block', md: 'none' },
-                }}
-                >
-                {pages?.map((page) => (
-                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
-                    </MenuItem>
-                ))}
-                </Menu>
-            </Box>
-            <SportsSoccerIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-            <Typography
-                variant="h5"
-                noWrap
-                component="a"
-                href="/"
-                sx={{
-                mr: 2,
-                display: { xs: 'flex', md: 'none' },
-                flexGrow: 1,
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
-                }}
-            >
-                Egyption Premuim League
-            </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                {pages?.map((page) => (
-                <Button
-                    key={page}
-                    onClick={handleCloseNavMenu}
+            <Box sx={{ flexGrow: 1, display: 'flex' }}>
+            <Button
+                    onClick={()=>{
+                        window.location.pathname='/';}}
                     sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                    {page}
-                </Button>
-                ))}
+                    Home
+            </Button> 
+            {
+            // Fan
+             
+            state===1?
+            <>
+                <Button
+                    onClick={()=>window.location.pathname='profile'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Profile
+                </Button> 
+                <Button
+                    onClick={()=>window.location.pathname='reservation'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Reservation
+                </Button> 
+                
+            </>
+            :
+            // Manager
+            state===2?
+            <>
+                <Button
+                    onClick={()=>window.location.pathname='profile'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Profile
+                </Button> 
+                <AddMatch/>
+                <AddStadium/>
+            </>:
+            state===3 ? 
+            // Admin
+            <>
+                <Button
+                    onClick={()=>window.location.pathname='profile'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Profile
+                </Button> 
+                <Button
+                    onClick={()=>window.location.pathname='Users'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Users
+                </Button> 
+                <Button
+                    onClick={()=>window.location.pathname='Pending'}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                    Pending
+                </Button> 
+            </>:null
+                }
             </Box>
 
             <Box sx={{ flexGrow: 0, display:"flex" }}>
-            {!pages ?
+                
+            {(state===0) ?
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                    {guest?.map((page) => (
-                    <Button
-                        key={page}
-                        onClick={handleCloseNavMenu}
-                        sx={{ my: 2, color: 'white', display: 'block' }}
-                    >
-                        {page}
-                    </Button>
-                    ))}
+                    <Login/>
+                    <SignUp/>
                 </Box>:
-                <IconButton 
-                // onClick={()=>window.location.pathname="profile"} 
-                sx={{ p: 0,borderRadius:1 }}>
-                    <Box sx={{color:"white" ,pr:1}}>
-                    Ahmed Hosny
-                    </Box>
-                    <Avatar alt="" src="/broken-image.jpg" />
-                </IconButton>}
+                <>
+                    <IconButton 
+                    onClick={()=>window.location.pathname="profile"} 
+                    sx={{ p: 0,borderRadius:1 }}>
+                        <Box sx={{color:"white" ,pr:1}}>
+                        Ahmed Hosny
+                        </Box>
+                        <Avatar alt="" src="/broken-image.jpg" />
+                    </IconButton>
+                    <IconButton>
+                        <LogoutIcon sx={{color:"white",fontSize:35,mr:-2}}onClick={()=>{ChangeState(0);ChangeToken("");window.location.pathname="/"}}/>
+                    </IconButton>
+                </>
+                }
             </Box>
             </Toolbar>
         </Container>
