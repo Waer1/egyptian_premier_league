@@ -11,9 +11,9 @@ import { ReservationModule } from './modules/reservation/reservation.module';
   imports: [
     EnvModule,
     DatabaseModule,
+    AuthModule,
     UsersModule,
     StadiumsModule,
-    AuthModule,
     MatchsModule,
     ReservationModule,
   ],

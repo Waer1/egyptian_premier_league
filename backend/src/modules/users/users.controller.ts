@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -21,6 +22,7 @@ import {
 import { SITE_ADMINGuard } from 'src/guards/siteAdmin.guard';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { UserRole } from 'src/entities/user.entity';
+import { FANGuard } from 'src/guards/FAN.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -28,31 +30,49 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
-  @Post()
-  @ApiOperation({ summary: 'Create a new user' })
-  @ApiResponse({ status: 201, description: 'User successfully created.' })
-  @ApiBody({
-    description: 'User creation payload',
-    type: CreateUserDto,
-    examples: {
-      'User creation': {
-        value: {
-          username: 'waer1',
-          password: '12345678Ww+',
-          firstName: 'yousef',
-          lastName: 'alwaer',
-          birthDate: '2023-11-05',
-          gender: 'male',
-          city: 'shoubra',
-          email: 'elwaeryousef@gmail.com',
-          role: UserRole.FAN,
-        },
-      },
-    },
-  })
-  async create(@Body() createUserDto: CreateUserDto) {
-    return await this.usersService.create(createUserDto);
+  @ApiBearerAuth()
+  @Get('actual')
+  @ApiOperation({ summary: 'Get all Active Users' })
+  @ApiResponse({ status: 200, description: 'Return all pending users.' })
+  async findActualUsers() {
+    return await this.usersService.findActiveUsers();
   }
+
+  @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
+  @ApiBearerAuth()
+  @Get('pending')
+  @ApiOperation({ summary: 'Get all pending users' })
+  @ApiResponse({ status: 200, description: 'Return all pending users.' })
+  async findPendingUsers() {
+    return await this.usersService.findPendingUsers();
+  }
+
+  // @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
+  // @Post()
+  // @ApiOperation({ summary: 'Create a new user' })
+  // @ApiResponse({ status: 201, description: 'User successfully created.' })
+  // @ApiBody({
+  //   description: 'User creation payload',
+  //   type: CreateUserDto,
+  //   examples: {
+  //     'User creation': {
+  //       value: {
+  //         username: 'waer1',
+  //         password: '12345678Ww+',
+  //         firstName: 'yousef',
+  //         lastName: 'alwaer',
+  //         birthDate: '2023-11-05',
+  //         gender: 'male',
+  //         city: 'shoubra',
+  //         email: 'elwaeryousef@gmail.com',
+  //         role: UserRole.FAN,
+  //       },
+  //     },
+  //   },
+  // })
+  // async create(@Body() createUserDto: CreateUserDto) {
+  //   return await this.usersService.create(createUserDto);
+  // }
 
   @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
   @ApiBearerAuth()
@@ -98,6 +118,15 @@ export class UsersController {
   })
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return await this.usersService.update(+id, updateUserDto);
+  }
+
+  @UseGuards(JwtAuthGuard, FANGuard)
+  @ApiBearerAuth()
+  @Patch('updateProfile')
+  @ApiOperation({ summary: 'Update a user' })
+  @ApiResponse({ status: 200, description: 'User successfully updated.' })
+  async updateMe(@Body() updateUserDto: UpdateUserDto, @Req() req) {
+    return await this.usersService.update(req.user.id, updateUserDto);
   }
 
   @UseGuards(JwtAuthGuard, SITE_ADMINGuard)

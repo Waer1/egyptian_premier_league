@@ -28,7 +28,7 @@ export class MatchsController {
   constructor(private readonly matchsService: MatchsService) {}
 
   @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
-  @ApiBearerAuth('EFA_MANAGERGuard')
+  @ApiBearerAuth()
   @Post()
   @ApiOperation({ summary: 'Create match' })
   @ApiResponse({
@@ -55,7 +55,7 @@ export class MatchsController {
   }
 
   @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
-  @ApiBearerAuth('EFA_MANAGERGuard')
+  @ApiBearerAuth()
   @Patch(':id')
   @ApiOperation({ summary: 'Update match' })
   @ApiResponse({
@@ -68,7 +68,7 @@ export class MatchsController {
   }
 
   @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
-  @ApiBearerAuth('EFA_MANAGERGuard')
+  @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({ summary: 'Delete match' })
   @ApiResponse({

@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User, UserStatus } from 'src/entities/user.entity';
+import { User, UserRole, UserStatus } from 'src/entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -79,5 +79,13 @@ export class UsersService {
     user.status = UserStatus.APPROVED;
     await this.userRepositry.save(user);
     return user;
+  }
+
+  async findPendingUsers(): Promise<User[]> {
+    return this.userRepositry.find({ where: { status: UserStatus.PENDING } });
+  }
+
+  async findActiveUsers(): Promise<User[]> {
+    return this.userRepositry.find({ where: { status: UserStatus.APPROVED } });
   }
 }

@@ -22,6 +22,7 @@ import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { SITE_ADMINGuard } from 'src/guards/siteAdmin.guard';
+import { Gender, UserRole } from 'src/entities/user.entity';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -50,6 +51,12 @@ export class AuthController {
           password: 'Admin1234+',
         },
       },
+      'efamanager': {
+        value: {
+          username: 'efamanager',
+          password: '12345678Ww+',
+        },
+      },
     },
   })
   async login(@Request() req) {
@@ -62,6 +69,34 @@ export class AuthController {
   @ApiBody({
     description: 'The signup details',
     type: CreateUserDto,
+    examples: {
+      'Waer User': {
+        value: {
+          username: 'waer',
+          password: '12345678Ww+',
+          firstName: 'yousef',
+          lastName: 'alwaer',
+          birthDate: new Date('2001-07-23'),
+          city: 'shoubra',
+          email: 'elwaeryousef@gmail.com',
+          role: UserRole.FAN,
+          gender: Gender.MALE,
+        },
+      },
+      'EFA Manager': {
+        value: {
+          username: 'efamanager',
+          password: '12345678Ww+',
+          firstName: 'manager',
+          lastName: 'efa',
+          birthDate: new Date('1980-01-01'),
+          city: 'cairo',
+          email: 'efamanager@gmail.com',
+          role: UserRole.EFA_MANAGER,
+          gender: Gender.MALE,
+        },
+      },
+    },
   })
   async signup(@Body() signUpDTO: CreateUserDto) {
     return this.authService.signup(signUpDTO);
@@ -74,12 +109,12 @@ export class AuthController {
     return { message: 'Logged out successfully.' };
   }
 
-  @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
-  @ApiBearerAuth()
-  @Post('refresh')
-  @ApiOperation({ summary: 'Refresh access token' })
-  @ApiResponse({ status: 200, description: 'Access token refreshed.' })
-  async refresh() {
-    return { waer: 'waer' };
-  }
+  // @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
+  // @ApiBearerAuth()
+  // @Post('refresh')
+  // @ApiOperation({ summary: 'Refresh access token' })
+  // @ApiResponse({ status: 200, description: 'Access token refreshed.' })
+  // async refresh() {
+  //   return { waer: 'waer' };
+  // }
 }

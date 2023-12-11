@@ -28,11 +28,9 @@ export class Match extends BaseEntity {
   @NotEquals('homeTeam')
   awayTeam: Team;
 
-  @Column({ type: 'date' })
-  date: string;
+  @Column({ type: 'datetime' })
+  dateTime: Date;
 
-  @Column({ type: 'time' })
-  time: string;
 
   @ManyToOne(() => Stadium, { cascade: true })
   matchVenue: Stadium;

@@ -118,7 +118,7 @@ export class ReservationGateway implements OnModuleDestroy {
       const reservation: Reservation =
         await this.reservationService.findOne(reservationId);
 
-      console.log(reservation);
+      console.log('waer', reservation);
 
       const { id, match } = reservation;
       const { rooms } = client;

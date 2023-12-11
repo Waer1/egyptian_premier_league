@@ -6,7 +6,7 @@ export class WebsocketExceptionsFilter extends BaseWsExceptionFilter {
   catch(exception: WsException | HttpException, host: ArgumentsHost) {
     const client = host.switchToWs().getClient() as WebSocket;
     const data = host.switchToWs().getData();
-    console.log('data', data);
+    console.log('soket exception', data);
     const error =
       exception instanceof WsException
         ? exception.getError()

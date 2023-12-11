@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Match } from 'src/entities/match.entity';
 import { Repository } from 'typeorm';
 import { StadiumsService } from '../stadiums/stadiums.service';
-import { Console } from 'console';
 
 @Injectable()
 export class MatchsService {
@@ -13,6 +12,12 @@ export class MatchsService {
     @InjectRepository(Match) private matchRepositry: Repository<Match>,
     private stadiumService: StadiumsService,
   ) {}
+
+  minimizeSeatsArray(seatsArray: boolean[][]): string {
+    return seatsArray
+      .map((row) => row.map((value) => (value ? '1' : '0')).join(''))
+      .join(',');
+  }
 
   async create(createMatchDto: CreateMatchDto) {
     const targetStadium = await this.stadiumService.findOneByName(
@@ -23,9 +28,15 @@ export class MatchsService {
       throw new BadRequestException('Stadium not found');
     }
 
+    const createMatchDtoInstance = Object.assign(
+      new CreateMatchDto(),
+      createMatchDto,
+    );
+
+    console.log('waer', createMatchDtoInstance.getDateTime());
     const existingMatch = await this.matchRepositry.findOne({
       where: {
-        date: createMatchDto.date,
+        dateTime: createMatchDtoInstance.getDateTime(),
       },
     });
 
@@ -34,9 +45,16 @@ export class MatchsService {
         'There is already a match scheduled on this day',
       );
     }
+
+    const seatsArray: boolean[][] = Array(targetStadium.rows)
+      .fill(null)
+      .map(() => Array(targetStadium.seatsPerRow).fill(false));
+
     const matchReq = {
       matchVenue: targetStadium,
       ...createMatchDto,
+      dateTime: createMatchDtoInstance.getDateTime(),
+      reservedSeats: this.minimizeSeatsArray(seatsArray),
     };
 
     const newMatch = this.matchRepositry.create(matchReq);

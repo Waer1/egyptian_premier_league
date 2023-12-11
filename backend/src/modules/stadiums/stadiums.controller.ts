@@ -27,7 +27,7 @@ export class StadiumsController {
   constructor(private readonly stadiumsService: StadiumsService) {}
 
   @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
-  @ApiBearerAuth('EFA_MANAGERGuard')
+  @ApiBearerAuth()
   @Post()
   @ApiOperation({ summary: 'Create a new stadium' })
   @ApiResponse({ status: 201, description: 'Stadium successfully created.' })
@@ -57,7 +57,7 @@ export class StadiumsController {
   }
 
   @Get(':id')
-  @ApiBearerAuth('EFA_MANAGERGuard')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get a stadium by id' })
   @ApiResponse({ status: 200, description: 'Return the stadium.' })
   async findOne(@Param('id') id: string) {
@@ -65,7 +65,7 @@ export class StadiumsController {
   }
 
   @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
-  @ApiBearerAuth('EFA_MANAGERGuard')
+  @ApiBearerAuth()
   @Patch(':id')
   @ApiOperation({ summary: 'Update a stadium' })
   @ApiResponse({ status: 200, description: 'Stadium successfully updated.' })
@@ -91,7 +91,7 @@ export class StadiumsController {
   }
 
   @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
-  @ApiBearerAuth('EFA_MANAGERGuard')
+  @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a stadium' })
   @ApiResponse({ status: 200, description: 'Stadium successfully deleted.' })
