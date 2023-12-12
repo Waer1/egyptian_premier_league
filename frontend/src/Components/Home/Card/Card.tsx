@@ -4,36 +4,8 @@ import Time from "./Time/Time";
 import EditMatch from "../../EditMatch/EditMatch";
 import TakeSeat from "../../TakeSeat/TakeSeat";
 import ShowSeats from "../../ShowSeats/ShowSeats";
-
-type Team = {
-    team1: string;
-    team2: string;
-    date: Date;
-    logo1: string;
-    logo2: string;
-}
-type Match = {
-    team1: string;
-    team2: string;
-    date: Date;
-    time: Date;
-    logo1: string;
-    logo2: string;
-    ref:string;
-    first:string;
-    second:string;
-    stadium:string;
-}
-type CardProps = {
-    team: Team;
-    index: number;
-    match:Match;
-    state:number;
-    row?:number;
-    column?:number;
-}
-type Coordinates = [number, number]; // [row, column]
-
+import { Match,Teams,Coordinates } from "../../Types";
+import axios from "../../../Server/Instance";
 const reserved: Coordinates[] = [
     [0, 1],
     [0, 2],
@@ -44,7 +16,14 @@ const reserved: Coordinates[] = [
     [2, 0],
     [2, 10],
 ];
-
+export type CardProps = {
+    team: Teams;
+    index: number;
+    match:Match;
+    state:number;
+    row?:number;
+    column?:number;
+}
 export default function Card(props:CardProps) {
     const team = props.team;
     const index=props.index;
@@ -58,9 +37,12 @@ export default function Card(props:CardProps) {
 
     const DeleteMatch=()=>{
         // TODO: send delete action to backend
+        axios.delete(`/match/${match.id}`);
+
     }
     const DeleteSeat=()=>{
         // TODO: send delete action to backend
+        // wait for waer
     }
     return (
         <BOX>

@@ -3,34 +3,11 @@ import Card from "../Home/Card/Card";
 import Filter from "../Home/Filter/Filter";
 import PopUpMatch from "../PopUpMatch/PopUpMatch";
 import React, { useEffect } from "react";
+import axios from "../../Server/Instance";
+import { Match,Teams,Ticket } from "../Types";
 
-type Match = {
-    team1: string;
-    team2: string;
-    date: Date;
-    time: Date;
-    logo1: string;
-    logo2: string;
-    ref:string;
-    first:string;
-    second:string;
-    stadium:string;
-}
 
-type Ticket={
-  seatRaw: number;
-  seatColum: number;
-  reservationTime: Date;
-  match: Match;
 
-}
-type Team = {
-    team1: string;
-    team2: string;
-    date: Date;
-    logo1: string;
-    logo2: string;
-}
 type TicketProps={
     tickets:Ticket[];
 }
@@ -40,6 +17,7 @@ const tickets2:Ticket[]=[
       seatColum: 1,
       reservationTime: new Date("2020-8-4"),
       match: {
+        id:1,
         team1: "Al-Ahly",
         team2: "El-Zamalek",
         date: new Date("2020-8-4"),
@@ -57,6 +35,7 @@ const tickets2:Ticket[]=[
       seatColum: 1,
       reservationTime: new Date("2020-8-4"),
       match: {
+        id:2,
         team1: "Al-Ahly",
         team2: "El-Zamalek",
         date: new Date("2020-8-4"),
@@ -73,10 +52,13 @@ const tickets2:Ticket[]=[
 export default function Reservation() {
     const [tickets,setTickets] =React.useState<Ticket[]>(tickets2);
     useEffect(() => {
+        // wait for waer 
         // Todo: fetch tickets from backend
+
     },[]);
-    const teams:Team[] =tickets.map((ticket,index) => {
-        const team :Team = {
+    const teams:Teams[] =tickets.map((ticket,index) => {
+        const team :Teams = {
+            id:ticket.match.id,
             team1: ticket.match.team1,
             team2: ticket.match.team2,
             date: ticket.match.date,

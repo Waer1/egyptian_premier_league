@@ -12,8 +12,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import moment from 'moment';
 import { DesktopTimePicker } from '@mui/x-date-pickers';
-
-
+import axios from "../../Server/Instance";
+import {error,success} from "../Alert";
 export default function AddMatch() {
   const [open, setOpen] = React.useState(false);
   const [home, setHom] = React.useState("");
@@ -34,7 +34,23 @@ export default function AddMatch() {
 
   const Submit=()=>{  
     // TODO: send data to backend
-    console.log("Submit");
+    axios.post('/matchs',{
+        homeTeam:home,
+        awayTeam:away,
+        date:time,
+        time:time2,
+        mainReferee:ref,
+        firstLinesman:fisrt,
+        secondLinesman:second,
+        stauimName:stadium
+        }).then((res)=>{
+            if(res.status===201)
+                {success("Match added successfully");
+                handleClose();}
+        }).catch((err)=>{
+            error("Match added successfully");
+        }
+    );
   }
 
   return (

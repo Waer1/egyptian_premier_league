@@ -27,3 +27,11 @@ export const ChangeToken = (state:string) => {
         });
     }
 }
+export const ChangeId = (state:number|null) => {
+    return (dispatch : Dispatch<Action>) => {
+        dispatch({
+            type: ActionType.CHANGE_ID,
+            payload: state,
+        });
+    }
+}

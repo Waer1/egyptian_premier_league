@@ -3,23 +3,15 @@ import { BOX, Btn, Container, Delete } from "./style";
 import moment from "moment";
 import React, { useEffect } from "react";
 import dayjs from "dayjs";
+import { User } from "../Types";
+import axios from "../../Server/Instance";
 
 
-type User={
-    firstName:string;
-    lastName:string;
-    email:string;
-    role:string;
-    address:string;
-    city:string;
-    dateOfBirth:Date;
-    gender:string;
-    userName:string;
-}
 type UserProps={
     users:User[];
 }
 const PendingList:User[]=[{
+    id:1,
     firstName:"Ahmed",
     lastName:"Hosny",
     email:"eng.ahmedhosny2024@gmail.com",
@@ -31,6 +23,7 @@ const PendingList:User[]=[{
     userName:"AhmedHosny2024"
   },
   {
+    id:2,
     firstName:"Ahmed",
     lastName:"Hosny",
     email:"eng.ahmedhosny2024@gmail.com",
@@ -48,7 +41,16 @@ export default function Pending( ) {
         moment(new Date(user.dateOfBirth)).format('YYYY-MM-DD')
     ))
     useEffect(() => {
+        // wait for waer
         // TODO: fetch teams from backend
+        // axios.get(`/users/pending`)
+        // .then(res => res.data)
+        // .then(data => {
+        //     console.log(data);
+        //     setUsers(data);
+        // })
+        // .catch(err => console.log(err));
+
     },[]);
     return (
         // <Box sx={{display:'flex',justifyContent:'flex-start',flexDirection:'column'}}>

@@ -5,6 +5,8 @@ import Button from '@mui/material/Button';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import { FormControl,Input,  InputLabel,Typography } from '@mui/material';
 import {Style} from './style';
+import axios from "../../Server/Instance";
+import { error, success } from '../Alert';
 
 export default function AddStadium() {
   const [open, setOpen] = React.useState(false);
@@ -20,8 +22,17 @@ const [Columns, setColumns] = React.useState(10);
 
   const Add=()=>{
     // TODO: send data to backend
-    handleClose();
-    console.log("Add");
+    axios.post('/stadium',{
+      name:userName,
+      rows:Rows,
+      seatsPerRow:Columns
+    }).then((res)=>{
+      success("Stadium added successfully");
+      handleClose();
+
+    }).catch((err)=>{
+      error("Something went wrong");
+    })
   }
 
   return (

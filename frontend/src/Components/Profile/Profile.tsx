@@ -10,24 +10,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import moment from 'moment';
+import { UserInfo } from '../Types';
+import axios from '../../Server/Instance';
+import {useSelector } from "react-redux";
+import { filterState } from '../../State';
 
-
-type UserInfo={
-    userName:string,
-    password:string,
-    firstName:string,
-    lastName:string,
-    email:string,
-    gender:string,
-    role:string,
-    city:string,
-    dateOfBirth:Date,
-    address:string
-}
-type UserProps={
-    user:UserInfo
-}
 const user:UserInfo={
+    id:1,
     userName:"AhmedHosny2024",
     password:"123456789",
     firstName:"Ahmed",
@@ -40,9 +29,10 @@ const user:UserInfo={
     address:"Masr el gadeda"
 }
 export default function Profile() {
-    const constInfo : UserInfo =user;
     // var UserInfo=constInfo;
-    const [UserInfo,setUserInfo]=React.useState<UserInfo>(JSON.parse(JSON.stringify(constInfo)));
+    const id:number =useSelector((state:filterState) => state.id);
+    let constInfo:UserInfo;
+    const [userInfo,setUserInfo]=React.useState<UserInfo|null>(null);
     const [showPassword, setShowPassword] = React.useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -51,20 +41,35 @@ export default function Profile() {
       event.preventDefault();
     };
     useEffect(() => {
+        // wait for waer get unauthorized
        // TODO: send request to backend to get the user info
+         axios.get(`/user/${id}`)
+        .then(res => res.data)
+        .then(data => {
+            console.log(data);
+            if(data!==undefined)
+            {setUserInfo(data);
+            constInfo=data;}
+        })
     }, [])
     const Cancel=async()=>{
-        await setUserInfo(constInfo);
-        if(UserInfo!==constInfo)
-        {
-            window.location.reload();
-        }
+        window.location.reload();
     }
     const Save=()=>{
-        if(UserInfo!==constInfo)
+        if(userInfo!==constInfo)
         {
-            // TODO: send request to backend to save the user info
-            window.location.reload();
+            if(userInfo!==undefined && userInfo!==null)
+            axios.patch(`/user/${id}`,{
+                username: userInfo.userName,
+                password: userInfo.password,
+                firstName: userInfo.firstName,
+                lastName: userInfo.lastName,
+                birthDate: userInfo.dateOfBirth,
+                gender: userInfo.gender,
+                city: userInfo.city,
+                email: userInfo.email,
+                role: userInfo.role,
+            })
         }
     }
     return (
@@ -95,9 +100,10 @@ export default function Profile() {
                 <Input
                     id="User Name"
                     type='text' 
-                    defaultValue={UserInfo.userName}
+                    defaultValue={userInfo?.userName} 
                     onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                        UserInfo.userName=e.target.value;
+                        if(userInfo!==null)
+                            userInfo.userName=e.target.value;
                     }}
                 />
             </FormControl>
@@ -109,9 +115,10 @@ export default function Profile() {
                 <Input
                     id="standard-adornment-password"
                     type={showPassword ? 'text' : 'password'}
-                    defaultValue={UserInfo.password}
+                    defaultValue={userInfo?.password}
                     onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                        UserInfo.password=e.target.value;
+                        if (userInfo!==null)
+                            userInfo.password=e.target.value;
                     }}
                     endAdornment={
                     <InputAdornment position="end">
@@ -136,9 +143,10 @@ export default function Profile() {
                 <Input
                     id="First Name"
                     type='text' 
-                    defaultValue={UserInfo.firstName}
+                    defaultValue={userInfo?.firstName}
                     onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                        UserInfo.firstName=e.target.value;
+                        if (userInfo!==null)
+                            userInfo.firstName=e.target.value;
                     }}
                 />
             </FormControl>
@@ -150,9 +158,10 @@ export default function Profile() {
                 <Input
                     id="Last Name"
                     type='text' 
-                    defaultValue={UserInfo.lastName}
+                    defaultValue={userInfo?.lastName}
                     onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                        UserInfo.lastName=e.target.value;
+                        if (userInfo!==null)
+                            userInfo.lastName=e.target.value;
                     }}
                 />
             </FormControl>
@@ -164,9 +173,10 @@ export default function Profile() {
         <FormControl >
                 <FormLabel id="demo-row-radio-buttons-group-label">Role</FormLabel>
                     <RadioGroup
-                        defaultValue={UserInfo.role}
+                        defaultValue={userInfo?.role}
                         onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                            UserInfo.role=e.target.value;
+                            if (userInfo!==null)
+                                userInfo.role=e.target.value;
                         }}
                         row
                         aria-labelledby="demo-row-radio-buttons-group-label"
@@ -182,9 +192,10 @@ export default function Profile() {
             <FormControl >
                 <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
                     <RadioGroup
-                        defaultValue={UserInfo.gender}
+                        defaultValue={userInfo?.gender}
                         onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                            UserInfo.role=e.target.value;
+                            if (userInfo!==null)
+                                userInfo.role=e.target.value;
                         }}
                         row
                         aria-labelledby="demo-row-radio-buttons-group-label"
@@ -205,9 +216,10 @@ export default function Profile() {
                 <Input
                     id="Email"
                     type='text' 
-                    defaultValue={UserInfo.email}
+                    defaultValue={userInfo?.email}
                     onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                        UserInfo.email=e.target.value;
+                        if (userInfo!==null)
+                            userInfo.email=e.target.value;
                     }}
                 />
             </FormControl>
@@ -218,10 +230,11 @@ export default function Profile() {
                 <DemoContainer components={['DatePicker', 'DatePicker']}sx={{marginLeft: '20%'}}>
                     <DatePicker
                     label="Date of Birth"
-                    value={dayjs(moment(UserInfo.dateOfBirth).format('YYYY-MM-DD'))}
+                    value={dayjs(moment(userInfo?.dateOfBirth).format('YYYY-MM-DD'))}
                     onChange={(newValue) => 
                             {
-                                if(newValue!==null) UserInfo.dateOfBirth=newValue.toDate();
+                                if(newValue!==null && userInfo!==null) 
+                                userInfo.dateOfBirth=newValue.toDate();
                             }                
                         }
                     />
@@ -237,9 +250,10 @@ export default function Profile() {
                 <Input
                     id="Address"
                     type='text' 
-                    defaultValue={UserInfo.address} 
+                    defaultValue={userInfo?.address} 
                     onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                        UserInfo.address=e.target.value;
+                        if (userInfo!==null)
+                            userInfo.address=e.target.value;
                     }}
                 />
             </FormControl>
@@ -251,9 +265,10 @@ export default function Profile() {
                 <Input
                     id="City"
                     type='text' 
-                    defaultValue={UserInfo.city}
+                    defaultValue={userInfo?.city}
                     onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                        UserInfo.city=e.target.value;
+                        if (userInfo!==null)
+                            userInfo.city=e.target.value;
                     }}
                 />
             </FormControl>

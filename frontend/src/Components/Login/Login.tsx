@@ -10,6 +10,8 @@ import {Style} from './style';
 import { useDispatch } from "react-redux";
 import {bindActionCreators} from 'redux';
 import { actionsCreators } from "../../State/index";
+import { error } from '../Alert';
+import axios from "../../Server/Instance";
 
 export default function Login() {
   const [open, setOpen] = React.useState(false);
@@ -30,14 +32,35 @@ export default function Login() {
     event.preventDefault();
   };
   const dispatch = useDispatch();
-  const {ChangeState, ChangeToken} = bindActionCreators(actionsCreators,dispatch);
+  const {ChangeState, ChangeToken,ChangeId} = bindActionCreators(actionsCreators,dispatch);
 
   const LogIN=()=>{
     // TODO:
     // send request to backend to check if the user is valid and fet the state 
-    ChangeState(1);
-    ChangeToken("sss");
-    console.log("Log in");
+    axios.post('/login',{
+      userName:name,
+      password:password
+    }).then((res)=>{
+      if(res.status===200){
+        let role =0 
+        if(res.data.userData.role==="fan")
+          role=1;
+        else if(res.data.userData.role==="efmanger")
+          role=2;
+        else if(res.data.userData.role==="siteAdmin")
+          role=3;
+
+        ChangeState(role);
+        ChangeId(res.data.userData.id);
+        ChangeToken(res.data.access_token);
+        handleClose();
+      }
+      else{
+        error("Invalid user name or password");
+      }
+    }).catch((err)=>{
+      error("Invalid user name or password");
+    });
   }
   const SignUP=()=>{
     handleClose();
