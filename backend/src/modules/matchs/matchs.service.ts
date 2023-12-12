@@ -143,8 +143,8 @@ export class MatchsService {
   ): Promise<Match[]> {
     return this.matchRepositry
       .createQueryBuilder('match')
-      .where('match.date >= :startDate', { startDate })
-      .andWhere('match.date <= :endDate', { endDate })
+      .where('match.dateTime >= :startDate', { startDate })
+      .andWhere('match.dateTime <= :endDate', { endDate })
       .getMany();
   }
 }
