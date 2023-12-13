@@ -1,30 +1,48 @@
-import { IsEnum, IsNotEmpty, IsString, IsDateString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  IsDateString,
+  ValidateNested,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Team } from 'src/shared/teams';
 import { IsNotEqualTo } from 'src/shared/IsNotEqual';
 import { IsTimeString } from 'src/shared/IsTimeString';
+import { Type } from 'class-transformer';
 
-export class CreateMatchDto {
+export class TeamInfo {
   @ApiProperty({
-    description: 'The home team',
+    description: 'The team name',
     enum: Team,
     example: Team.AL_AHLY,
   })
   @IsEnum(Team)
   @IsNotEmpty()
-  homeTeam: Team;
+  name: Team;
+
+  imageUrl: string;
+}
+
+export class CreateMatchDto {
+  @ApiProperty({
+    description: 'The home team',
+    type: TeamInfo,
+  })
+  @Type(() => TeamInfo)
+  @ValidateNested()
+  homeTeam: TeamInfo;
 
   @ApiProperty({
     description: 'The away team',
-    enum: Team,
-    example: Team.ZAMALEK,
+    type: TeamInfo,
   })
-  @IsEnum(Team)
-  @IsNotEmpty()
+  @Type(() => TeamInfo)
+  @ValidateNested()
   @IsNotEqualTo('homeTeam', {
     message: 'Away team must not be the same as the home team',
   })
-  awayTeam: Team;
+  awayTeam: TeamInfo;
 
   @ApiProperty({ description: 'The date of the match' })
   @IsDateString()

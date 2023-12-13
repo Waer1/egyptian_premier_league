@@ -10,27 +10,25 @@ import { NotEquals } from 'class-validator';
 import { Stadium } from './stadum.entity';
 import { BadRequestException } from '@nestjs/common';
 
+export type TeamInfo = {
+  name: Team;
+  image: string;
+};
+
 @Entity()
 export class Match extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    type: 'enum',
-    enum: Team,
-  })
-  homeTeam: Team;
+  @Column('json')
+  homeTeam: TeamInfo;
 
-  @Column({
-    type: 'enum',
-    enum: Team,
-  })
+  @Column('json')
   @NotEquals('homeTeam')
-  awayTeam: Team;
+  awayTeam: TeamInfo;
 
   @Column({ type: 'datetime' })
   dateTime: Date;
-
 
   @ManyToOne(() => Stadium, { cascade: true })
   matchVenue: Stadium;

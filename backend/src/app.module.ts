@@ -6,6 +6,7 @@ import { StadiumsModule } from './modules/stadiums/stadiums.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MatchsModule } from './modules/matchs/matchs.module';
 import { ReservationModule } from './modules/reservation/reservation.module';
+import { TeamsModule } from './modules/teams/teams.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ReservationModule } from './modules/reservation/reservation.module';
     StadiumsModule,
     MatchsModule,
     ReservationModule,
+    TeamsModule
   ],
   controllers: [],
   providers: [],

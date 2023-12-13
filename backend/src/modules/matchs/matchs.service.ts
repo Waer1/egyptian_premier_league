@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Match } from 'src/entities/match.entity';
 import { Repository } from 'typeorm';
 import { StadiumsService } from '../stadiums/stadiums.service';
+import { getTeamImageLocation } from 'src/shared/teams';
 
 @Injectable()
 export class MatchsService {
@@ -33,7 +34,6 @@ export class MatchsService {
       createMatchDto,
     );
 
-    console.log('waer', createMatchDtoInstance.getDateTime());
     const existingMatch = await this.matchRepositry.findOne({
       where: {
         dateTime: createMatchDtoInstance.getDateTime(),
@@ -57,13 +57,17 @@ export class MatchsService {
       reservedSeats: this.minimizeSeatsArray(seatsArray),
     };
 
+    matchReq.homeTeam.imageUrl = getTeamImageLocation(matchReq.homeTeam.name);
+    matchReq.awayTeam.imageUrl = getTeamImageLocation(matchReq.awayTeam.name);
+
     const newMatch = this.matchRepositry.create(matchReq);
     await this.matchRepositry.save(newMatch);
     return newMatch;
   }
 
-  findAll() {
-    return this.matchRepositry.find({});
+  async findAll() {
+    const matches = await this.matchRepositry.find({});
+    return matches;
   }
 
   async findOne(id: number) {
@@ -141,10 +145,12 @@ export class MatchsService {
     startDate: Date,
     endDate: Date,
   ): Promise<Match[]> {
-    return this.matchRepositry
+    const matches = await this.matchRepositry
       .createQueryBuilder('match')
       .where('match.dateTime >= :startDate', { startDate })
       .andWhere('match.dateTime <= :endDate', { endDate })
       .getMany();
+
+    return matches;
   }
 }
