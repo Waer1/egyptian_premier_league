@@ -6,9 +6,10 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import { Container, Header, ListContainer, ListNumber } from './style';
+import {Team} from '../Types';
 
 export default function Order() {
-  
+    // wait for waer
     // React.useEffect(() => {
     //     // TODO: fetch teams from backend
     //     // fetch('http://localhost:8000/teams')
@@ -20,9 +21,11 @@ export default function Order() {
     //     // .catch(err => console.log(err));
     // }, []);
 
-    const [teams,setTeams]=React.useState<string[]>();
+    const [teams,setTeams]=React.useState<Team[]>();
     React.useEffect(() => {
-        setTeams(["Al-ahly","Zamalek","itihad el sakandary","pyramids"]);
+        // wait for waer
+        // featch data 
+        // setTeams(["Al-ahly","Zamalek","itihad el sakandary","pyramids"]);
     }, []);
   return (
     <Container>
@@ -30,21 +33,21 @@ export default function Order() {
         <SportsSoccerIcon fontSize='medium' sx={{paddingRight:1}}/> Standing
         </Header>
         <ListContainer dense >
-        {teams?.map((value:string,index:number) => {
+        {teams?.map((value:Team,index:number) => {
             return (
             <ListItem
-                key={value}
+                key={value.id}
                 disablePadding
             >
                 <ListItemButton >
                 <ListNumber primary={index+1}/>
                 <ListItemAvatar sx={{width:"30%"}}>
                     <Avatar
-                    alt={value}
-                    src={`/static/images/avatar/${index + 1}.jpg`}
+                    alt={value.name}
+                    src={value.logo}
                     />
                 </ListItemAvatar>
-                <ListItemText id={`index`} primary={value} sx={{width:"50%"}} />
+                <ListItemText id={`index`} primary={value.name} sx={{width:"50%"}} />
                 </ListItemButton>
             </ListItem>
             );

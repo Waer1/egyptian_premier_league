@@ -11,4 +11,9 @@ interface Token{
     type: ActionType.CHANGE_TOKEN; 
     payload: string; 
 }
-export type Action = Filer|State|Token;
+interface ID{
+    type: ActionType.CHANGE_ID; 
+    payload: number|null; 
+}
+
+export type Action = Filer|State|Token|ID;

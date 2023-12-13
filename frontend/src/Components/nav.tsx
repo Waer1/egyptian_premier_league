@@ -19,8 +19,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useDispatch } from "react-redux";
 import {bindActionCreators} from 'redux';
 import { actionsCreators } from "../State/index";
-import { Icon } from '@mui/material';
-import { changeFilter } from '../State/ActionCreators';
+
 
 // type UserState={
 //     state:number
@@ -30,19 +29,18 @@ function ResponsiveAppBar() {
     console.log(state);
     const token= useSelector((state:filterState) => state.token);
     const dispatch = useDispatch();
-    const {ChangeState,ChangeToken} = bindActionCreators(actionsCreators,dispatch);
+    const {ChangeState,ChangeToken,ChangeId} = bindActionCreators(actionsCreators,dispatch);
 
     const fan :string[] = ["Home",'profile', 'Reservation'];
     const manger :string[] = ["Home",'profile', 'Add match', 'Add stadium'];
     const admin :string[] = ["Home",'Profile', 'pending', 'users'];
     const guest :string[] = ['Log in','Sign up'];
-    const [pages, setPages] = React.useState<null | string[]>(null);
-    ChangeState(1);
-   
+    const [pages, setPages] = React.useState<null | string[]>(null);   
   
     React.useEffect (()=>{
         if(token===""){
             ChangeState(0)
+            ChangeId(null)
         }
     },[])
     React.useEffect(() => {

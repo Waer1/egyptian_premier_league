@@ -14,8 +14,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useDispatch } from "react-redux";
 import {bindActionCreators} from 'redux';
 import { actionsCreators } from "../../State/index";
-
-
+import axios from "../../Server/Instance";
+import { error , success} from '../Alert';
 export default function SignUp() {
   const [open, setOpen] = React.useState(false);
   const [userName, setUserName] = React.useState("");
@@ -55,8 +55,30 @@ export default function SignUp() {
   const SignUP=()=>{  
     // TODO:
     // send request to backend to check if the user is valid and fet the state 
+    axios.post('/signup',{
+        username: userName,
+        password:  password,
+        firstName: firstName,
+        lastName: lastName,
+        birthDate: dateOfBirth,
+        city: city,
+        email: email,
+        role: role,
+        gender: gender,
+        address: address
+    }).then((res)=>{
+        if(res.status===200){
+            success("your request send successfully");
+            handleClose();
+        }
+        else{
+            error("Invalid data");
+        }
+        }).catch((err)=>{
+            console.log(err);
+        }
+    );
     ChangeState(0);
-    console.log("Sign up");
   }
 
   return (

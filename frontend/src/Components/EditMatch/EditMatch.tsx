@@ -12,8 +12,11 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import moment from 'moment';
 import { DesktopTimePicker } from '@mui/x-date-pickers';
+import axios from "../../Server/Instance";
+import { error, success } from '../Alert';
 
 type Match = {
+    id:number;
     team1: string;
     team2: string;
     date: Date;
@@ -33,6 +36,7 @@ type CardProps = {
 export default function EditMatch(props:CardProps) {
     const match = props.match;
     const index=props.index
+    const id=match.id;
   const [open, setOpen] = React.useState(false);
   const [home, setHom] = React.useState(match.team1);
   const [away, setAway] = React.useState(match.team2);
@@ -52,10 +56,34 @@ export default function EditMatch(props:CardProps) {
 
   const Submit=()=>{  
     // TODO: send new data to backend
-    console.log("Submit");
+    axios.patch(`/matchs/${id}`,{
+        homeTeam:home,
+        awayTeam:away,
+        date:time,
+        time:time2,
+        mainReferee:ref,
+        firstLinesman:fisrt,
+        secondLinesman:second,
+        stauimName:stadium
+        }).then((res)=>{
+            if(res.status===200)
+                {success("Match added successfully");
+                handleClose();}
+        }).catch((err)=>{
+            error("Match added successfully");
+        }
+    );
   }
   const Cancel=()=>{  
-    console.log("Cancel");
+    setHom(match.team1);
+    setAway(match.team2);
+    setRef(match.ref);
+    setFirst(match.first);
+    setSecond(match.second);
+    setStadium(match.stadium);
+    setTime(match.date);
+    setTime2(match.time);
+    handleClose();
   }
 
   return (

@@ -2,44 +2,46 @@ import { Typography } from "@mui/material";
 import { BOX, Container, Delete } from "./style";
 import { useEffect } from "react";
 import React from "react";
+import { User } from "../Types";
+import axios from "../../Server/Instance";
+import { useSelector } from "react-redux";
+import { filterState } from "../../State";
+import { error, success } from "../Alert";
 
 
-type User={
-    firstName:string;
-    lastName:string;
-    email:string;
-    role:string;
-}
-type UserProps={
-    users:User[];
-}
-const users2:User[]=[
-    {
-      firstName:"Ahmed",
-      lastName:"Hosny",
-      email:"eng.ahmedhosny2024@gmail.com",
-      role:"fan",
-    },
-    {
-      firstName:"Ahmed20",
-      lastName:"Hosny20",
-      email:"eng.ahmedhosny2020@gmail.com",
-      role:"fan",
-    },
-    {
-      firstName:"Ahmed10",
-      lastName:"Hosny10",
-      email:"eng.ahmedhosny1010@gmail.com",
-      role:"fan",
-    },
-  ]
+const users2:User[]=[{
+    id:1,
+    firstName:"Ahmed",
+    lastName:"Hosny",
+    email:"aaaaa",
+    role:"fan",
+    address:"Masr el gadeda",
+    city:"Cairo",
+    gender:'male',
+    userName:"AhmedHosny2024",
+    dateOfBirth:new Date("2000-01-01")
+    }
+]
 
 export default function Users() {
     const [users,setUsers]=React.useState<User[]>(users2);
+    const id=useSelector((state:filterState)=>state.id);
 
     useEffect(() => {
         // TODO: fetch teams from backend
+        axios.get(`/users/actual`)
+        .then(res => res.data)
+        .then(data => {
+            console.log(data);
+            setUsers(data);
+        })
+        .catch(err => console.log(err));
     },[]);
+    const Del=()=>{
+        axios.delete(`/users/${id}`)
+        .then(res => success("user deleted successfully"))
+        .catch(err => error("can't delete user please try again"));
+    }
     return (
 <>
     {users.map((user:User,index:number)=>(
@@ -58,7 +60,7 @@ export default function Users() {
                     </Typography>
                 </Container>
                 <Container>
-                    <Delete>
+                    <Delete onClick={Del}>
                         Delete
                     </Delete>
                 </Container>
