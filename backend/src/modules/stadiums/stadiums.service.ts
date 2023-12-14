@@ -68,7 +68,9 @@ export class StadiumsService {
     if (!stadium) {
       throw new BadRequestException('Stadium not found');
     }
-    this.stadiumRepository.delete(stadium);
+    this.stadiumRepository.delete({
+      id: stadium.id,
+    });
     return stadium;
   }
 }

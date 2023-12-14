@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Post,
   Request,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -29,9 +30,9 @@ import { Gender, UserRole } from 'src/entities/user.entity';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard)
-  @ApiBasicAuth()
-  @HttpCode(HttpStatus.OK)
+  // @UseGuards(LocalAuthGuard)
+  // @ApiBasicAuth()
+  // @HttpCode(HttpStatus.OK)
   @Post('login')
   @ApiOperation({ summary: 'Log in' })
   @ApiResponse({ status: 200, description: 'Logged in successfully.' })
@@ -51,7 +52,7 @@ export class AuthController {
           password: 'Admin1234+',
         },
       },
-      'efamanager': {
+      efamanager: {
         value: {
           username: 'efamanager',
           password: '12345678Ww+',
@@ -59,8 +60,18 @@ export class AuthController {
       },
     },
   })
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  async login(@Body() userlogin: SignInDTO) {
+    console.log('userlogin', userlogin);
+    const user = await this.authService.validateUser(
+      userlogin.username,
+      userlogin.password,
+    );
+
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return this.authService.login(user);
   }
 
   @Post('signup')

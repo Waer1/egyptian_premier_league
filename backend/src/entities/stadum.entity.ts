@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Match } from './match.entity';
 
 @Entity()
 export class Stadium {
@@ -13,4 +14,7 @@ export class Stadium {
 
   @Column()
   seatsPerRow: number;
+
+  @OneToMany(() => Match, (match) => match.matchVenue)
+  matches: Match[];
 }
