@@ -50,6 +50,7 @@ export default function Order() {
             <ListItem
                 key={value.id}
                 disablePadding
+                sx={{m:1}}
             >
                 <ListItemButton >
                 <ListNumber primary={index+1}/>

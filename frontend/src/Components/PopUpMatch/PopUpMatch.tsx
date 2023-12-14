@@ -74,7 +74,7 @@ export default function PopUpMatch(props:CardProps) {
             </Box>
             <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',width: 620,my:1}}>
                 <Team1>
-                    <Avatar sx={{ width: 85, height: 85 ,mx:4}} alt={match.team1} src={match.logo1} />
+                    <Avatar sx={{ width: 85, height: 85 ,mx:4}} alt={match.team1} src={process.env.PUBLIC_URL+match.logo1} />
                     <TeamName>
                         {match.team1}
                     </TeamName>
@@ -84,7 +84,7 @@ export default function PopUpMatch(props:CardProps) {
                     <TeamName>
                         {match.team2}
                     </TeamName>
-                    <Avatar sx={{ width: 85, height: 85 ,mx:4}} alt={match.team2} src={match.logo2} />
+                    <Avatar sx={{ width: 85, height: 85 ,mx:4}} alt={match.team2} src={process.env.PUBLIC_URL+match.logo2} />
                 </Team2>
             </Box>
             <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',width: 550,my:1}}>
