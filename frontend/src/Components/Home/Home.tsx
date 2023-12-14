@@ -78,11 +78,11 @@ useEffect(() => {
         case 0:
             
             // send start data and end date in params of the request
-            axios.get('/matchs/date-range',{
-                params:{
+            axios.post('/matchs/date-range',{
+                
                     startDate:startDate,
                     endDate:endDate
-                }
+                
             }).then((res)=>{ 
 
                 if(res.status===200)
@@ -127,11 +127,11 @@ useEffect(() => {
             // set start date with 1900/1/1 and end date with 
             startDate = new Date(1900,1,1);
             endDate= new Date();
-            axios.get('/matchs/date-range',{
-                params:{
+            axios.post('/matchs/date-range',{
+                
                     startDate:startDate,
                     endDate:endDate
-                }
+                
             }).then((res)=>{ 
                 if(res.status===200)
                 {
@@ -157,11 +157,11 @@ useEffect(() => {
         case 2:
             startDate = new Date();
             endDate= new Date();
-            axios.get('/matchs/date-range',{
-                params:{
+            axios.post('/matchs/date-range',{
+                
                     startDate:startDate,
                     endDate:endDate
-                }
+                
             }).then((res)=>{ 
                 if(res.status===200)
                 {
@@ -187,11 +187,9 @@ useEffect(() => {
         case 3:
             startDate = new Date();
             endDate= new Date(2100,1,1);
-            axios.get('/matchs/date-range',{
-                params:{
+            axios.post('/matchs/date-range',{
                     startDate:startDate,
                     endDate:endDate
-                }
             }).then((res)=>{ 
                 if(res.status===200)
                 {

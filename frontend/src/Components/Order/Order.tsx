@@ -20,18 +20,23 @@ export default function Order() {
     //     // })
     //     // .catch(err => console.log(err));
     // }, []);
-
     const [teams,setTeams]=React.useState<Team[]>();
+
+    const getTeams =()=>{
+        axios.get("./teams")
+        .then((res)=>{
+            (
+                // console.log(res.data)
+                setTeams(res.data)   
+            );
+        })
+        console.log(teams)
+    }
     React.useEffect(() => {
         // wait for waer
         // featch data 
-        axios.get("./teams")
-        .then((res)=>{
-            return
-            (
-                setTeams(res.data)
-            );
-        })
+        getTeams()
+        
         // setTeams(["Al-ahly","Zamalek","itihad el sakandary","pyramids"]);
     }, []);
   return (
@@ -51,7 +56,7 @@ export default function Order() {
                 <ListItemAvatar sx={{width:"30%"}}>
                     <Avatar
                     alt={value.name}
-                    src={value.logo}
+                    src={process.env.PUBLIC_URL+value.logo}
                     />
                 </ListItemAvatar>
                 <ListItemText id={`index`} primary={value.name} sx={{width:"50%"}} />
