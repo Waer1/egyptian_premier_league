@@ -21,7 +21,7 @@ export class TeamInfo {
   @IsNotEmpty()
   name: Team;
 
-  imageUrl: string;
+  logo: string;
 }
 
 export class CreateMatchDto {

@@ -10,7 +10,7 @@ export class TeamsService {
     // Map each team name to an object with name and image location
     const teams = teamNames.map((name) => ({
       name,
-      image: getTeamImageLocation(name),
+      logo: getTeamImageLocation(name),
     }));
 
     return teams;

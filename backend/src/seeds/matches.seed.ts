@@ -8,5 +8,7 @@ export class MatchesSeedsService {
     private readonly matchsService: MatchsService,
   ) {}
 
-  async seedsMatches() {}
+  async seedsMatches() {
+    
+  }
 }

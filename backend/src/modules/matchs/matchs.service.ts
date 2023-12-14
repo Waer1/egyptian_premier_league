@@ -57,8 +57,8 @@ export class MatchsService {
       reservedSeats: this.minimizeSeatsArray(seatsArray),
     };
 
-    matchReq.homeTeam.imageUrl = getTeamImageLocation(matchReq.homeTeam.name);
-    matchReq.awayTeam.imageUrl = getTeamImageLocation(matchReq.awayTeam.name);
+    matchReq.homeTeam.logo = getTeamImageLocation(matchReq.homeTeam.name);
+    matchReq.awayTeam.logo = getTeamImageLocation(matchReq.awayTeam.name);
 
     const newMatch = this.matchRepositry.create(matchReq);
     await this.matchRepositry.save(newMatch);
