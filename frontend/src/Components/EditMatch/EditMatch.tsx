@@ -50,10 +50,10 @@ export default function EditMatch(props:CardProps) {
   React.useEffect(()=>{
       axios.get("/stadiums")
       .then((res)=>{
-          setStadiums(res.data)
+          setStadiums(res.data.name)
       })
   },[])
-  
+
   const handleOpen = () => {
     setOpen(true);
   };

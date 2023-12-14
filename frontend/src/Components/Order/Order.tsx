@@ -7,7 +7,7 @@ import Avatar from '@mui/material/Avatar';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import { Container, Header, ListContainer, ListNumber } from './style';
 import {Team} from '../Types';
-
+import axios from "../../Server/Instance"
 export default function Order() {
     // wait for waer
     // React.useEffect(() => {
@@ -25,6 +25,13 @@ export default function Order() {
     React.useEffect(() => {
         // wait for waer
         // featch data 
+        axios.get("./teams")
+        .then((res)=>{
+            return
+            (
+                setTeams(res.data)
+            );
+        })
         // setTeams(["Al-ahly","Zamalek","itihad el sakandary","pyramids"]);
     }, []);
   return (
