@@ -28,6 +28,7 @@ function ResponsiveAppBar() {
     const state= useSelector((state:filterState) => state.state);
     console.log(state);
     const token= useSelector((state:filterState) => state.token);
+    console.log(token)
     const dispatch = useDispatch();
     const {ChangeState,ChangeToken,ChangeId} = bindActionCreators(actionsCreators,dispatch);
 
@@ -94,6 +95,7 @@ function ResponsiveAppBar() {
                 >
                     Home
             </Button> 
+
             {
             // Fan
              

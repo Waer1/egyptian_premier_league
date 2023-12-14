@@ -69,12 +69,14 @@ useEffect(() => {
     //TODO: get data from backend depends on the filter 
     // get index of fisrt true in filter array
     const index = filter.indexOf(true);
+    // set start date with 1900/1/1 and end date with 2100/1/1
+    let startDate = new Date(1900,1,1);
+    let endDate= new Date(2100,1,1);
     switch(index)
     {
+        
         case 0:
-            // set start date with 1900/1/1 and end date with 2100/1/1
-            let startDate = new Date(1900,1,1);
-            let endDate= new Date(2100,1,1);
+            
             // send start data and end date in params of the request
             axios.get('/matchs/date-range',{
                 params:{
@@ -82,6 +84,7 @@ useEffect(() => {
                     endDate:endDate
                 }
             }).then((res)=>{ 
+
                 if(res.status===200)
                 {
                     const ms:Match[] =res.data.map((d:Response,index:number) => {

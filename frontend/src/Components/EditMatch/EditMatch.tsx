@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
-import { FormControl,Input,InputLabel,Typography } from '@mui/material';
+import { FormControl,Input,InputLabel,MenuItem,Select,Typography } from '@mui/material';
 import {Btn, Style} from './style';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -46,7 +46,14 @@ export default function EditMatch(props:CardProps) {
   const [stadium, setStadium] = React.useState(match.stadium);
   const [time, setTime] = React.useState(match.date);
   const [time2, setTime2] = React.useState(match.time);
-
+  const [stadiums, setStadiums] = React.useState<string[]>([]);
+  React.useEffect(()=>{
+      axios.get("/stadiums")
+      .then((res)=>{
+          setStadiums(res.data)
+      })
+  },[])
+  
   const handleOpen = () => {
     setOpen(true);
   };
@@ -193,15 +200,25 @@ export default function EditMatch(props:CardProps) {
                 <Box sx={{width:"40%"}}>
                 
                 <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
-                    <InputLabel htmlFor="Stadium">Stadium</InputLabel>
-                    <Input
-                        id="Stadium"
-                        type='text' 
-                        defaultValue={stadium} 
-                        onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                            setStadium(e.target.value);
-                        }}
-                    />
+                    <InputLabel id="demo-simple-select-standard-label">Stadium</InputLabel>
+                    <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={stadium}
+                    onChange={(e) => {
+                        setStadium(e.target.value);
+                    }}
+                    label="stadium"
+                    >
+                    
+                    {stadiums.map((s:string) => {
+                        return (
+                        <MenuItem value={s}>{s}</MenuItem>
+                    );
+                    })}
+                    
+                    
+                    </Select>
                 </FormControl>
                 </Box>
                 
