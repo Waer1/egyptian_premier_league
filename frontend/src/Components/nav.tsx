@@ -95,6 +95,7 @@ function ResponsiveAppBar() {
                 >
                     Home
             </Button> 
+
             {
             // Fan
              
