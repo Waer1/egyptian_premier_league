@@ -8,13 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { ReservationService } from './reservation.service';
-import {
-  OnModuleDestroy,
-  Request,
-  UseFilters,
-  UseGuards,
-  UsePipes,
-} from '@nestjs/common';
+import { OnModuleDestroy, Request, UseGuards, UsePipes } from '@nestjs/common';
 import { JoinReservationDto } from './dto/join-reservation.dto';
 import { WsJwtGuard } from 'src/guards/WsGuard.guard';
 import { MatchsService } from '../matchs/matchs.service';
@@ -25,9 +19,10 @@ import { CancelReservationDto } from './dto/cancel-reservation.dto';
 import { Reservation } from 'src/entities/reservation.entity';
 
 // @UseFilters(new WebsocketExceptionsFilter())
-@WebSocketGateway({
+@WebSocketGateway(3001, {
   cors: {
     origin: '*',
+    credentials: true,
   },
 })
 @UsePipes(new WSValidationPipe())

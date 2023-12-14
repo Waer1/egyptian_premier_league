@@ -76,11 +76,11 @@ export class CreateMatchDto {
   @IsString()
   @IsNotEmpty()
   secondLinesman: string;
+}
 
-  getDateTime(): Date {
-    const [hours, minutes] = this.time.split(':').map(Number);
-    const date = new Date(this.date);
-    date.setHours(hours, minutes);
-    return date;
-  }
+export function getDateTime(time: string, _date: Date): Date {
+  const [hours, minutes] = time.split(':').map(Number);
+  const date = new Date(_date);
+  date.setHours(hours, minutes);
+  return date;
 }

@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, Search } from '@nestjs/common';
-import { CreateMatchDto } from './dto/create-match.dto';
+import { CreateMatchDto, getDateTime } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Match } from 'src/entities/match.entity';
@@ -33,10 +33,11 @@ export class MatchsService {
       new CreateMatchDto(),
       createMatchDto,
     );
+    const { time, date } = createMatchDtoInstance;
 
     const existingMatch = await this.matchRepositry.findOne({
       where: {
-        dateTime: createMatchDtoInstance.getDateTime(),
+        dateTime: getDateTime(time, date),
       },
     });
 
@@ -53,7 +54,7 @@ export class MatchsService {
     const matchReq = {
       matchVenue: targetStadium,
       ...createMatchDto,
-      dateTime: createMatchDtoInstance.getDateTime(),
+      dateTime: getDateTime(time, date),
       reservedSeats: this.minimizeSeatsArray(seatsArray),
     };
 
@@ -66,7 +67,10 @@ export class MatchsService {
   }
 
   async findAll() {
-    const matches = await this.matchRepositry.find({});
+    const matches = await this.matchRepositry.find({
+      skip: 0,
+      take: 50,
+    });
     return matches;
   }
 
@@ -149,6 +153,7 @@ export class MatchsService {
       .createQueryBuilder('match')
       .where('match.dateTime >= :startDate', { startDate })
       .andWhere('match.dateTime <= :endDate', { endDate })
+      .limit(50)
       .getMany();
 
     return matches;

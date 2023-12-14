@@ -17,10 +17,11 @@ import { SeedsModule } from './seeds/seeds.module';
     UsersModule,
     StadiumsModule,
     MatchsModule,
-    // ReservationModule,
+    ReservationModule,
     TeamsModule,
     SeedsModule,
   ],
+
   controllers: [],
   providers: [],
 })
