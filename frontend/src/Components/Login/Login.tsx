@@ -41,6 +41,7 @@ export default function Login() {
       userName:name,
       password:password
     }).then((res)=>{
+      console.log(res)
       if(res.status===200){
         let role =0 
         if(res.data.userData.role==="fan")
@@ -49,7 +50,7 @@ export default function Login() {
           role=2;
         else if(res.data.userData.role==="siteAdmin")
           role=3;
-
+        console.log(role)
         ChangeState(role);
         ChangeId(res.data.userData.id);
         ChangeToken(res.data.access_token);

@@ -6,8 +6,6 @@ import { Container } from './style';
 import Home from './Components/Home/Home';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Profile from './Components/Profile/Profile';
-import moment from 'moment';
-import dayjs from 'dayjs';
 import Users from './Components/Users/Users';
 import Pending from './Components/Pending/Pending';
 import Reservation from './Components/Reservations/Reservations';
