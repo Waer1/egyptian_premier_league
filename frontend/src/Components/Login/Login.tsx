@@ -37,12 +37,12 @@ export default function Login() {
   const LogIN=()=>{
     // TODO:
     // send request to backend to check if the user is valid and fet the state 
-    axios.post('/login',{
-      userName:name,
+    axios.post('/auth/login',{
+      username:name,
       password:password
     }).then((res)=>{
       console.log(res)
-      if(res.status===200){
+      if(res.status===201){
         let role =0 
         if(res.data.userData.role==="fan")
           role=1;

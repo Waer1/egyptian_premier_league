@@ -28,7 +28,7 @@ export default function AddMatch() {
     React.useEffect(()=>{
         axios.get("/stadiums")
         .then((res)=>{
-            setStadiums(res.data)
+            setStadiums(res.data.name)
         })
     },[])
   const handleOpen = () => {

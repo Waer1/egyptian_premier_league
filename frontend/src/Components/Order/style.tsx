@@ -23,7 +23,7 @@ export const Header = styled(Typography)(() => ({
     alignItems:"center",
     }));
 export const Container = styled(Typography)(() => ({
-    width:"20%",
+    width:"25%",
     maxWidth: 200,
     }));
 

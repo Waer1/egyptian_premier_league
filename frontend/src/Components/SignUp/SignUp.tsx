@@ -67,7 +67,7 @@ export default function SignUp() {
         gender: gender,
         address: address
     }).then((res)=>{
-        if(res.status===200){
+        if(res.status===201){
             success("your request send successfully");
             handleClose();
         }
