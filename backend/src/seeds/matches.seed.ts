@@ -19,10 +19,13 @@ export class MatchesSeedsService {
       console.log('Seeding matches...');
 
       const teams = Object.values(Team); // Get all team names
-      const startDate = new Date(); // Start from today
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - 14); // Two weeks ago
+
       const endDate = new Date();
+      endDate.setDate(endDate.getDate() + 14); // Two weeks from now
+
       const stadiums = await this.stadiumsService.findAll();
-      endDate.setMonth(startDate.getMonth() + 3); // End date is 3 months from now
 
       for (
         let day = startDate;
