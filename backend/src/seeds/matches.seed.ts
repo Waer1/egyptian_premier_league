@@ -15,8 +15,9 @@ export class MatchesSeedsService {
   ) {}
 
   async seedsMatches() {
-    console.log('Seeding matches...');
     if ((await this.matchsService.findAll()).length === 0) {
+      console.log('Seeding matches...');
+
       const teams = Object.values(Team); // Get all team names
       const startDate = new Date(); // Start from today
       const endDate = new Date();

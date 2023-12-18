@@ -31,7 +31,7 @@ export class CreateUserDto {
   @ApiProperty()
   @IsDateString()
   @CreateDateColumn()
-  birthDate: Date;
+  dateOfBirth: Date;
 
   @ApiProperty({ enum: Gender })
   @IsEnum(Gender)

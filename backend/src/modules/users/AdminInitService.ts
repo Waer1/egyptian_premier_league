@@ -21,7 +21,7 @@ export class AdminInitService implements OnModuleInit {
         password: 'Admin1234+',
         firstName: 'Admin',
         lastName: 'Admin',
-        birthDate: new Date(),
+        dateOfBirth: new Date(),
         gender: Gender.MALE,
         city: 'Amman',
         address: 'Amman',

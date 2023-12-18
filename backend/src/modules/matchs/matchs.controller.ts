@@ -50,8 +50,10 @@ export class MatchsController {
   @ApiOperation({ summary: 'Find match' })
   @ApiResponse({ status: 200, description: 'Return a match.' })
   @ApiParam({ name: 'id', required: true, description: 'The id of the match' })
-  findOne(@Param('id') id: string) {
-    return this.matchsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const match = await this.matchsService.findOne(+id);
+    console.log(match);
+    return match;
   }
 
   @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
@@ -63,8 +65,11 @@ export class MatchsController {
     description: 'The match has been successfully updated.',
   })
   @ApiParam({ name: 'id', required: true, description: 'The id of the match' })
-  update(@Param('id') id: string, @Body() updateMatchDto: UpdateMatchDto) {
-    return this.matchsService.update(+id, updateMatchDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateMatchDto: UpdateMatchDto,
+  ) {
+    return await this.matchsService.update(+id, updateMatchDto);
   }
 
   @UseGuards(JwtAuthGuard, EFA_MANAGERGuard)
@@ -76,8 +81,8 @@ export class MatchsController {
     description: 'The match has been successfully deleted.',
   })
   @ApiParam({ name: 'id', required: true, description: 'The id of the match' })
-  remove(@Param('id') id: string) {
-    return this.matchsService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.matchsService.remove(+id);
   }
 
   @ApiBody({
