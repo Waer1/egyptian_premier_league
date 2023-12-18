@@ -65,6 +65,7 @@ export class Match extends BaseEntity {
   }
 
   getSeatsArray(): boolean[][] {
+    console.log(this.matchVenue);
     const seatsArray: boolean[][] = Array(this.matchVenue.rows)
       .fill(null)
       .map(() => Array(this.matchVenue.seatsPerRow).fill(false));

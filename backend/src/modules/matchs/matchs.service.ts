@@ -3,7 +3,7 @@ import { CreateMatchDto, getDateTime } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Match } from 'src/entities/match.entity';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { StadiumsService } from '../stadiums/stadiums.service';
 import { getTeamImageLocation } from 'src/shared/teams';
 
@@ -149,12 +149,13 @@ export class MatchsService {
     startDate: Date,
     endDate: Date,
   ): Promise<Match[]> {
-    const matches = await this.matchRepositry
-      .createQueryBuilder('match')
-      .where('match.dateTime >= :startDate', { startDate })
-      .andWhere('match.dateTime <= :endDate', { endDate })
-      .limit(10)
-      .getMany();
+    const matches = await this.matchRepositry.find({
+      where: {
+        dateTime: Between(startDate, endDate),
+      },
+      take: 10,
+    });
+
 
     return matches;
   }
