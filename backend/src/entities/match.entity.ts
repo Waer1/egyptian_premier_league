@@ -4,11 +4,15 @@ import {
   Column,
   ManyToOne,
   BaseEntity,
+  AfterUpdate,
+  AfterInsert,
+  AfterLoad,
 } from 'typeorm';
 import { Team } from 'src/shared/teams';
 import { NotEquals } from 'class-validator';
 import { Stadium } from './stadum.entity';
 import { BadRequestException } from '@nestjs/common';
+import { Expose } from 'class-transformer';
 
 export type TeamInfo = {
   name: Team;
@@ -30,7 +34,7 @@ export class Match extends BaseEntity {
   @Column({ type: 'datetime' })
   dateTime: Date;
 
-  @ManyToOne(() => Stadium, { cascade: true })
+  @ManyToOne(() => Stadium, { cascade: true, eager: true })
   matchVenue: Stadium;
 
   @Column()
@@ -51,6 +55,15 @@ export class Match extends BaseEntity {
       .join(',');
   }
 
+  seatsArray: boolean[][];
+
+  @AfterLoad()
+  @AfterInsert()
+  @AfterUpdate()
+  setseatsArray() {
+    this.seatsArray = this.getSeatsArray();
+  }
+
   getSeatsArray(): boolean[][] {
     const seatsArray: boolean[][] = Array(this.matchVenue.rows)
       .fill(null)
@@ -66,6 +79,7 @@ export class Match extends BaseEntity {
 
     return seatsArray;
   }
+
   isValidAndAvailableSeat(row: number, column: number): boolean {
     const seatsArray = this.getSeatsArray();
 

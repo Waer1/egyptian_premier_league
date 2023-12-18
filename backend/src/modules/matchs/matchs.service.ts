@@ -69,7 +69,7 @@ export class MatchsService {
   async findAll() {
     const matches = await this.matchRepositry.find({
       skip: 0,
-      take: 50,
+      take: 10,
     });
     return matches;
   }
@@ -153,7 +153,7 @@ export class MatchsService {
       .createQueryBuilder('match')
       .where('match.dateTime >= :startDate', { startDate })
       .andWhere('match.dateTime <= :endDate', { endDate })
-      .limit(50)
+      .limit(10)
       .getMany();
 
     return matches;
