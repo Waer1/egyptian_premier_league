@@ -88,4 +88,17 @@ export class UsersService {
   async findActiveUsers(): Promise<User[]> {
     return this.userRepositry.find({ where: { status: UserStatus.APPROVED } });
   }
+
+  async getCurrentUser(id: number) {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    return user;
+  }
+
+  async isUsernameTaken(username: string): Promise<boolean> {
+    const user = await this.userRepositry.findOne({ where: { username } });
+    return !!user;
+  }
 }

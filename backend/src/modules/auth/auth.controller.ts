@@ -4,7 +4,9 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
+  Req,
   Request,
   UnauthorizedException,
   UseGuards,
@@ -24,6 +26,9 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { SITE_ADMINGuard } from 'src/guards/siteAdmin.guard';
 import { Gender, UserRole } from 'src/entities/user.entity';
+import { FANGuard } from 'src/guards/FAN.guard';
+import { EditUserDto } from './dto/edit-profile.dto';
+import { UpdatePasswordDto } from './dto/updatePassword.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -118,6 +123,25 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Logged out successfully.' })
   async logout() {
     return { message: 'Logged out successfully.' };
+  }
+
+  @UseGuards(JwtAuthGuard, FANGuard)
+  @ApiBearerAuth()
+  @Patch('updateProfile')
+  @ApiOperation({ summary: 'Update a user' })
+  @ApiBody({ type: EditUserDto })
+  @ApiResponse({ status: 200, description: 'User successfully updated.' })
+  async updateMe(@Body() updateUserDto: EditUserDto, @Req() req) {
+    return await this.authService.updateProfile(req.user.id, updateUserDto);
+  }
+
+  @UseGuards(JwtAuthGuard, FANGuard)
+  @ApiBearerAuth()
+  @Patch('updateProfile')
+  @ApiOperation({ summary: 'Update a user' })
+  @ApiResponse({ status: 200, description: 'User successfully updated.' })
+  async updatePassword(@Body() updateUserDto: UpdatePasswordDto, @Req() req) {
+    return await this.authService.changePassword(req.user.id, updateUserDto);
   }
 
   // @UseGuards(JwtAuthGuard, SITE_ADMINGuard)

@@ -1,9 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { comparePasswords } from 'src/shared/encryption.util';
+import { comparePasswords, encryptPassword } from 'src/shared/encryption.util';
 import { JwtService } from '@nestjs/jwt';
 import { User, UserStatus } from 'src/entities/user.entity';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { EditUserDto } from './dto/edit-profile.dto';
+import { UpdatePasswordDto } from './dto/updatePassword.dto';
 
 @Injectable()
 export class AuthService {
@@ -67,5 +73,34 @@ export class AuthService {
     } catch (err) {
       throw new UnauthorizedException('Invalid token');
     }
+  }
+
+  async changePassword(id: number, updateUserDto: UpdatePasswordDto) {
+    const { newPassword, oldPassword } = updateUserDto;
+    const user = await this.usersService.findOne(id);
+    this.validateUser(user.username, oldPassword);
+
+    const newHadedPassword = await encryptPassword(newPassword);
+    user.password = newHadedPassword;
+    await this.usersService.update(id, user);
+  }
+
+  async updateProfile(id: number, updateUserDto: EditUserDto) {
+    const user = await this.usersService.findOne(id);
+    if (updateUserDto.username) {
+      // Check if the username is reserved
+      const isUsernameTaken = await this.usersService.isUsernameTaken(
+        updateUserDto.username,
+      );
+      if (isUsernameTaken) {
+        throw new BadRequestException('Username is already taken');
+      }
+    }
+
+    // await this.validateUser(user.username, updateUserDto.password);
+    delete user.password;
+    Object.assign(user, updateUserDto);
+    await this.usersService.update(id, user);
+    return user;
   }
 }

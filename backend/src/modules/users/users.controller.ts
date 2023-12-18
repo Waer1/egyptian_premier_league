@@ -29,6 +29,17 @@ import { FANGuard } from 'src/guards/FAN.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(JwtAuthGuard, FANGuard)
+  @ApiBearerAuth()
+  @Patch('current')
+  @ApiOperation({ summary: 'get the current user' })
+  @ApiResponse({ status: 200, description: 'current user data.' })
+  async getCurrent(@Req() req) {
+    const id = req.user.id;
+    return await this.usersService.getCurrentUser(+id);
+  }
+
+
   @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
   @ApiBearerAuth()
   @Get('actual')
@@ -120,14 +131,14 @@ export class UsersController {
     return await this.usersService.update(+id, updateUserDto);
   }
 
-  @UseGuards(JwtAuthGuard, FANGuard)
-  @ApiBearerAuth()
-  @Patch('updateProfile')
-  @ApiOperation({ summary: 'Update a user' })
-  @ApiResponse({ status: 200, description: 'User successfully updated.' })
-  async updateMe(@Body() updateUserDto: UpdateUserDto, @Req() req) {
-    return await this.usersService.update(req.user.id, updateUserDto);
-  }
+  // @UseGuards(JwtAuthGuard, FANGuard)
+  // @ApiBearerAuth()
+  // @Patch('updateProfile')
+  // @ApiOperation({ summary: 'Update a user' })
+  // @ApiResponse({ status: 200, description: 'User successfully updated.' })
+  // async updateMe(@Body() updateUserDto: UpdateUserDto, @Req() req) {
+  //   return await this.usersService.update(req.user.id, updateUserDto);
+  // }
 
   @UseGuards(JwtAuthGuard, SITE_ADMINGuard)
   @ApiBearerAuth()
@@ -155,4 +166,5 @@ export class UsersController {
   async approve(@Param('id') id: string) {
     return await this.usersService.approve(+id);
   }
+
 }
