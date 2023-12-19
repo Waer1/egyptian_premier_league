@@ -70,7 +70,6 @@ export default function Reservation() {
     )
     return (
         <Container>
-            <Filter/>
             {
                 tickets.map((ticket,index) => {
                     return <>

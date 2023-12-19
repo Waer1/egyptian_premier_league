@@ -9,26 +9,17 @@ import { filterState } from "../../State";
 import { error, success } from "../Alert";
 
 
-const users2:User[]=[{
-    id:1,
-    firstName:"Ahmed",
-    lastName:"Hosny",
-    email:"aaaaa",
-    role:"fan",
-    address:"Masr el gadeda",
-    city:"Cairo",
-    gender:'male',
-    userName:"AhmedHosny2024",
-    dateOfBirth:new Date("2000-01-01")
-    }
-]
+
 
 export default function Users() {
-    const [users,setUsers]=React.useState<User[]>(users2);
+    const [users,setUsers]=React.useState<User[]>([]);
     const id=useSelector((state:filterState)=>state.id);
+    const token=useSelector((state:filterState)=>state.token)
 
+    let click=0;
     useEffect(() => {
         // TODO: fetch teams from backend
+        axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
         axios.get(`/users/actual`)
         .then(res => res.data)
         .then(data => {
@@ -36,11 +27,17 @@ export default function Users() {
             setUsers(data);
         })
         .catch(err => console.log(err));
-    },[]);
+    },[click]);
     const Del=()=>{
         axios.delete(`/users/${id}`)
-        .then(res => success("user deleted successfully"))
-        .catch(err => error("can't delete user please try again"));
+        .then((res) => 
+            {
+            users.splice(users.findIndex((user)=>user.id===id),1)
+            success("user deleted successfully")
+            }
+        )
+        .catch(err => error(err.response.data.message));
+        click+=1
     }
     return (
 <>

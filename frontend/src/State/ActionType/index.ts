@@ -3,4 +3,5 @@ export enum ActionType {
     CHANGE_STATE = "CHANGE_STATE",
     CHANGE_TOKEN="CHANGE_TOKEN",
     CHANGE_ID="CHANGE_ID",
+    CHANGE_NAME="CHANGE_NAME"
 }

@@ -14,20 +14,10 @@ import moment from 'moment';
 import { DesktopTimePicker } from '@mui/x-date-pickers';
 import axios from "../../Server/Instance";
 import { error, success } from '../Alert';
+import { useSelector } from 'react-redux';
 
-type Match = {
-    id:number;
-    team1: string;
-    team2: string;
-    date: Date;
-    time: Date;
-    logo1: string;
-    logo2: string;
-    ref:string;
-    first:string;
-    second:string;
-    stadium:string;
-}
+import { Match } from "../Types";
+
 type CardProps = {
     match: Match;
     index: number;
@@ -40,19 +30,32 @@ export default function EditMatch(props:CardProps) {
   const [open, setOpen] = React.useState(false);
   const [home, setHom] = React.useState(match.team1);
   const [away, setAway] = React.useState(match.team2);
+//   const [logo1, setLogo1] = React.useState(match.logo1);
+//   const [logo2, setLogo2] = React.useState(match.logo2);
   const [ref, setRef] = React.useState(match.ref);
   const [fisrt, setFirst] = React.useState(match.first);
   const [second, setSecond] = React.useState(match.second);
   const [stadium, setStadium] = React.useState(match.stadium);
   const [time, setTime] = React.useState(match.date);
-  const [time2, setTime2] = React.useState(match.time);
+  const [time2, setTime2] = React.useState(new Date (match.time));
   const [stadiums, setStadiums] = React.useState<string[]>([]);
+  const [teamName, setTeamName] = React.useState<string[]>([]);
+
+  const token=useSelector((state:any)=>state.token)
   React.useEffect(()=>{
-      axios.get("/stadiums")
-      .then((res)=>{
-          setStadiums(res.data.name)
-      })
-  },[])
+    axios.get("/teams")
+    .then((res)=>{
+        const data=res.data.map((s:any)=>s.name)
+        setTeamName(data)
+    })
+},[])
+  React.useEffect(()=>{
+    axios.get("/stadiums")
+    .then((res)=>{
+        const data=res.data.map((s:any)=>s.name)
+        setStadiums(data)
+    })
+},[])
 
   const handleOpen = () => {
     setOpen(true);
@@ -63,22 +66,31 @@ export default function EditMatch(props:CardProps) {
 
   const Submit=()=>{  
     // TODO: send new data to backend
+    if(home===away){
+        error("Home and away team can't be the same");
+        return;
+    }
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     axios.patch(`/matchs/${id}`,{
-        homeTeam:home,
-        awayTeam:away,
+        homeTeam:{
+            name:home,
+        },
+        awayTeam:{
+            name:away,
+        },
         date:time,
-        time:time2,
+        time:moment(time2).format('HH:mm'),
         mainReferee:ref,
         firstLinesman:fisrt,
         secondLinesman:second,
         stauimName:stadium
+        
         }).then((res)=>{
-            if(res.status===200)
-                {success("Match added successfully");
+            if(res.status===201 || res.status===200)
+                {success("Match edited successfully");
                 handleClose();}
         }).catch((err)=>{
-            error("Match added successfully");
-        }
+            error(err.response.data.message)        }
     );
   }
   const Cancel=()=>{  
@@ -124,31 +136,51 @@ export default function EditMatch(props:CardProps) {
             </Box>
             <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',width: 500,my:1}}>
                 <Box sx={{width:"40%"}}>
-                    <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
-                        <InputLabel htmlFor="Home Team">Home Team</InputLabel>
-                        <Input
-                            id="Home Team"
-                            type='text' 
-                            defaultValue={home}
-                            onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                                setHom(e.target.value);
-                            }}
-                        />
-                    </FormControl>
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
+                    <InputLabel id="demo-simple-select-standard-label">Home Team</InputLabel>
+                    <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={home}
+                    onChange={(e) => {
+                        setHom(e.target.value);
+                    }}
+                    label="Home Team"
+                    >
+                    
+                    {teamName?.map((s:string) => {
+                        return (
+                        <MenuItem value={s}>{s}</MenuItem>
+                    );
+                    })}
+                    
+                    
+                    </Select>
+                </FormControl>
                 </Box>
 
                 <Box sx={{width:"40%"}}>
-                    <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
-                        <InputLabel htmlFor="Away Team">Away Team</InputLabel>
-                        <Input
-                            id="Away Team"
-                            type='text' 
-                            defaultValue={away}
-                            onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                                setAway(e.target.value);
-                            }}
-                        />
-                    </FormControl>
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
+                    <InputLabel id="demo-simple-select-standard-label">Away Team</InputLabel>
+                    <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={away}
+                    onChange={(e) => {
+                        setAway(e.target.value);
+                    }}
+                    label="Away Team"
+                    >
+                    
+                    {teamName?.map((s:string) => {
+                        return (
+                        <MenuItem value={s}>{s}</MenuItem>
+                    );
+                    })}
+                    
+                    
+                    </Select>
+                </FormControl>
             </Box>
             </Box>
             <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',width: 500,my:1}}>
@@ -211,7 +243,7 @@ export default function EditMatch(props:CardProps) {
                     label="stadium"
                     >
                     
-                    {stadiums.map((s:string) => {
+                    {stadiums?.map((s:string) => {
                         return (
                         <MenuItem value={s}>{s}</MenuItem>
                     );
@@ -242,25 +274,25 @@ export default function EditMatch(props:CardProps) {
                     </Box>
             <Box sx={{boxSizing:"border-box",width:"40%",display:'flex',justifyContent:'center',alignItems:'center'}}>
 
-                        <DemoContainer
-                            components={[
-                                'TimePicker',
-                                'MobileTimePicker',
-                                'DesktopTimePicker',
-                                'StaticTimePicker',
-                            ]}
-                            >
-                            <DemoItem >
-                                <DesktopTimePicker defaultValue={dayjs(time2.toISOString().slice(0, 16))} label="Time for match"
-                                onChange={
-                                    (newValue) => 
-                                    {
-                                        if(newValue!==null) setTime2(newValue.toDate());
-                                    }
-                                }
-                                />
-                            </DemoItem>
-                        </DemoContainer>
+            <DemoContainer
+                    components={[
+                        'TimePicker',
+                        'MobileTimePicker',
+                        'DesktopTimePicker',
+                        'StaticTimePicker',
+                    ]}
+                    >
+                    <DemoItem >
+                        <DesktopTimePicker defaultValue={dayjs(time2.toISOString().slice(0, 16))} label="Time for match"
+                        onChange={
+                            (newValue) => 
+                            {
+                                if(newValue!==null) setTime2(newValue.toDate());
+                            }
+                        }
+                        />
+                    </DemoItem>
+                </DemoContainer>
                                  </Box>       
                     </LocalizationProvider>
 

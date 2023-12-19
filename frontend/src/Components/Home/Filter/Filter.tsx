@@ -13,7 +13,6 @@ export default function Filter() {
     
     const dispatch = useDispatch();
     const filter:boolean[] =useSelector((state:filterState) => state.filter);
-    console.log(filter);
     const {changeFilter} = bindActionCreators(actionsCreators,dispatch);
 
     // const [selected,setSelected] =React.useState<boolean[]> ([false,false,true]);
@@ -25,19 +24,19 @@ export default function Filter() {
 
     return (
         <Container>
-            <Btn flag={filter[0]} onClick={() => changeFilter([true,false,false,false])}>
+            <Btn flag={filter[0]} onClick={() => {changeFilter([true,false,false,false]); window.location.reload()}}>
                 <DensitySmallIcon/>
                 All
             </Btn>
-            <Btn flag={filter[1]} onClick={() => changeFilter([false,true,false,false])}>
+            <Btn flag={filter[1]} onClick={() => {changeFilter([false,true,false,false]); window.location.reload()}}>
                 <DoneIcon/>
                 Finished
             </Btn>
-            <Btn flag={filter[2]} onClick={() => changeFilter([false,false,true,false])}>
+            <Btn flag={filter[2]} onClick={() => {changeFilter([false,false,true,false]); window.location.reload()}}>
                 <PublishedWithChangesIcon/>
                 Today
             </Btn>
-            <Btn flag={filter[3]} onClick={() => changeFilter([false,false,false,true])}>
+            <Btn flag={filter[3]} onClick={() => {changeFilter([false,false,false,true]); window.location.reload()}}>
                 <ScheduleIcon/>
                 Soon
             </Btn>

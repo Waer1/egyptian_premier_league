@@ -32,8 +32,7 @@ export default function Login() {
     event.preventDefault();
   };
   const dispatch = useDispatch();
-  const {ChangeState, ChangeToken,ChangeId} = bindActionCreators(actionsCreators,dispatch);
-
+  const {ChangeState, ChangeToken,ChangeId,ChangeName} = bindActionCreators(actionsCreators,dispatch);
   const LogIN=()=>{
     // TODO:
     // send request to backend to check if the user is valid and fet the state 
@@ -41,32 +40,29 @@ export default function Login() {
       username:name,
       password:password
     }).then((res)=>{
-      console.log(res)
       if(res.status===201){
         let role =0 
         if(res.data.userData.role==="fan")
           role=1;
-        else if(res.data.userData.role==="efmanger")
+        else if(res.data.userData.role==="EFA manager")
           role=2;
         else if(res.data.userData.role==="siteAdmin")
           role=3;
-        console.log(role)
         ChangeState(role);
         ChangeId(res.data.userData.id);
         ChangeToken(res.data.access_token);
+        ChangeName(res.data.userData.username);
         handleClose();
       }
       else{
         error("Invalid user name or password");
       }
     }).catch((err)=>{
-      error("Invalid user name or password");
-    });
+      error(err.response.data.message)    });
   }
   const SignUP=()=>{
     handleClose();
     document.getElementById('Signup')?.click();
-    console.log("Sign up");
   }
   return (
     <div>

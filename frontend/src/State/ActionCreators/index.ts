@@ -35,3 +35,11 @@ export const ChangeId = (state:number|null) => {
         });
     }
 }
+export const ChangeName = (state:string) => {
+    return (dispatch : Dispatch<Action>) => {
+        dispatch({
+            type: ActionType.CHANGE_NAME,
+            payload: state,
+        });
+    }
+}

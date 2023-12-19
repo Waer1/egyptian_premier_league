@@ -26,24 +26,24 @@ import { actionsCreators } from "../State/index";
 // }
 function ResponsiveAppBar() {
     const state= useSelector((state:filterState) => state.state);
-    console.log(state);
-    const token= useSelector((state:filterState) => state.token);
-    console.log(token)
+    const name= useSelector((state:filterState) => state.name);
+    const token : string= useSelector((state:filterState) => state.token);
     const dispatch = useDispatch();
-    const {ChangeState,ChangeToken,ChangeId} = bindActionCreators(actionsCreators,dispatch);
+    const {ChangeState,ChangeToken,ChangeId,ChangeName} = bindActionCreators(actionsCreators,dispatch);
 
     const fan :string[] = ["Home",'profile', 'Reservation'];
     const manger :string[] = ["Home",'profile', 'Add match', 'Add stadium'];
     const admin :string[] = ["Home",'Profile', 'pending', 'users'];
     const guest :string[] = ['Log in','Sign up'];
     const [pages, setPages] = React.useState<null | string[]>(null);   
-  
+
     React.useEffect (()=>{
         if(token===""){
             ChangeState(0)
+            ChangeName("")
             ChangeId(null)
         }
-    },[])
+    },[token])
     React.useEffect(() => {
         switch (state) {
             case 1:
@@ -59,7 +59,6 @@ function ResponsiveAppBar() {
                 setPages(null);
                 break;
         }
-    console.log(pages);
     }, [state]);
 
   
@@ -165,12 +164,17 @@ function ResponsiveAppBar() {
                     onClick={()=>window.location.pathname="profile"} 
                     sx={{ p: 0,borderRadius:1 }}>
                         <Box sx={{color:"white" ,pr:1}}>
-                        Ahmed Hosny
+                        {name}
                         </Box>
                         <Avatar alt="" src="/broken-image.jpg" />
                     </IconButton>
-                    <IconButton>
-                        <LogoutIcon sx={{color:"white",fontSize:35,mr:-2}}onClick={()=>{ChangeState(0);ChangeToken("");window.location.pathname="/"}}/>
+                    <IconButton onClick={async()=>{
+                        ChangeToken("");
+                        // ChangeName("");
+                        await ChangeState(0);
+                       window.location.pathname="/"
+                        }}>
+                        <LogoutIcon sx={{color:"white",fontSize:35,mr:-2}}/>
                     </IconButton>
                 </>
                 }
