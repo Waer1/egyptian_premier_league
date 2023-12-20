@@ -125,7 +125,7 @@ export class AuthController {
     return { message: 'Logged out successfully.' };
   }
 
-  @UseGuards(JwtAuthGuard, FANGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Patch('updateProfile')
   @ApiOperation({ summary: 'Update a user' })
@@ -135,7 +135,7 @@ export class AuthController {
     return await this.authService.updateProfile(req.user.id, updateUserDto);
   }
 
-  @UseGuards(JwtAuthGuard, FANGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Patch('updateProfile')
   @ApiOperation({ summary: 'Update a user' })

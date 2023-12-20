@@ -92,6 +92,19 @@ export class MatchsService {
     if (!match) {
       throw new BadRequestException('Match not found');
     }
+
+    if (updateMatchDto.homeTeam && updateMatchDto.homeTeam.name) {
+      updateMatchDto.homeTeam.logo = getTeamImageLocation(
+        updateMatchDto.homeTeam.name,
+      );
+    }
+
+    if (updateMatchDto.awayTeam && updateMatchDto.awayTeam.name) {
+      updateMatchDto.awayTeam.logo = getTeamImageLocation(
+        updateMatchDto.awayTeam.name,
+      );
+    }
+
     Object.assign(match, updateMatchDto);
     await this.matchRepositry.save(match);
     return match;
@@ -104,7 +117,10 @@ export class MatchsService {
       throw new BadRequestException('Match not found');
     }
 
-    await this.matchRepositry.remove(match);
+    await this.matchRepositry.softDelete({
+      id: id,
+    });
+
     return match;
   }
 
@@ -155,7 +171,6 @@ export class MatchsService {
       },
       take: 10,
     });
-
 
     return matches;
   }

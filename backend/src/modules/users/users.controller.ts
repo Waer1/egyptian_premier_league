@@ -29,7 +29,7 @@ import { FANGuard } from 'src/guards/FAN.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(JwtAuthGuard, FANGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Patch('current')
   @ApiOperation({ summary: 'get the current user' })

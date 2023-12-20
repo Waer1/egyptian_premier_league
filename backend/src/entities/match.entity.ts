@@ -7,6 +7,7 @@ import {
   AfterUpdate,
   AfterInsert,
   AfterLoad,
+  DeleteDateColumn,
 } from 'typeorm';
 import { Team } from 'src/shared/teams';
 import { NotEquals } from 'class-validator';
@@ -45,6 +46,9 @@ export class Match extends BaseEntity {
 
   @Column()
   secondLinesman: string;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date;
 
   @Column({ type: 'mediumtext' })
   reservedSeats: string;
