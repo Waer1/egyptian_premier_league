@@ -7,12 +7,14 @@ import { FormControl,Input,  InputLabel,Typography } from '@mui/material';
 import {Style} from './style';
 import axios from "../../Server/Instance";
 import { error, success } from '../Alert';
+import { useSelector } from 'react-redux';
 
 export default function AddStadium() {
   const [open, setOpen] = React.useState(false);
   const [userName, setUserName] = React.useState("");
 const [Rows, setRows] = React.useState(10);
 const [Columns, setColumns] = React.useState(10);
+const token =useSelector((state:any)=>state.token)
   const handleOpen = () => {
     setOpen(true);
   };
@@ -22,17 +24,19 @@ const [Columns, setColumns] = React.useState(10);
 
   const Add=()=>{
     // TODO: send data to backend
-    axios.post('/stadium',{
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    axios.post('/stadiums',{
       name:userName,
       rows:Rows,
       seatsPerRow:Columns
     }).then((res)=>{
-      success("Stadium added successfully");
-      handleClose();
+      if(res.status===201||res.status===200)
+      {success("Stadium added successfully");
+      handleClose();}
 
     }).catch((err)=>{
-      error("Something went wrong");
-    })
+      error(err.response.data.message)
+        })
   }
 
   return (

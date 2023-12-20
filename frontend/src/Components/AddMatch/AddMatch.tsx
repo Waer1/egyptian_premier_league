@@ -14,6 +14,7 @@ import moment from 'moment';
 import { DesktopTimePicker } from '@mui/x-date-pickers';
 import axios from "../../Server/Instance";
 import {error,success} from "../Alert";
+import { useSelector } from 'react-redux';
 export default function AddMatch() {
   const [open, setOpen] = React.useState(false);
   const [home, setHom] = React.useState("");
@@ -25,10 +26,20 @@ export default function AddMatch() {
   const [time, setTime] = React.useState(new Date());
   const [time2, setTime2] = React.useState(new Date());
   const [stadiums, setStadiums] = React.useState<string[]>([]);
+  const [teamName, setTeamName] = React.useState<string[]>([]);
+  const token =useSelector((state:any)=>state.token)
+    React.useEffect(()=>{
+        axios.get("/teams")
+        .then((res)=>{
+            const data=res.data.map((s:any)=>s.name)
+            setTeamName(data)
+        })
+    },[])
     React.useEffect(()=>{
         axios.get("/stadiums")
         .then((res)=>{
-            setStadiums(res.data.name)
+            const data=res.data.map((s:any)=>s.name)
+            setStadiums(data)
         })
     },[])
   const handleOpen = () => {
@@ -40,11 +51,20 @@ export default function AddMatch() {
 
   const Submit=()=>{  
     // TODO: send data to backend
+    if(home===away){
+        error("Home and away team can't be the same");
+        return;
+    }
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     axios.post('/matchs',{
-        homeTeam:home,
-        awayTeam:away,
+        homeTeam:{
+            name:home
+        },
+        awayTeam:{
+            name:away
+        },
         date:time,
-        time:time2,
+        time:moment(time2).format('HH:mm'),
         mainReferee:ref,
         firstLinesman:fisrt,
         secondLinesman:second,
@@ -54,8 +74,7 @@ export default function AddMatch() {
                 {success("Match added successfully");
                 handleClose();}
         }).catch((err)=>{
-            error("Match added successfully");
-        }
+            error(err.response.data.message)        }
     );
   }
 
@@ -90,31 +109,51 @@ export default function AddMatch() {
             </Box>
             <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',width: 500,my:1}}>
                 <Box sx={{width:"40%"}}>
-                    <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
-                        <InputLabel htmlFor="Home Team">Home Team</InputLabel>
-                        <Input
-                            id="Home Team"
-                            type='text' 
-                            defaultValue={home}
-                            onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                                setHom(e.target.value);
-                            }}
-                        />
-                    </FormControl>
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
+                    <InputLabel id="demo-simple-select-standard-label">Home Team</InputLabel>
+                    <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={home}
+                    onChange={(e) => {
+                        setHom(e.target.value);
+                    }}
+                    label="Home Team"
+                    >
+                    
+                    {teamName?.map((s:string) => {
+                        return (
+                        <MenuItem value={s}>{s}</MenuItem>
+                    );
+                    })}
+                    
+                    
+                    </Select>
+                </FormControl>
                 </Box>
 
                 <Box sx={{width:"40%"}}>
-                    <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
-                        <InputLabel htmlFor="Away Team">Away Team</InputLabel>
-                        <Input
-                            id="Away Team"
-                            type='text' 
-                            defaultValue={away}
-                            onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                                setAway(e.target.value);
-                            }}
-                        />
-                    </FormControl>
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
+                    <InputLabel id="demo-simple-select-standard-label">Away Team</InputLabel>
+                    <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={away}
+                    onChange={(e) => {
+                        setAway(e.target.value);
+                    }}
+                    label="Away Team"
+                    >
+                    
+                    {teamName?.map((s:string) => {
+                        return (
+                        <MenuItem value={s}>{s}</MenuItem>
+                    );
+                    })}
+                    
+                    
+                    </Select>
+                </FormControl>
             </Box>
             </Box>
             <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',width: 500,my:1}}>
@@ -177,7 +216,7 @@ export default function AddMatch() {
                     label="stadium"
                     >
                     
-                    {stadiums.map((s:string) => {
+                    {stadiums?.map((s:string) => {
                         return (
                         <MenuItem value={s}>{s}</MenuItem>
                     );

@@ -6,6 +6,8 @@ import TakeSeat from "../../TakeSeat/TakeSeat";
 import ShowSeats from "../../ShowSeats/ShowSeats";
 import { Match,Teams,Coordinates } from "../../Types";
 import axios from "../../../Server/Instance";
+import { useSelector } from "react-redux";
+import { filterState } from "../../../State";
 const reserved: Coordinates[] = [
     [0, 1],
     [0, 2],
@@ -34,11 +36,17 @@ export default function Card(props:CardProps) {
     const displayCard=()=>{
         document.getElementById("match"+index)?.click();
     }
-
+    const token=useSelector((state:filterState)=>state.token)
     const DeleteMatch=()=>{
         // TODO: send delete action to backend
-        axios.delete(`/match/${match.id}`);
-
+        axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
+        axios.delete(`/matchs/${match.id}`)
+        .then(res => res.status)
+        .then(status => {
+            if(status===200||status===201) 
+                window.location.reload();
+        })
+        .catch(err => console.log(err));
     }
     const DeleteSeat=()=>{
         // TODO: send delete action to backend
@@ -48,17 +56,17 @@ export default function Card(props:CardProps) {
         <BOX>
             <Container key={index} onClick={displayCard}>
                 <Team1>
-                    <Avatar sx={{ width: 85, height: 85 ,mx:4}} alt={process.env.PUBLIC_URL + team.team1} src={team.logo1} />
+                    <Avatar sx={{ width: 85, height: 85 ,mx:4}} alt={match.team1} src={process.env.PUBLIC_URL+match.logo1} />
                     <TeamName>
-                        {team.team1}
+                        {match.team1}
                     </TeamName>
                 </Team1>
-                <Time data={team.date} time={match.time}/>
+                <Time data={match.date} time={match.time}/>
                 <Team2>
                     <TeamName>
-                        {team.team2}
+                        {match.team2}
                     </TeamName>
-                    <Avatar sx={{ width: 85, height: 85 ,mx:4}} alt={process.env.PUBLIC_URL+team.team2} src={team.logo2} />
+                    <Avatar sx={{ width: 85, height: 85 ,mx:4}} alt={match.team2} src={process.env.PUBLIC_URL+match.logo2} />
                 </Team2>
             </Container>
             <Box sx={{display:'flex', mt:0.5}}>

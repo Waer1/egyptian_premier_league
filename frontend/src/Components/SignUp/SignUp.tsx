@@ -50,17 +50,20 @@ export default function SignUp() {
   const LogIN=()=>{
     handleClose();
     document.getElementById('Login')?.click();
-    console.log("Log in");
   }
   const SignUP=()=>{  
     // TODO:
     // send request to backend to check if the user is valid and fet the state 
-    axios.post('/signup',{
+    if(userName===""||password===""||firstName===""||lastName===""||gender===""||role===""||email===""||city===""||dateOfBirth===null){
+        error("Please fill all the fields");
+        return;
+    }
+    axios.post('auth/signup',{
         username: userName,
         password:  password,
         firstName: firstName,
         lastName: lastName,
-        birthDate: dateOfBirth,
+        dateOfBirth: dateOfBirth,
         city: city,
         email: email,
         role: role,
@@ -72,9 +75,10 @@ export default function SignUp() {
             handleClose();
         }
         else{
-            error("Invalid data");
-        }
+            error(res.data.message)
+            }
         }).catch((err)=>{
+            error(err.response.data.message);
             console.log(err);
         }
     );
@@ -194,8 +198,8 @@ export default function SignUp() {
                             aria-labelledby="demo-row-radio-buttons-group-label"
                             name="row-radio-buttons-group"
                         >
-                            <FormControlLabel value="Manager" control={<Radio />} label="Manager" />
-                            <FormControlLabel value="Fan" control={<Radio />} label="Fan" />
+                            <FormControlLabel value="EFA manager" control={<Radio />} label="Manager" />
+                            <FormControlLabel value="fan" control={<Radio />} label="Fan" />
                         </RadioGroup>
                 </FormControl>
                 </Box>

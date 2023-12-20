@@ -9,28 +9,15 @@ import { Container, Header, ListContainer, ListNumber } from './style';
 import {Team} from '../Types';
 import axios from "../../Server/Instance"
 export default function Order() {
-    // wait for waer
-    // React.useEffect(() => {
-    //     // TODO: fetch teams from backend
-    //     // fetch('http://localhost:8000/teams')
-    //     // .then(res => res.json())
-    //     // .then(data => {
-    //     //     console.log(data);
-    //     //     setTeams(data);
-    //     // })
-    //     // .catch(err => console.log(err));
-    // }, []);
     const [teams,setTeams]=React.useState<Team[]>();
 
     const getTeams =()=>{
         axios.get("./teams")
         .then((res)=>{
             (
-                // console.log(res.data)
                 setTeams(res.data)   
             );
         })
-        console.log(teams)
     }
     React.useEffect(() => {
         // wait for waer

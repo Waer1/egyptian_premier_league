@@ -5,53 +5,68 @@ import React, { useEffect } from "react";
 import dayjs from "dayjs";
 import { User } from "../Types";
 import axios from "../../Server/Instance";
+import { useSelector } from "react-redux";
+import { filterState } from "../../State";
 
 
-type UserProps={
-    users:User[];
-}
-const PendingList:User[]=[{
-    id:1,
-    firstName:"Ahmed",
-    lastName:"Hosny",
-    email:"eng.ahmedhosny2024@gmail.com",
-    role:"fan",
-    address:"Masr el gadeda",
-    city:"Cairo",
-    dateOfBirth:dayjs(moment(new Date("2000-01-01")).format('YYYY-MM-DD')).toDate(),
-    gender:'male',
-    userName:"AhmedHosny2024"
-  },
-  {
-    id:2,
-    firstName:"Ahmed",
-    lastName:"Hosny",
-    email:"eng.ahmedhosny2024@gmail.com",
-    role:"fan",
-    address:"Masr el gadeda",
-    city:"Cairo",
-    dateOfBirth:dayjs(moment(new Date("2000-01-01")).format('YYYY-MM-DD')).toDate(),
-    gender:'male',
-    userName:"AhmedHosny2024"
-  }
-  ]
+// const PendingList:User[]=[{
+//     id:1,
+//     firstName:"Ahmed",
+//     lastName:"Hosny",
+//     email:"eng.ahmedhosny2024@gmail.com",
+//     role:"fan",
+//     address:"Masr el gadeda",
+//     city:"Cairo",
+//     dateOfBirth:dayjs(moment(new Date("2000-01-01")).format('YYYY-MM-DD')).toDate(),
+//     gender:'male',
+//     userName:"AhmedHosny2024"
+//   },
+//   {
+//     id:2,
+//     firstName:"Ahmed",
+//     lastName:"Hosny",
+//     email:"eng.ahmedhosny2024@gmail.com",
+//     role:"fan",
+//     address:"Masr el gadeda",
+//     city:"Cairo",
+//     dateOfBirth:dayjs(moment(new Date("2000-01-01")).format('YYYY-MM-DD')).toDate(),
+//     gender:'male',
+//     userName:"AhmedHosny2024"
+//   }
+//   ]
 export default function Pending( ) {
-    const [users,setUsers]=React.useState<User[]>(PendingList);
-    const formattedDate :string[]= users.map((user:User,index:number)=>(
-        moment(new Date(user.dateOfBirth)).format('YYYY-MM-DD')
-    ))
+    const [users,setUsers]=React.useState<User[]>([]);
+    const token=useSelector((state:filterState)=>state.token)
+    let click=0;
+    const getPending=()=>{
+        axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
+        axios.get(`/users/pending`)
+        .then(res => res.data)
+        .then(data => {
+            setUsers(data);
+        })
+        .catch(err => console.log(err));
+        
+    }
+    getPending()
     useEffect(() => {
         // wait for waer
         // TODO: fetch teams from backend
-        // axios.get(`/users/pending`)
-        // .then(res => res.data)
-        // .then(data => {
-        //     console.log(data);
-        //     setUsers(data);
-        // })
-        // .catch(err => console.log(err));
+        
 
-    },[]);
+    },[users]);
+    const Del=(id:number)=>{
+        axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
+        axios.delete(`/users/${id}`)
+        users.splice(users.findIndex((user)=>user.id===id),1)
+        click+=1
+    }
+    const Approve=(id:number)=>{
+        axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
+        axios.patch(`/users/${id}/approve`)
+        users.splice(users.findIndex((user)=>user.id===id),1)
+        click+=1
+    }
     return (
         // <Box sx={{display:'flex',justifyContent:'flex-start',flexDirection:'column'}}>
 <>
@@ -84,7 +99,7 @@ export default function Pending( ) {
                             {user.gender} &nbsp;
                         </Typography>
                         <Typography variant="h5"  component="div" sx={{color:'black',opacity:1,fontSize:"small",m:0}}>
-                            {formattedDate[index]}
+                            {moment(user.dateOfBirth).format('YYYY-MM-DD')}
                         </Typography>
                     </Box>
                 </Container>
@@ -96,10 +111,10 @@ export default function Pending( ) {
                     </Box>
                 </Container>
                 <Box sx={{display:'flex'}}>
-                    <Delete>
+                    <Delete onClick={()=>Del(user.id)}>
                         Delete
                     </Delete>
-                    <Btn>
+                    <Btn onClick={()=>Approve(user.id)}>
                         Approve
                     </Btn>
                 </Box>
