@@ -8,7 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { ReservationService } from './reservation.service';
-import { OnModuleDestroy, Request, UseGuards, UsePipes } from '@nestjs/common';
+import { ConflictException, OnModuleDestroy, Request, UseGuards, UsePipes } from '@nestjs/common';
 import { JoinReservationDto } from './dto/join-reservation.dto';
 import { WsJwtGuard } from 'src/guards/WsGuard.guard';
 import { MatchsService } from '../matchs/matchs.service';
@@ -46,10 +46,12 @@ export class ReservationGateway implements OnModuleDestroy {
     const matchExists = await this.matchsService.doesMatchExist(
       joinReservationDto.matchId,
     );
+
     if (!matchExists) {
       throw new WsException('match does not exist');
     }
     client.join(joinReservationDto.matchId.toString());
+
     client.emit(
       'message',
       `You have joined match ${joinReservationDto.matchId}`,
@@ -90,12 +92,20 @@ export class ReservationGateway implements OnModuleDestroy {
     }
 
     try {
-      const reservation = await this.reservationService.create(
+      const result = await this.reservationService.create(
         createReservationDto,
         req.user.id,
       );
 
-      this.server.to(matchId.toString()).emit('reserve', reservation);
+      if (result instanceof ConflictException) {
+        throw new WsException(result.message);
+      }
+
+      const reservation = result as Reservation;
+
+      this.server
+        .to(matchId.toString())
+        .emit('reserve', [[reservation.seatRaw, reservation.seatColum]]);
     } catch (e) {
       throw new WsException(e.message);
     }
