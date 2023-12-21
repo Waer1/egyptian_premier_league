@@ -8,7 +8,13 @@ import {
 } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { ReservationService } from './reservation.service';
-import { ConflictException, OnModuleDestroy, Request, UseGuards, UsePipes } from '@nestjs/common';
+import {
+  ConflictException,
+  OnModuleDestroy,
+  Request,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 import { JoinReservationDto } from './dto/join-reservation.dto';
 import { WsJwtGuard } from 'src/guards/WsGuard.guard';
 import { MatchsService } from '../matchs/matchs.service';
@@ -103,9 +109,9 @@ export class ReservationGateway implements OnModuleDestroy {
 
       const reservation = result as Reservation;
 
-      this.server
-        .to(matchId.toString())
-        .emit('reserve', [[reservation.seatRaw, reservation.seatColum]]);
+      this.server.to(matchId.toString()).emit('reserve', {
+        content: [[reservation.seatRaw, reservation.seatColum]],
+      });
     } catch (e) {
       throw new WsException(e.message);
     }

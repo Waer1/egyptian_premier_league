@@ -137,8 +137,8 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Patch('updateProfile')
-  @ApiOperation({ summary: 'Update a user' })
+  @Patch('updatePassword')
+  @ApiOperation({ summary: 'update the password' })
   @ApiResponse({ status: 200, description: 'User successfully updated.' })
   async updatePassword(@Body() updateUserDto: UpdatePasswordDto, @Req() req) {
     return await this.authService.changePassword(req.user.id, updateUserDto);
