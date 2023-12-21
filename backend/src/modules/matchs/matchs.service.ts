@@ -35,6 +35,13 @@ export class MatchsService {
     );
     const { time, date } = createMatchDtoInstance;
 
+    const matchDateTime = getDateTime(time, date);
+    const currentDateTime = new Date();
+
+    if (matchDateTime < currentDateTime) {
+      throw new BadRequestException('Cannot create a match in the past');
+    }
+
     const existingMatch = await this.matchRepositry.findOne({
       where: {
         dateTime: getDateTime(time, date),
