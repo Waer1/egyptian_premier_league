@@ -78,7 +78,7 @@ export class AuthService {
   async changePassword(id: number, updateUserDto: UpdatePasswordDto) {
     const { newPassword, oldPassword } = updateUserDto;
     const user = await this.usersService.findOne(id);
-    this.validateUser(user.username, oldPassword);
+    await this.validateUser(user.username, oldPassword);
 
     const newHadedPassword = await encryptPassword(newPassword);
     user.password = newHadedPassword;
