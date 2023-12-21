@@ -56,4 +56,8 @@ export type Ticket={
     match: Match;
   
   }
+
+export type MessagePayload = {
+    content: Coordinates[];
+  };
 export type Coordinates = [number, number]; // [row, column]

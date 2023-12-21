@@ -27,7 +27,8 @@ import { Reservation } from 'src/entities/reservation.entity';
 // @UseFilters(new WebsocketExceptionsFilter())
 @WebSocketGateway(3001, {
   cors: {
-    origin: '*',
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
     credentials: true,
   },
 })
@@ -52,7 +53,6 @@ export class ReservationGateway implements OnModuleDestroy {
     const matchExists = await this.matchsService.doesMatchExist(
       joinReservationDto.matchId,
     );
-
     if (!matchExists) {
       throw new WsException('match does not exist');
     }

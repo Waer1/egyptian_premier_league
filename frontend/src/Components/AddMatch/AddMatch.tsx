@@ -72,10 +72,13 @@ export default function AddMatch() {
         }).then((res)=>{
             if(res.status===201)
                 {success("Match added successfully");
-                handleClose();}
+                handleClose();
+                window.location.reload();
+            }
         }).catch((err)=>{
-            error(err.response.data.message)        }
-    );
+            error(err.response.data.message)        
+        }
+        );
   }
 
   return (

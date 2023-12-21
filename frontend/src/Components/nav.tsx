@@ -168,7 +168,7 @@ function ResponsiveAppBar() {
                         </Box>
                         <Avatar alt="" src="/broken-image.jpg" />
                     </IconButton>
-                    <IconButton onClick={async()=>{
+                    <IconButton sx={{boxSizing:"border-box"}}onClick={async()=>{
                         ChangeToken("");
                         // ChangeName("");
                         await ChangeState(0);
