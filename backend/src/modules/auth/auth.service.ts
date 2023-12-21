@@ -80,9 +80,7 @@ export class AuthService {
     const user = await this.usersService.findOne(id);
     await this.validateUser(user.username, oldPassword);
 
-    const newHadedPassword = await encryptPassword(newPassword);
-    user.password = newHadedPassword;
-    await this.usersService.update(id, user);
+    return await this.usersService.updatePassword(id, newPassword);
   }
 
   async updateProfile(id: number, updateUserDto: EditUserDto) {

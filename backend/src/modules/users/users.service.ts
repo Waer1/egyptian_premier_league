@@ -1,9 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserRole, UserStatus } from 'src/entities/user.entity';
+import { encryptPassword } from 'src/shared/encryption.util';
 
 @Injectable()
 export class UsersService {
@@ -48,6 +53,22 @@ export class UsersService {
     Object.assign(user, updateUserDto);
     await this.userRepositry.save(user);
     return user;
+  }
+
+  async updatePassword(id: number, newPassword: string) {
+    const user = await this.userRepositry
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.id = :id', { id })
+      .getOne();
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    user.password = newPassword;
+
+    return await this.userRepositry.save(user);
   }
 
   async remove(id: number) {
