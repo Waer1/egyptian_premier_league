@@ -88,7 +88,9 @@ export default function EditMatch(props:CardProps) {
         }).then((res)=>{
             if(res.status===201 || res.status===200)
                 {success("Match edited successfully");
-                handleClose();}
+                handleClose();
+                window.location.reload();
+    }
         }).catch((err)=>{
             error(err.response.data.message)        }
     );
@@ -187,7 +189,7 @@ export default function EditMatch(props:CardProps) {
             <Box sx={{width:"40%"}}>
 
                 <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
-                    <InputLabel htmlFor="First Name">First Linmane</InputLabel>
+                    <InputLabel htmlFor="First Name">First Lineman</InputLabel>
                     <Input
                         id="First Name"
                         type='text' 
@@ -201,7 +203,7 @@ export default function EditMatch(props:CardProps) {
                 <Box sx={{width:"40%"}}>
 
                 <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
-                    <InputLabel htmlFor="Last Name">Second linman</InputLabel>
+                    <InputLabel htmlFor="Last Name">Second lineman</InputLabel>
                     <Input
                         id="Last Name"
                         type='text' 

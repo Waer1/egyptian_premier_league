@@ -51,7 +51,6 @@ export class ReservationGateway implements OnModuleDestroy {
     const matchExists = await this.matchsService.doesMatchExist(
       joinReservationDto.matchId,
     );
-
     if (!matchExists) {
       throw new WsException('match does not exist');
     }

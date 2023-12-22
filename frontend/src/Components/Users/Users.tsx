@@ -28,21 +28,27 @@ export default function Users() {
         })
         .catch(err => console.log(err));
     },[click]);
-    const Del=()=>{
-        axios.delete(`/users/${id}`)
+    const Del=(myid:number)=>{
+        axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
+        axios.delete(`/users/${myid}`)
         .then((res) => 
             {
-            users.splice(users.findIndex((user)=>user.id===id),1)
-            success("user deleted successfully")
+                if(res.status===200||res.status===201)
+                {    
+                    users.splice(users.findIndex((user)=>user.id===id),1)
+                    success("user deleted successfully")
+                    click+=1
+                    window.location.reload();
+
+                }
             }
         )
         .catch(err => error(err.response.data.message));
-        click+=1
     }
     return (
 <>
-    {users.map((user:User,index:number)=>(
-        <BOX key={index}>
+    {users.map((user:User)=>(
+        <BOX key={user.id}>
                 <Container>
                     <Typography variant="h3"  component="div" sx={{color:'black',opacity:1,fontSize:"x-large" ,m:0}}>
                         {user.firstName} {user.lastName}
@@ -57,7 +63,7 @@ export default function Users() {
                     </Typography>
                 </Container>
                 <Container>
-                    <Delete onClick={Del}>
+                    <Delete onClick={()=>Del(user.id)}>
                         Delete
                     </Delete>
                 </Container>

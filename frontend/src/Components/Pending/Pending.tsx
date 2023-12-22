@@ -54,18 +54,22 @@ export default function Pending( ) {
         // TODO: fetch teams from backend
         
 
-    },[users]);
+    },[click]);
     const Del=(id:number)=>{
         axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
         axios.delete(`/users/${id}`)
         users.splice(users.findIndex((user)=>user.id===id),1)
         click+=1
+        window.location.reload();
+
     }
     const Approve=(id:number)=>{
         axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
         axios.patch(`/users/${id}/approve`)
         users.splice(users.findIndex((user)=>user.id===id),1)
         click+=1
+        window.location.reload();
+
     }
     return (
         // <Box sx={{display:'flex',justifyContent:'flex-start',flexDirection:'column'}}>

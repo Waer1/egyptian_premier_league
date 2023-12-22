@@ -14,11 +14,15 @@ import { UserInfo } from '../Types';
 import axios from '../../Server/Instance';
 import {useSelector } from "react-redux";
 import { filterState } from '../../State';
+import { error, success } from '../Alert';
+import ChangePass from './UpdatePass/Updatepass';
 
 export default function Profile() {
     // var UserInfo=constInfo;
+    const [userConstName,setUserCostName]=React.useState<string>('');
+
     const id:number =useSelector((state:filterState) => state.id);
-    let constInfo:UserInfo;
+    const [constInfo,setConstInfo]=React.useState<UserInfo|null>(null);
     const [userInfo,setUserInfo]=React.useState<UserInfo|null>(null);
     const [showPassword, setShowPassword] = React.useState(false);
     const token=useSelector((state:filterState)=>state.token)
@@ -30,14 +34,17 @@ export default function Profile() {
     };
     const getData=async()=>{
         axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
-        await axios.get(`/users/${id}`)
+        await axios.patch(`/users/current`)
         .then(res => res.data)
         .then(data => {
         if(data!==undefined )
         {
-            data.userName=data.username;
+            const usernameValue = data.username;
+            delete data.username;
+            data.userName = usernameValue;
             setUserInfo(data);
-            constInfo=data;
+            setUserCostName(data.userName);
+        
         }
         })
         .catch(err => console.log(err));
@@ -52,23 +59,57 @@ export default function Profile() {
         window.location.reload();
     }
     const Save=()=>{
-        if(userInfo!==constInfo)
+        console.log(userInfo)
+        if(userInfo!==undefined && userInfo!==null)
         {
-            if(userInfo!==undefined && userInfo!==null)
-            {
-                axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
-            axios.patch(`/users/${id}`,{
-                username: userInfo.userName,
-                password: userInfo.password,
-                firstName: userInfo.firstName,
-                lastName: userInfo.lastName,
-                dateOfBirth: userInfo.dateOfBirth,
-                gender: userInfo.gender,
-                city: userInfo.city,
-                email: userInfo.email,
-                role: userInfo.role,
-                address: userInfo.address
-            })}
+            axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
+            if (userInfo?.userName!==userConstName)
+                {
+                    axios.patch(`/auth/updateProfile`,{
+                    username: userInfo.userName,
+                    password: userInfo.password,
+                    firstName: userInfo.firstName,
+                    lastName: userInfo.lastName,
+                    dateOfBirth: userInfo.dateOfBirth,
+                    gender: userInfo.gender,
+                    city: userInfo.city,
+                    email: userInfo.email,
+                    role: userInfo.role,
+                    address: userInfo.address
+                })
+                .then((res)=> {
+                    if(res.status!==200 )
+                    {
+                        error(res.data.message)
+                    
+                    }
+                    else{
+                        success("updated successfully")
+                    }
+                    }
+                )
+                .catch(err => 
+                    {
+                        console.log(err.response.data.message)
+                        error(err.response.data.message);
+
+                    }
+                )
+            }else{
+                axios.patch(`/auth/updateProfile`,{
+                    password: userInfo.password,
+                    firstName: userInfo.firstName,
+                    lastName: userInfo.lastName,
+                    dateOfBirth: userInfo.dateOfBirth,
+                    gender: userInfo.gender,
+                    city: userInfo.city,
+                    email: userInfo.email,
+                    role: userInfo.role,
+                    address: userInfo.address
+                })
+                .then(res => res.data)
+                .catch(err => error(err));
+            }
         }
     }
     return (
@@ -105,15 +146,17 @@ export default function Profile() {
                         type='text' 
                         defaultValue={userInfo?.userName} 
                         onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                            if(userInfo!==null)
+                            if(userInfo!==null){
                                 userInfo.userName=e.target.value;
+                            }
                         }}
                     />
                 </FormControl>
                 </Box>
 
                 <Box sx={{width:"50%"}}>
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
+                    <ChangePass/>
+                {/* <FormControl sx={{ m: 1, width: '25ch' }} variant="standard">
                     <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
                     <Input
                         id="standard-adornment-password"
@@ -135,7 +178,7 @@ export default function Profile() {
                         </InputAdornment>
                         }
                     />
-                </FormControl>
+                </FormControl> */}
             </Box>
             </Box>
             <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',my:1,width:"100%"}}>
@@ -185,8 +228,8 @@ export default function Profile() {
                             aria-labelledby="demo-row-radio-buttons-group-label"
                             name="row-radio-buttons-group"
                         >
-                            <FormControlLabel value="Manager" control={<Radio />} label="Manager" />
-                            <FormControlLabel value="Fan" control={<Radio />} label="Fan" />
+                            <FormControlLabel value="EFA manager" control={<Radio />} label="Manager" />
+                            <FormControlLabel value="fan" control={<Radio />} label="Fan" />
                         </RadioGroup>
                 </FormControl>
                 </Box>
