@@ -6,19 +6,11 @@ import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import { Avatar, FormControl,Input,InputLabel,Typography } from '@mui/material';
 import {Delete, Style, Team1, Team2, TeamName} from './style';
 import Time from '../Home/Card/Time/Time';
+import axios from "../../Server/Instance";
+import { Match } from '../Types';
+import { useSelector } from 'react-redux';
+import { filterState } from '../../State';
 
-type Match = {
-    team1: string;
-    team2: string;
-    date: Date;
-    time: Date;
-    logo1: string;
-    logo2: string;
-    ref:string;
-    first:string;
-    second:string;
-    stadium:string;
-}
 type CardProps = {
     match: Match;
     index: number;
@@ -42,6 +34,17 @@ export default function PopUpMatch(props:CardProps) {
   const handleClose = () => {
     setOpen(false);
   };
+  const token=useSelector((state:filterState)=>state.token)
+  const DEL=()=>{
+    axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
+    axios.delete(`/reservation/${index}`)
+    .then(res => res.status)
+    .then(status => {
+        if(status===200||status===201) 
+            window.location.reload();
+    })
+    .catch(err => console.log(err));
+  }
 
   return (
     <div>
@@ -143,7 +146,7 @@ export default function PopUpMatch(props:CardProps) {
                 <>
                     <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',width: 550,my:1}}>
                         <Box sx={{width:"40%"}}>
-                            <Delete> Cancle Row:{row} column:{column}</Delete>
+                            <Delete onClick={DEL}> Cancle Row:{row} column:{column}</Delete>
                         </Box>
                     </Box>
                 </>

@@ -3,22 +3,25 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import {Btn, Style} from './style';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
-
+import axios from"../../Server/Instance";
+import { useSelector } from 'react-redux';
+import { filterState } from '../../State';
+import { tr } from 'date-fns/locale';
 type Coordinates = [number, number]; // [row, column]
 type Props = {
     Rows: number;
     Columns: number;
-    reserved: Coordinates[];
+    id:number;
     };
 
 export default function ShowSeats(props:Props) {
     const [open, setOpen] = React.useState(false);
-    const [willReserve, setWillReserve] = React.useState<Coordinates[]>([]);
-    const reserved : Coordinates[]=props.reserved;
-    const reservedSet = new Set<string>();
-    reserved.forEach((point: Coordinates) => {
-        reservedSet.add(JSON.stringify(point));
-      });
+    // const [willReserve, setWillReserve] = React.useState<Coordinates[]>([]);
+    // const reserved : Coordinates[]=props.reserved;
+    const [reservedSet,setReservedset] = React.useState (new Set<string>());
+    // reserved.forEach((point: Coordinates) => {
+    //     reservedSet.add(JSON.stringify(point));
+    //   });
     let numColumns = props.Columns;
     const numRows = props.Rows;
     const imageWidth = 7; // Width of the image in icon units
@@ -33,7 +36,37 @@ export default function ShowSeats(props:Props) {
     const handleClose = () => {
         setOpen(false);
     };
-    
+    const token=useSelector((state:filterState) => state.token);
+    const id=props.id;
+    const actualColumns=props.Columns;
+
+    React.useEffect(() => {
+        if(open===true){
+            let seats=new Set<string>();
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        axios.get(`/matchs/${id}`)
+        .then(res => {
+            for (let i = 0; i < numRows; i++) {
+                for (let j = 0; j < actualColumns; j++) {
+                    const point:Coordinates = [i,j];
+                    if(res.data.seatsArray[i][j] ===true){
+                        const pointString = JSON.stringify(point);
+                        seats.add(pointString);
+                    }
+                }
+            }
+            setReservedset(seats);
+        })
+        .catch(err => console.log(err));
+        console.log(reservedSet);
+    }
+    }, [id,open]);
+
+    React.useEffect(() => {
+        console.log(reservedSet);
+        renderSeats();
+    }, [reservedSet,open]);
+
     const renderSeats = () => {
         const seats = [];
         const centerX = Math.floor(numColumns / 2);
@@ -102,7 +135,7 @@ export default function ShowSeats(props:Props) {
                             left: `${j * 48}px`,
                             zIndex: '2',
                         }}
-                        onClick={() => willReserve.push(point)}
+                        // onClick={() => willReserve.push(point)}
                         /> 
                     );
                 }

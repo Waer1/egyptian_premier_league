@@ -23,6 +23,8 @@ type Response = {
         };
         matchVenue: {
             name: string;
+            rows: number;
+            seatsPerRow: number;
         };
         dateTime: Date;
         stauimName: string;
@@ -38,7 +40,6 @@ export default function Home( ) {
     const [matches, setMatches] = React.useState<Match[]>([]);
     const [teams, setTeams] = React.useState<Teams[]>([]);
     const idx = filter.indexOf(true);
-    console.log(matches);
  
 useEffect(() => {
     //TODO: get data from backend depends on the filter 
@@ -66,6 +67,8 @@ useEffect(() => {
                             second:match.secondLinesman,
                             logo1:match.homeTeam.logo,
                             logo2:match.awayTeam.logo,
+                            row:match.matchVenue.rows,
+                            column:match.matchVenue.seatsPerRow,
                             };
                         return matchObj;
                     }
@@ -115,6 +118,8 @@ useEffect(() => {
                             second:match.secondLinesman,
                             logo1:match.homeTeam.logo,
                             logo2:match.awayTeam.logo,
+                            row:match.matchVenue.rows,
+                            column:match.matchVenue.seatsPerRow,
                             };
                         return matchObj;
                     }
@@ -163,6 +168,8 @@ useEffect(() => {
                             second:match.secondLinesman,
                             logo1:match.homeTeam.logo,
                             logo2:match.awayTeam.logo,
+                            row:match.matchVenue.rows,
+                            column:match.matchVenue.seatsPerRow,
                             };
                         return matchObj;
                     }
@@ -210,6 +217,8 @@ useEffect(() => {
                             second:match.secondLinesman,
                             logo1:match.homeTeam.logo,
                             logo2:match.awayTeam.logo,
+                            row:match.matchVenue.rows,
+                            column:match.matchVenue.seatsPerRow,
                             };
                         return matchObj;
                     }
@@ -251,6 +260,8 @@ useEffect(() => {
                             second:match.secondLinesman,
                             logo1:match.homeTeam.logo,
                             logo2:match.awayTeam.logo,
+                            row:match.matchVenue.rows,
+                            column:match.matchVenue.seatsPerRow,
                             };
                         return matchObj;
                     }

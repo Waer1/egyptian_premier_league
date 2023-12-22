@@ -90,7 +90,7 @@ const token =useSelector((state:any)=>state.token)
                         onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
                             setRows(Number(e.target.value));
                         }}
-                        inputProps={{ min: 10}}
+                        inputProps={{ min: 7,max:14}}
 
                     />
                 </FormControl>
@@ -99,7 +99,7 @@ const token =useSelector((state:any)=>state.token)
                     <Input
                         id="Columns"
                         type='number' 
-                        inputProps={{ min: 10}}
+                        inputProps={{ min: 9,max:15}}
                         defaultValue={Columns}
                         onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
                             setColumns(Number(e.target.value));

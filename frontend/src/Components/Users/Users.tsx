@@ -49,7 +49,7 @@ export default function Users() {
 <>
     {users.map((user:User)=>(
         <BOX key={user.id}>
-                <Container>
+                <Container sx={{width:"40%"}}>
                     <Typography variant="h3"  component="div" sx={{color:'black',opacity:1,fontSize:"x-large" ,m:0}}>
                         {user.firstName} {user.lastName}
                     </Typography>
@@ -57,12 +57,12 @@ export default function Users() {
                         {user.email}
                     </Typography>
                 </Container>
-                <Container>
+                <Container sx={{width:"40%"}}>
                     <Typography variant="h5"  component="div" sx={{color:'black',opacity:1,fontSize:"x-large",m:0}}>
                         {user.role}
                     </Typography>
                 </Container>
-                <Container>
+                <Container sx={{width:"20%"}}>
                     <Delete onClick={()=>Del(user.id)}>
                         Delete
                     </Delete>

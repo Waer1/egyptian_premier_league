@@ -243,6 +243,7 @@ export default function SignUp() {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker']}>
                         <DatePicker
+                        label="Date of Birth"
                         onChange={(value: Date | null) => {
                             if (value) {
                                 setDateOfBirth(value);

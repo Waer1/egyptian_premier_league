@@ -8,12 +8,11 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { error, success } from '../Alert';
 import axios from "../../Server/Instance";
 
-import { MessagePayload } from '../Types';
-import { WebsocketContext } from '../../Context/WebSocketContext';
-import { useContext } from 'react';
+// import { MessagePayload } from '../Types';
+// import { WebsocketContext } from '../../Context/WebSocketContext';
+// import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { filterState } from '../../State';
-
 
 
 
@@ -31,7 +30,7 @@ export default function TakeSeat(props:Props) {
     const actualColumns=props.Columns;
     const [open, setOpen] = React.useState(false);
     const [willReserve, setWillReserve] = React.useState<Coordinates[]>([]);
-    let reservedSet = new Set<string>();
+    const [reservedSet,setReservedset] = React.useState (new Set<string>());
     // reserved.forEach((point: Coordinates) => {
     //     reservedSet.add(JSON.stringify(point));
     //   });
@@ -121,16 +120,21 @@ export default function TakeSeat(props:Props) {
                             cursor: 'pointer',
                         }}
                         onClick={() => {
-                            if(willReserve.length===0){
                             setWillReserve(prevWillReserve => {
                                 const index = prevWillReserve.findIndex(item => item[0] === point[0] && item[1] === point[1]);
                                 if (index !== -1) {
                                     return prevWillReserve.filter(item => item[0] !== point[0] || item[1] !== point[1]);
                                 } else {
-                                    return [...prevWillReserve, point];
+                                    if(willReserve.length===0){
+                                        return [...prevWillReserve, point];
+                                    }
+                                    else{
+                                        error('You can reserve only one seat');
+                                        return prevWillReserve;
+                                    }
                                 }
                             });
-                            }
+                            
                         }}
                         /> 
                     );
@@ -147,6 +151,8 @@ export default function TakeSeat(props:Props) {
     };
 const token=useSelector((state:filterState)=>state.token)
     React.useEffect(() => {
+        if(open===true){
+            let seats=new Set<string>();
         axios.defaults.headers.common['Authorization'] = 'Bearer '+ token;
         axios.get(`/matchs/${id}`)
         .then(res => {
@@ -155,49 +161,51 @@ const token=useSelector((state:filterState)=>state.token)
                     const point:Coordinates = [i,j];
                     if(res.data.seatsArray[i][j] ===true){
                         const pointString = JSON.stringify(point);
-                        reservedSet.add(pointString);
+                        seats.add(pointString);
                     }
                 }
             }
+            setReservedset(seats);
         })
         .catch(err => console.log(err));
-    }, [id]);
-    
-    const socket = useContext(WebsocketContext);
-    React.useEffect(() => {
-        // const socket = io('http://localhost:3001/');
-        
-        if (open === true){
-        console.log('Registering Events...');
-        socket.on('connect', () => {
-          console.log('Connected!');
-        });
-        socket.on('connect_error', (error) => {
-            console.error('Connection Error:', error);
-        });
-        socket.emit('join', {
-            matchId: id,
-        });
-        socket.on('message', (newMessage: string) => {
-            console.log(newMessage);
-        });
-        socket.on('join', (newMessage: MessagePayload) => {
-          console.log(newMessage);
-          reservedSet.add(JSON.stringify(newMessage.content));
-        });
-        socket.on('cancel', (newMessage: MessagePayload) => {
-            console.log(newMessage);
-            newMessage.content.forEach((point: Coordinates) => {
-              reservedSet.delete(JSON.stringify(point));
-            });
-          });
-        return () => {
-          console.log('Unregistering Events...');
-          socket.off('connect');
-          socket.off('onMessage');
-        };
     }
-      }, [open]);
+    }, [id,open]);
+    
+    // const socket = useContext(WebsocketContext);
+    // React.useEffect(() => {
+    //     // const socket = io('http://localhost:3001/');
+        
+    //     if (open === true){
+    //     console.log('Registering Events...');
+    //     socket.on('connect', () => {
+    //       console.log('Connected!');
+    //     });
+    //     socket.on('connect_error', (error) => {
+    //         console.error('Connection Error:', error);
+    //     });
+    //     socket.emit('join', {
+    //         matchId: id,
+    //     });
+    //     socket.on('message', (newMessage: string) => {
+    //         console.log(newMessage);
+    //     });
+    //     socket.on('join', (newMessage: MessagePayload) => {
+    //       console.log(newMessage);
+    //       reservedSet.add(JSON.stringify(newMessage.content));
+    //     });
+    //     socket.on('cancel', (newMessage: MessagePayload) => {
+    //         console.log(newMessage);
+    //         newMessage.content.forEach((point: Coordinates) => {
+    //           reservedSet.delete(JSON.stringify(point));
+    //         });
+    //       });
+    //     return () => {
+    //       console.log('Unregistering Events...');
+    //       socket.off('connect');
+    //       socket.off('onMessage');
+    //     };
+    // }
+    //   }, [open]);
     
     React.useEffect(() => {
         renderSeats()
@@ -208,12 +216,22 @@ const token=useSelector((state:filterState)=>state.token)
     console.log(willReserve);
     if(willReserve.length!==0 && cardNumber!=='' && password!==''){
        //wait for waer to reserve seat 
-
         // TODO: send willReserve to backend
-
-        socket.emit('newMessage', willReserve);
-        setWillReserve([])
-        setOpen(false);
+        // socket.emit('newMessage', willReserve);
+        axios.defaults.headers.common['Authorization'] = 'Bearer '+ token;
+        axios.post(`/reservation`,{
+            matchId:id,
+            seatRaw:willReserve[0][0],
+            seatColum:willReserve[0][1],
+        }).then(res => res.status)
+        .then(status => {
+            if(status===200||status===201) 
+                {success("Seat reserved successfully")
+                setWillReserve([])
+                setOpen(false);}
+        })
+        .catch(err => error(err.response.data.message));
+        
     }
   }
   const Cancel = () => {

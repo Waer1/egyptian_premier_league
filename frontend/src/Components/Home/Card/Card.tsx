@@ -8,31 +8,20 @@ import { Match,Teams,Coordinates } from "../../Types";
 import axios from "../../../Server/Instance";
 import { useSelector } from "react-redux";
 import { filterState } from "../../../State";
-const reserved: Coordinates[] = [
-    [0, 1],
-    [0, 2],
-    [0, 3],
-    [1, 9],
-    [2, 1],
-    [2, 2],
-    [2, 0],
-    [2, 10],
-];
+
 export type CardProps = {
     team: Teams;
     index: number;
     match:Match;
     state:number;
-    row?:number;
-    column?:number;
 }
 export default function Card(props:CardProps) {
     const team = props.team;
     const index=props.index;
     const state=props.state;
     const match=props.match;
-    const row=props.row;
-    const column=props.column;
+    const row=match.row;
+    const column=match.column;
     const displayCard=()=>{
         document.getElementById("match"+index)?.click();
     }
@@ -51,6 +40,14 @@ export default function Card(props:CardProps) {
     const DeleteSeat=()=>{
         // TODO: send delete action to backend
         // wait for waer
+        axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
+        axios.delete(`reservation/${index}`)
+        .then(res => res.status)
+        .then(status => {
+            if(status===200||status===201) 
+                window.location.reload();
+        })
+        .catch(err => console.log(err));
     }
     return (
         <BOX>
@@ -75,12 +72,12 @@ export default function Card(props:CardProps) {
                 <>
                 <EditMatch match={match} index={index} />
                 <Delete onClick={DeleteMatch}>Delete</Delete>
-                <ShowSeats Rows={8} Columns={15} reserved={reserved}/>
+                <ShowSeats Rows={row!} Columns={column!} id={match.id}/>
                 </>
                 }
                 {(state===1) && 
                 <>
-                <TakeSeat Rows={10} Columns={10} id={match.id}/>
+                <TakeSeat Rows={row!} Columns={column!} id={match.id}/>
                 </>
                 }
                 {(state===4) && 

@@ -2,11 +2,11 @@ import { Box, Typography } from "@mui/material";
 import { BOX, Btn, Container, Delete } from "./style";
 import moment from "moment";
 import React, { useEffect } from "react";
-import dayjs from "dayjs";
 import { User } from "../Types";
 import axios from "../../Server/Instance";
 import { useSelector } from "react-redux";
 import { filterState } from "../../State";
+import { error } from "../Alert";
 
 
 // const PendingList:User[]=[{
@@ -38,7 +38,7 @@ export default function Pending( ) {
     const [users,setUsers]=React.useState<User[]>([]);
     const token=useSelector((state:filterState)=>state.token)
     let click=0;
-    const getPending=()=>{
+    useEffect(() => {
         axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
         axios.get(`/users/pending`)
         .then(res => res.data)
@@ -46,14 +46,6 @@ export default function Pending( ) {
             setUsers(data);
         })
         .catch(err => console.log(err));
-        
-    }
-    getPending()
-    useEffect(() => {
-        // wait for waer
-        // TODO: fetch teams from backend
-        
-
     },[click]);
     const Del=(id:number)=>{
         axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
@@ -66,9 +58,17 @@ export default function Pending( ) {
     const Approve=(id:number)=>{
         axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
         axios.patch(`/users/${id}/approve`)
-        users.splice(users.findIndex((user)=>user.id===id),1)
+        .then(res => res)
+        .then(res => {
+            if(res.status===200||res.status===201)
+            {
+                users.splice(users.findIndex((user)=>user.id===id),1)
+                window.location.reload();
+            }
+        })
+        .catch(err => error(err.response.data.message));
         click+=1
-        window.location.reload();
+
 
     }
     return (

@@ -5,55 +5,78 @@ import PopUpMatch from "../PopUpMatch/PopUpMatch";
 import React, { useEffect } from "react";
 import axios from "../../Server/Instance";
 import { Match,Teams,Ticket } from "../Types";
+import { useSelector } from "react-redux";
+import { filterState } from "../../State";
 
 
 
 type TicketProps={
     tickets:Ticket[];
 }
-const tickets2:Ticket[]=[
-    {
-      seatRaw: 1,
-      seatColum: 1,
-      reservationTime: new Date("2020-8-4"),
-      match: {
-        id:1,
-        team1: "Al-Ahly",
-        team2: "El-Zamalek",
-        date: new Date("2020-8-4"),
-        time: new Date("2020-8-4"),
-        logo1: "https://material-ui.com/static/images/avatar/1.jpg",
-        logo2: "https://material-ui.com/static/images/avatar/1.jpg",
-        ref:"ref",
-        first:"first",
-        second:"second",
-        stadium:"stadium"
-        },
-    },
-    {
-      seatRaw: 1,
-      seatColum: 1,
-      reservationTime: new Date("2020-8-4"),
-      match: {
-        id:2,
-        team1: "Al-Ahly",
-        team2: "El-Zamalek",
-        date: new Date("2020-8-4"),
-        time: new Date("2020-8-4"),
-        logo1: "https://material-ui.com/static/images/avatar/1.jpg",
-        logo2: "https://material-ui.com/static/images/avatar/1.jpg",
-        ref:"ref",
-        first:"first",
-        second:"second",
-        stadium:"stadium"
-        },
-    },
-  ]
+type Response = {
+    id: number;
+        match:{
+            name: string;
+        logo: string;
+        homeTeam: {
+            name: string;
+            logo: string;
+        };
+        awayTeam: {
+            name: string;
+            logo: string;
+        };
+        matchVenue: {
+            name: string;
+            rows: number;
+            seatsPerRow: number;
+        };
+        dateTime: Date;
+        stauimName: string;
+        mainReferee: string;
+        firstLinesman: string;
+        secondLinesman: string;
+        }
+        seatRaw: number;
+        seatColum: number;
+        reservationTime:string
+    }
 export default function Reservation() {
-    const [tickets,setTickets] =React.useState<Ticket[]>(tickets2);
+    const [tickets,setTickets] =React.useState<Ticket[]>([]);
+    const token=useSelector((state:filterState)=>state.token);
     useEffect(() => {
         // wait for waer 
         // Todo: fetch tickets from backend
+        axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
+        axios.post("reservation/user")
+        .then(res => {
+                const ts:Ticket[]=res.data.map((t:Response,index:number) => {
+                    const matchObj :Match = {
+                        id:t.id,
+                        team1: t.match.homeTeam.name,
+                        team2: t.match.awayTeam.name,
+                        date: t.match.dateTime,
+                        time:t.match.dateTime,
+                        stadium: t.match.matchVenue.name,
+                        ref:t.match.mainReferee,
+                        first:t.match.firstLinesman,
+                        second:t.match.secondLinesman,
+                        logo1:t.match.homeTeam.logo,
+                        logo2:t.match.awayTeam.logo,
+                        row:t.match.matchVenue.rows,
+                        column:t.match.matchVenue.seatsPerRow,
+                        };
+                    const T:Ticket={
+                        id:t.id,
+                        match:matchObj,
+                        seatRaw:t.seatRaw,
+                        seatColum:t.seatColum,
+                        reservationTime:new Date (t.reservationTime)
+                    }
+                    return T;
+                })
+                setTickets(ts);
+        })
 
     },[]);
     const teams:Teams[] =tickets.map((ticket,index) => {
@@ -71,10 +94,10 @@ export default function Reservation() {
     return (
         <Container>
             {
-                tickets.map((ticket,index) => {
+                tickets.map((ticket) => {
                     return <>
-                            <PopUpMatch row={ticket.seatRaw} column={ticket.seatColum} match={ticket.match} key={index} index={index} state={4}/>
-                            <Card row={ticket.seatRaw} column={ticket.seatColum} key={index} team={teams[index]} index={index} match={ticket.match} state={4}/>
+                            <PopUpMatch row={ticket.seatRaw} column={ticket.seatColum} match={ticket.match} key={ticket.id} index={ticket.id} state={4}/>
+                            <Card key={ticket.id} team={teams[ticket.id]} index={ticket.id} match={ticket.match} state={4}/>
                         </>
                 })
             }

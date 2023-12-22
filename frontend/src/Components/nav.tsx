@@ -44,25 +44,8 @@ function ResponsiveAppBar() {
             ChangeId(null)
         }
     },[token])
-    React.useEffect(() => {
-        switch (state) {
-            case 1:
-                setPages(fan);
-                break;
-            case 2:
-                setPages( manger );
-                break;
-            case 3:
-                setPages(admin);
-                break;
-            default:
-                setPages(null);
-                break;
-        }
-    }, [state]);
 
-  
-
+    console.log(token)
     return (
         <AppBar position="static">
         <Container maxWidth="xl">
@@ -170,9 +153,9 @@ function ResponsiveAppBar() {
                     </IconButton>
                     <IconButton sx={{boxSizing:"border-box"}}onClick={async()=>{
                         ChangeToken("");
-                        // ChangeName("");
-                        await ChangeState(0);
-                       window.location.pathname="/"
+                        ChangeName("");
+                        ChangeState(0);
+                        window.location.pathname="/"
                         }}>
                         <LogoutIcon sx={{color:"white",fontSize:35,mr:-2}}/>
                     </IconButton>

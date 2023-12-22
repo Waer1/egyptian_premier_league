@@ -23,6 +23,8 @@ export type Match = {
     first:string;
     second:string;
     stadium:string;
+    row:number;
+    column:number;
 }
 export type User={
     id:number;
@@ -54,7 +56,7 @@ export type Ticket={
     seatColum: number;
     reservationTime: Date;
     match: Match;
-  
+    id:number;
   }
 
 export type MessagePayload = {
