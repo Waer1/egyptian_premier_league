@@ -27,6 +27,20 @@ import { FANGuard } from 'src/guards/FAN.guard';
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
 
+  @Post('user')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'get all reservations for user' })
+  @ApiResponse({
+    status: 200,
+    description: 'get all reservations for user.',
+  })
+  async findAllForUser(@Request() req) {
+    const { id } = req.user;
+    console.log('waer', req.user);
+    return await this.reservationService.findAllForUser(+id);
+  }
+
   @UseGuards(JwtAuthGuard, FANGuard)
   @ApiBearerAuth()
   @Post()
@@ -38,16 +52,6 @@ export class ReservationController {
   @ApiBody({
     description: 'The reservation details',
     type: CreateReservationDto,
-    examples: {
-      'Example 1': {
-        summary: 'A single seat reservation',
-        value: { matchId: 1, row: 2, column: 3 },
-      },
-      'Example 2': {
-        summary: 'Another single seat reservation',
-        value: { matchId: 2, row: 4, column: 5 },
-      },
-    },
   })
   async create(
     @Body() createReservationDto: CreateReservationDto,
@@ -117,5 +121,17 @@ export class ReservationController {
   })
   async remove(@Param('id') id: string, @Request() req) {
     return await this.reservationService.remove(+id, req.user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'get all reservation for match' })
+  @ApiResponse({
+    status: 200,
+    description: 'get all reservation for match.',
+  })
+  @Get('match/:matchId')
+  async findAllForMatch(@Param('matchId') matchId: string) {
+    return await this.reservationService.findAllForMatch(+matchId);
   }
 }

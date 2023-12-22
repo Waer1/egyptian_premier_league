@@ -28,7 +28,6 @@ import { Reservation } from 'src/entities/reservation.entity';
 @WebSocketGateway(3001, {
   cors: {
     origin: '*',
-    credentials: true,
   },
 })
 @UsePipes(new WSValidationPipe())

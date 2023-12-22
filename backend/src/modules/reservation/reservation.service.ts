@@ -160,4 +160,17 @@ export class ReservationService {
 
     return await this.reservationRepository.remove(reservation);
   }
+
+  async findAllForMatch(matchId: number): Promise<Reservation[]> {
+    const match = await this.matchService.findOne(matchId);
+    return await this.reservationRepository.find({
+      where: { match: { id: match.id } },
+    });
+  }
+
+  async findAllForUser(userId: number): Promise<Reservation[]> {
+    return await this.reservationRepository.find({
+      where: { user: { id: userId } },
+    });
+  }
 }
