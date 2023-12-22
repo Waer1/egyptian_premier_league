@@ -38,7 +38,7 @@ export default function TakeSeat(props:Props) {
     const numRows = props.Rows;
     const imageWidth = 7; // Width of the image in icon units
     const imageHeight = 5; // Height of the image in icon units
-    numColumns=numColumns+Math.ceil((imageWidth*imageHeight)/numRows)
+    // numColumns=numColumns+Math.ceil((imageWidth*imageHeight)/numRows)
     const totalIcons = numColumns*numRows;
     
     const handleOpen = () => {
