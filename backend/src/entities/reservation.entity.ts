@@ -7,10 +7,10 @@ export class Reservation {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, { cascade: true })
+  @ManyToOne(() => User, { cascade: true, eager: true })
   user: User;
 
-  @ManyToOne(() => Match, { cascade: true })
+  @ManyToOne(() => Match, { cascade: true, eager: true })
   match: Match;
 
   @Column()
