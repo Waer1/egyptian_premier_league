@@ -25,26 +25,24 @@ export default function PopUpMatch(props:CardProps) {
     const state=props.state
     const row=props.row;
     const column=props.column;
-
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const token=useSelector((state:filterState)=>state.token)
-  const DEL=()=>{
-    axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
-    axios.delete(`/reservation/${index}`)
-    .then(res => res.status)
-    .then(status => {
-        if(status===200||status===201) 
-            window.location.reload();
-    })
-    .catch(err => console.log(err));
-  }
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const token=useSelector((state:filterState)=>state.token)
+    const DEL=()=>{
+        axios.defaults.headers.common['Authorization'] = 'Bearer '+token;
+        axios.delete(`/reservation/${index}`)
+        .then(res => res.status)
+        .then(status => {
+            if(status===200||status===201) 
+                window.location.reload();
+        })
+        .catch(err => console.log(err));
+    }
 
   return (
     <div>
