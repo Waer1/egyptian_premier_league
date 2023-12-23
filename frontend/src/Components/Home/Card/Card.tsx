@@ -14,6 +14,8 @@ export type CardProps = {
     index: number;
     match:Match;
     state:number;
+    seatRaw?:number;
+    seatColum?:number;
 }
 export default function Card(props:CardProps) {
     const team = props.team;
@@ -75,14 +77,14 @@ export default function Card(props:CardProps) {
                 <ShowSeats Rows={row!} Columns={column!} id={match.id}/>
                 </>
                 }
-                {(state===1) && 
+                {(state===1 && new Date(match.date) >= new Date()) && 
                 <>
                 <TakeSeat Rows={row!} Columns={column!} id={match.id}/>
                 </>
                 }
                 {(state===4) && 
                 <>
-                <Delete onClick={DeleteSeat}> Cancle Row:{row} column:{column}</Delete>
+                <Delete onClick={DeleteSeat}> Cancle Row:{props.seatRaw} column:{props.seatColum}</Delete>
                 </>
                 }
             </Box>

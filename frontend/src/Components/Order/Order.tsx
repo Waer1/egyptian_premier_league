@@ -18,6 +18,9 @@ export default function Order() {
                 setTeams(res.data)   
             );
         })
+        .catch((err)=>{
+            console.log(err);
+        })
     }
     React.useEffect(() => {
         // wait for waer

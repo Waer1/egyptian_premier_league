@@ -79,8 +79,8 @@ export default function TakeSeat(props:Props) {
                 alt="Stadium"
                 style={{
                     position: 'absolute',
-                    top :(numRows%2===0 && numColumns%2===0) ?'54%' : (numRows%2===1 && numColumns%2===0) ?'50%' : '54%',
-                    left: (numRows%2===0 && numColumns%2===1) ?'50%' : '53%',
+                    top :(numRows%2===0 && numColumns%2===0) ?'54%' : (numRows%2===1 && numColumns%2===0) ?'50%' : '52%',
+                    left: (numRows%2===0 && numColumns%2===1) ?'50%' : '52%',
                     transform: 'translate(-50%, -50%)',
                     zIndex: '1',
                     width: '50  %',
@@ -126,6 +126,7 @@ export default function TakeSeat(props:Props) {
                                     return prevWillReserve.filter(item => item[0] !== point[0] || item[1] !== point[1]);
                                 } else {
                                     if(willReserve.length===0){
+                                        console.log(point);
                                         return [...prevWillReserve, point];
                                     }
                                     else{
@@ -165,6 +166,7 @@ const token=useSelector((state:filterState)=>state.token)
                     }
                 }
             }
+            console.log(seats);
             setReservedset(seats);
         })
         .catch(err => console.log(err));

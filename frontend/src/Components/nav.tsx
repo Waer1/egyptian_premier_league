@@ -31,17 +31,20 @@ function ResponsiveAppBar() {
     const dispatch = useDispatch();
     const {ChangeState,ChangeToken,ChangeId,ChangeName} = bindActionCreators(actionsCreators,dispatch);
 
-    const fan :string[] = ["Home",'profile', 'Reservation'];
-    const manger :string[] = ["Home",'profile', 'Add match', 'Add stadium'];
-    const admin :string[] = ["Home",'Profile', 'pending', 'users'];
-    const guest :string[] = ['Log in','Sign up'];
-    const [pages, setPages] = React.useState<null | string[]>(null);   
+    // const fan :string[] = ["Home",'profile', 'Reservation'];
+    // const manger :string[] = ["Home",'profile', 'Add match', 'Add stadium'];
+    // const admin :string[] = ["Home",'Profile', 'pending', 'users'];
+    // const guest :string[] = ['Log in','Sign up'];
+    // const [pages, setPages] = React.useState<null | string[]>(null);   
 
     React.useEffect (()=>{
         if(token===""){
             ChangeState(0)
             ChangeName("")
             ChangeId(null)
+            if(window.location.pathname!=='/'){
+                window.location.pathname='/'
+            }
         }
     },[token])
 
@@ -155,7 +158,7 @@ function ResponsiveAppBar() {
                         ChangeToken("");
                         ChangeName("");
                         ChangeState(0);
-                        window.location.pathname="/"
+                        // window.location.pathname="/"
                         }}>
                         <LogoutIcon sx={{color:"white",fontSize:35,mr:-2}}/>
                     </IconButton>

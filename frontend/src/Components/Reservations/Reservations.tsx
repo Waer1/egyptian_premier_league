@@ -75,6 +75,7 @@ export default function Reservation() {
                     }
                     return T;
                 })
+                console.log(ts);
                 setTickets(ts);
         })
 
@@ -97,7 +98,7 @@ export default function Reservation() {
                 tickets.map((ticket) => {
                     return <>
                             <PopUpMatch row={ticket.seatRaw} column={ticket.seatColum} match={ticket.match} key={ticket.id} index={ticket.id} state={4}/>
-                            <Card key={ticket.id} team={teams[ticket.id]} index={ticket.id} match={ticket.match} state={4}/>
+                            <Card key={ticket.id} team={teams[ticket.id]} index={ticket.id} match={ticket.match} state={4} seatRaw={ticket.seatRaw} seatColum={ticket.seatColum}/>
                         </>
                 })
             }
