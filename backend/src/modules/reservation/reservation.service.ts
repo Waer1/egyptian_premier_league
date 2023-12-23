@@ -27,6 +27,12 @@ export class ReservationService {
     const user = await this.userService.findOne(userId);
     const match = await this.matchService.findOne(createReservationDto.matchId);
 
+    if (match.dateTime < new Date()) {
+      throw new BadRequestException(
+        'Cannot reserve seats for a match in the past',
+      );
+    }
+
     // check if the seat is valid and available
     if (
       !match.isValidAndAvailableSeat(
