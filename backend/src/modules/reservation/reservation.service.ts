@@ -157,7 +157,6 @@ export class ReservationService {
       reservation.seatRaw,
       reservation.seatColum,
     );
-
     return await this.reservationRepository.remove(reservation);
   }
 

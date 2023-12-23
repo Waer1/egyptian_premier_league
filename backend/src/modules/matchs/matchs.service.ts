@@ -157,7 +157,6 @@ export class MatchsService {
     const match = await this.findOne(matchId);
 
     const seatsArray = match.getSeatsArray();
-
     if (match.isValidAndAvailableSeat(row, column)) {
       throw new BadRequestException('Seat is not reserved');
     }

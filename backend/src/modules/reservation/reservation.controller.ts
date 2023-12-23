@@ -37,7 +37,6 @@ export class ReservationController {
   })
   async findAllForUser(@Request() req) {
     const { id } = req.user;
-    console.log('waer', req.user);
     return await this.reservationService.findAllForUser(+id);
   }
 

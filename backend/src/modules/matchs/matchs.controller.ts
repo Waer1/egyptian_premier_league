@@ -52,7 +52,6 @@ export class MatchsController {
   @ApiParam({ name: 'id', required: true, description: 'The id of the match' })
   async findOne(@Param('id') id: string) {
     const match = await this.matchsService.findOne(+id);
-    console.log(match);
     return match;
   }
 

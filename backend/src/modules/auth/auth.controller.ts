@@ -66,7 +66,6 @@ export class AuthController {
     },
   })
   async login(@Body() userlogin: SignInDTO) {
-    console.log('userlogin', userlogin);
     const user = await this.authService.validateUser(
       userlogin.username,
       userlogin.password,

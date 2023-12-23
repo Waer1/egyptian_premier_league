@@ -66,9 +66,7 @@ export class AuthService {
 
   validateToken(token: string) {
     try {
-      console.log('token', token);
       const payload = this.jwtService.verify(token);
-      console.log('payload', payload);
       return payload;
     } catch (err) {
       throw new UnauthorizedException('Invalid token');
