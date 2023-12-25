@@ -158,11 +158,7 @@ export class MatchsService {
       throw new BadRequestException('Match not found');
     }
 
-    await this.reservationRepositry.softDelete({
-      match: {
-        id: id,
-      },
-    });
+    await this.reservationRepositry.delete({ match: { id: id } });
 
     await this.matchRepositry.softDelete({
       id: id,
