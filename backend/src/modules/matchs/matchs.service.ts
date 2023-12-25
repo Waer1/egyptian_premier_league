@@ -59,34 +59,34 @@ export class MatchsService {
     //   throw new BadRequestException('Cannot create a match in the past');
     // }
 
-    const dateStr = this.formatDate(date);
+    // const dateStr = this.formatDate(date);
 
-    const existingMatchForTeam = await this.matchRepositry.findOne({
-      where: [
-        {
-          dateTime: Raw((alias) => `DATE(${alias}) = '${dateStr}'`),
-          homeTeam: createMatchDto.homeTeam,
-        },
-        {
-          dateTime: Raw((alias) => `DATE(${alias}) = '${dateStr}'`),
-          awayTeam: createMatchDto.homeTeam,
-        },
-        {
-          dateTime: Raw((alias) => `DATE(${alias}) = '${dateStr}'`),
-          homeTeam: createMatchDto.awayTeam,
-        },
-        {
-          dateTime: Raw((alias) => `DATE(${alias}) = '${dateStr}'`),
-          awayTeam: createMatchDto.awayTeam,
-        },
-      ],
-    });
+    // const existingMatchForTeam = await this.matchRepositry.findOne({
+    //   where: [
+    //     {
+    //       dateTime: Raw((alias) => `DATE(${alias}) = '${dateStr}'`),
+    //       homeTeam: createMatchDto.homeTeam,
+    //     },
+    //     {
+    //       dateTime: Raw((alias) => `DATE(${alias}) = '${dateStr}'`),
+    //       awayTeam: createMatchDto.homeTeam,
+    //     },
+    //     {
+    //       dateTime: Raw((alias) => `DATE(${alias}) = '${dateStr}'`),
+    //       homeTeam: createMatchDto.awayTeam,
+    //     },
+    //     {
+    //       dateTime: Raw((alias) => `DATE(${alias}) = '${dateStr}'`),
+    //       awayTeam: createMatchDto.awayTeam,
+    //     },
+    //   ],
+    // });
 
-    if (existingMatchForTeam) {
-      throw new BadRequestException(
-        'One of the teams already has a match scheduled on this day',
-      );
-    }
+    // if (existingMatchForTeam) {
+    //   throw new BadRequestException(
+    //     'One of the teams already has a match scheduled on this day',
+    //   );
+    // }
 
     const seatsArray: boolean[][] = Array(targetStadium.rows)
       .fill(null)
