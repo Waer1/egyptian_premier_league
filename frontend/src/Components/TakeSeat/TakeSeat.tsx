@@ -279,7 +279,10 @@ const token=useSelector((state:filterState)=>state.token)
         })
         .catch(err => console.log(err));
     }
-    }, 2000);
+    else{
+        clearInterval(nooooooooo);
+    }
+    }, 5000);
 
 
   const Cancel = () => {

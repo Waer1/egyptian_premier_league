@@ -82,7 +82,10 @@ export default function ShowSeats(props:Props) {
             })
             .catch(err => console.log(err));
         }
-        }, 2000);
+        else{
+            clearInterval(nooooooooo);
+        }
+        }, 5000);
         
     React.useEffect(() => {
         console.log(reservedSet);
