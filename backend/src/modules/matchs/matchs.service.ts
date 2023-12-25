@@ -3,7 +3,7 @@ import { CreateMatchDto, getDateTime } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Match } from 'src/entities/match.entity';
-import { Between, Repository } from 'typeorm';
+import { Between, Raw, Repository } from 'typeorm';
 import { StadiumsService } from '../stadiums/stadiums.service';
 import { getTeamImageLocation } from 'src/shared/teams';
 
@@ -13,6 +13,14 @@ export class MatchsService {
     @InjectRepository(Match) private matchRepositry: Repository<Match>,
     private stadiumService: StadiumsService,
   ) {}
+
+  formatDate(date: Date): string {
+    date = new Date(date);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
   minimizeSeatsArray(seatsArray: boolean[][]): string {
     return seatsArray
@@ -29,6 +37,12 @@ export class MatchsService {
       throw new BadRequestException('Stadium not found');
     }
 
+    if (createMatchDto.homeTeam === createMatchDto.awayTeam) {
+      throw new BadRequestException(
+        'The home team cannot be the same as the away team',
+      );
+    }
+
     const createMatchDtoInstance = Object.assign(
       new CreateMatchDto(),
       createMatchDto,
@@ -42,15 +56,32 @@ export class MatchsService {
       throw new BadRequestException('Cannot create a match in the past');
     }
 
-    const existingMatch = await this.matchRepositry.findOne({
-      where: {
-        dateTime: getDateTime(time, date),
-      },
+    const dateStr = this.formatDate(date);
+
+    const existingMatchForTeam = await this.matchRepositry.findOne({
+      where: [
+        {
+          dateTime: Raw((alias) => `DATE(${alias}) = '${dateStr}'`),
+          homeTeam: createMatchDto.homeTeam,
+        },
+        {
+          dateTime: Raw((alias) => `DATE(${alias}) = '${dateStr}'`),
+          awayTeam: createMatchDto.homeTeam,
+        },
+        {
+          dateTime: Raw((alias) => `DATE(${alias}) = '${dateStr}'`),
+          homeTeam: createMatchDto.awayTeam,
+        },
+        {
+          dateTime: Raw((alias) => `DATE(${alias}) = '${dateStr}'`),
+          awayTeam: createMatchDto.awayTeam,
+        },
+      ],
     });
 
-    if (existingMatch) {
+    if (existingMatchForTeam) {
       throw new BadRequestException(
-        'There is already a match scheduled on this day',
+        'One of the teams already has a match scheduled on this day',
       );
     }
 
