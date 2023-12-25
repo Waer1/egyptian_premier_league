@@ -158,6 +158,20 @@ export class ReservationService {
       );
     }
 
+    const currentDate = new Date();
+    const cancelLimitDate = new Date(
+      Date.UTC(
+        currentDate.getUTCFullYear(),
+        currentDate.getUTCMonth(),
+        currentDate.getUTCDate() + 3,
+      ),
+    );
+
+    if (new Date(reservation.match.dateTime) < cancelLimitDate) {
+      throw new BadRequestException(
+        'You cannot cancel the reservation since the match date is within 3 days',
+      );
+    }
     await this.matchService.unresereveSeat(
       reservation.match.id,
       reservation.seatRaw,

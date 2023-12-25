@@ -8,6 +8,7 @@ import { Match,Teams,Coordinates } from "../../Types";
 import axios from "../../../Server/Instance";
 import { useSelector } from "react-redux";
 import { filterState } from "../../../State";
+import moment from "moment";
 
 export type CardProps = {
     team: Teams;
@@ -24,6 +25,7 @@ export default function Card(props:CardProps) {
     const match=props.match;
     const row=match.row;
     const column=match.column;
+
     const displayCard=()=>{
         document.getElementById("match"+index)?.click();
     }
@@ -84,7 +86,7 @@ export default function Card(props:CardProps) {
                 }
                 {(state===4) && 
                 <>
-                <Delete onClick={DeleteSeat}> Cancle Row:{props.seatRaw} column:{props.seatColum}</Delete>
+                <Delete onClick={DeleteSeat} disabled={((moment(match.date).format('YYYY-MM-DD'))) <= ((moment(new Date()).add(3, 'days').format('YYYY-MM-DD')) )} > Cancle Row:{props.seatRaw} column:{props.seatColum}</Delete>
                 </>
                 }
             </Box>

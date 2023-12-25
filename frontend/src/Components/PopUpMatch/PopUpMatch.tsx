@@ -10,6 +10,7 @@ import axios from "../../Server/Instance";
 import { Match } from '../Types';
 import { useSelector } from 'react-redux';
 import { filterState } from '../../State';
+import moment from 'moment';
 
 type CardProps = {
     match: Match;
@@ -144,7 +145,7 @@ export default function PopUpMatch(props:CardProps) {
                 <>
                     <Box sx={{display:"flex" , alignItems:"center",justifyContent:'space-evenly',width: 550,my:1}}>
                         <Box sx={{width:"40%"}}>
-                            <Delete onClick={DEL}> Cancle Row:{row} column:{column}</Delete>
+                            <Delete onClick={DEL} disabled={((moment(match.date).format('YYYY-MM-DD'))) <= ((moment(new Date()).add(3, 'days').format('YYYY-MM-DD')) )} > Cancle Row:{row} column:{column}</Delete>
                         </Box>
                     </Box>
                 </>

@@ -26,7 +26,7 @@ export default function ShowSeats(props:Props) {
     const numRows = props.Rows;
     const imageWidth = 7; // Width of the image in icon units
     const imageHeight = 5; // Height of the image in icon units
-    numColumns=numColumns+Math.ceil((imageWidth*imageHeight)/numRows)
+    // numColumns=numColumns+Math.ceil((imageWidth*imageHeight)/numRows)
     const totalIcons = numColumns*numRows;
     
     const handleOpen = () => {
@@ -62,6 +62,28 @@ export default function ShowSeats(props:Props) {
     }
     }, [id,open]);
 
+    const nooooooooo=setInterval(() => {
+        if(open===true){
+            let seats=new Set<string>();
+            axios.defaults.headers.common['Authorization'] = 'Bearer '+ token;
+            axios.get(`/matchs/${id}`)
+            .then(res => {
+                for (let i = 0; i < numRows; i++) {
+                    for (let j = 0; j < actualColumns; j++) {
+                        const point:Coordinates = [i,j];
+                        if(res.data.seatsArray[i][j] ===true){
+                            const pointString = JSON.stringify(point);
+                            seats.add(pointString);
+                        }
+                    }
+                }
+                console.log(seats);
+                setReservedset(seats);
+            })
+            .catch(err => console.log(err));
+        }
+        }, 2000);
+        
     React.useEffect(() => {
         console.log(reservedSet);
         renderSeats();
