@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Search } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateMatchDto, getDateTime } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,12 +6,15 @@ import { Match } from 'src/entities/match.entity';
 import { Between, Raw, Repository } from 'typeorm';
 import { StadiumsService } from '../stadiums/stadiums.service';
 import { getTeamImageLocation } from 'src/shared/teams';
+import { Reservation } from 'src/entities/reservation.entity';
 
 @Injectable()
 export class MatchsService {
   constructor(
     @InjectRepository(Match) private matchRepositry: Repository<Match>,
     private stadiumService: StadiumsService,
+    @InjectRepository(Reservation)
+    private reservationRepositry: Repository<Reservation>,
   ) {}
 
   formatDate(date: Date): string {
@@ -19,7 +22,7 @@ export class MatchsService {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return `${year}-${month}-${day}`; 
   }
 
   minimizeSeatsArray(seatsArray: boolean[][]): string {
@@ -154,6 +157,12 @@ export class MatchsService {
     if (!match) {
       throw new BadRequestException('Match not found');
     }
+
+    await this.reservationRepositry.softDelete({
+      match: {
+        id: id,
+      },
+    });
 
     await this.matchRepositry.softDelete({
       id: id,
