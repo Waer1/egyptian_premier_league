@@ -46,7 +46,7 @@ export class StadiumSeedsService {
       console.log('Seeding staduims ddata...');
 
       this.stadiumNames.forEach(async (stadiumName) => {
-        const rows = Math.floor(Math.random() * 8) + 5; // Random number between 7 and 14
+        const rows = Math.floor(Math.random() * 8) + 7; // Random number between 7 and 14
         const seatsPerRow = Math.floor(Math.random() * 7) + 9; // Random number between 9 and 16
         await this.stadiumsService.create({
           name: stadiumName,

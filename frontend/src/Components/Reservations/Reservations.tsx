@@ -51,6 +51,7 @@ export default function Reservation() {
         axios.post("reservation/user")
         .then(res => {
                 const ts:Ticket[]=res.data.map((t:Response,index:number) => {
+                    console.log(t)
                     const matchObj :Match = {
                         id:t.id,
                         team1: t.match.homeTeam.name,

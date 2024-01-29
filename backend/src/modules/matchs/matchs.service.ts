@@ -11,6 +11,8 @@ import { Reservation } from 'src/entities/reservation.entity';
 @Injectable()
 export class MatchsService {
   constructor(
+    @InjectRepository(Reservation)
+    private reservationRepositry: Repository<Reservation>,
     @InjectRepository(Match) private matchRepositry: Repository<Match>,
     private stadiumService: StadiumsService,
     @InjectRepository(Reservation)
@@ -22,7 +24,7 @@ export class MatchsService {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`; 
+    return `${year}-${month}-${day}`;
   }
 
   minimizeSeatsArray(seatsArray: boolean[][]): string {
@@ -52,12 +54,12 @@ export class MatchsService {
     );
     const { time, date } = createMatchDtoInstance;
 
-    const matchDateTime = getDateTime(time, date);
-    const currentDateTime = new Date();
+    // const matchDateTime = getDateTime(time, date);
+    // const currentDateTime = new Date();
 
-    if (matchDateTime < currentDateTime) {
-      throw new BadRequestException('Cannot create a match in the past');
-    }
+    // if (matchDateTime < currentDateTime) {
+    //   throw new BadRequestException('Cannot create a match in the past');
+    // }
 
     const dateStr = this.formatDate(date);
 
@@ -163,7 +165,6 @@ export class MatchsService {
         id: id,
       },
     });
-
     await this.matchRepositry.softDelete({
       id: id,
     });

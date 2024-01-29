@@ -12,8 +12,8 @@ import { useSelector } from 'react-redux';
 export default function AddStadium() {
   const [open, setOpen] = React.useState(false);
   const [userName, setUserName] = React.useState("");
-const [Rows, setRows] = React.useState(10);
-const [Columns, setColumns] = React.useState(10);
+const [Rows, setRows] = React.useState(7);
+const [Columns, setColumns] = React.useState(9);
 const token =useSelector((state:any)=>state.token)
   const handleOpen = () => {
     setOpen(true);

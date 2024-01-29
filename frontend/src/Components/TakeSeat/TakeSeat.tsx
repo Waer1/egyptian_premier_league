@@ -213,8 +213,9 @@ const token=useSelector((state:filterState)=>state.token)
         renderSeats()
     }
     , [willReserve, reservedSet]);
-    
-  const Confirm = () => {
+    const [cardNumber, setCardNumber] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const Confirm = () => {
     console.log(willReserve);
     if(willReserve.length!==0 && cardNumber!=='' && password!==''){
        //wait for waer to reserve seat 
@@ -232,10 +233,58 @@ const token=useSelector((state:filterState)=>state.token)
                 setWillReserve([])
                 setOpen(false);}
         })
-        .catch(err => error(err.response.data.message));
-        
+        .catch(err => 
+            
+            {
+                error(err.response.data.message)
+                let seats=new Set<string>();
+                axios.defaults.headers.common['Authorization'] = 'Bearer '+ token;
+                axios.get(`/matchs/${id}`)
+                .then(res => {
+                    for (let i = 0; i < numRows; i++) {
+                        for (let j = 0; j < actualColumns; j++) {
+                            const point:Coordinates = [i,j];
+                            if(res.data.seatsArray[i][j] ===true){
+                                const pointString = JSON.stringify(point);
+                                seats.add(pointString);
+                            }
+                        }
+                    }
+                    console.log(seats);
+                    setReservedset(seats);
+                })
+                .catch(err => console.log(err));
+            }
+            ); 
     }
   }
+
+  const nooooooooo=setInterval(() => {
+    if(open===true){
+        let seats=new Set<string>();
+        axios.defaults.headers.common['Authorization'] = 'Bearer '+ token;
+        axios.get(`/matchs/${id}`)
+        .then(res => {
+            for (let i = 0; i < numRows; i++) {
+                for (let j = 0; j < actualColumns; j++) {
+                    const point:Coordinates = [i,j];
+                    if(res.data.seatsArray[i][j] ===true){
+                        const pointString = JSON.stringify(point);
+                        seats.add(pointString);
+                    }
+                }
+            }
+            console.log(seats);
+            setReservedset(seats);
+        })
+        .catch(err => console.log(err));
+    }
+    else{
+        clearInterval(nooooooooo);
+    }
+    }, 5000);
+
+
   const Cancel = () => {
     setWillReserve([]);
     console.log(willReserve);
@@ -249,8 +298,7 @@ const token=useSelector((state:filterState)=>state.token)
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
     };
-const [cardNumber, setCardNumber] = React.useState('');
-const [password, setPassword] = React.useState('');
+
 return (
     <div>
       <Btn onClick={handleOpen} id='Reserve'>Reserve</Btn>
